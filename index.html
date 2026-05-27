@@ -599,6 +599,18 @@ select.field{cursor:pointer}
 .docbtn:hover{background:var(--surface-3);color:var(--text-1)}
 .docbtn.wa:hover{background:var(--income-soft);color:var(--income)}
 .docbtn svg{width:16px;height:16px}
+.streak-chip{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--warning);background:var(--warning-soft);padding:2px 8px;border-radius:var(--r-full)}
+.streak-chip svg{width:11px;height:11px}
+.hdone{width:100%;padding:11px;border-radius:var(--r-md);background:var(--surface-2);font-weight:700;font-size:13px;color:var(--text-2);display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s var(--ease);cursor:pointer}
+.hdone svg{width:16px;height:16px}
+.hdone:hover{background:var(--surface-3)}
+.hdone.on{background:var(--income-soft);color:var(--income)}
+.qty{display:flex;align-items:center;gap:12px}
+.qty button{width:36px;height:36px;border-radius:11px;background:var(--surface-2);font-size:20px;font-weight:700;color:var(--text-2);line-height:1;transition:.15s var(--ease)}
+.qty button:hover{background:var(--surface-3);color:var(--text-1)}
+.qty .qv{font-size:19px;font-weight:800;font-family:var(--mono)}
+.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:11px}
+.heat span{aspect-ratio:1;border-radius:4px;background:var(--surface-3)}
 
 @media(max-width:640px){
   .page-kpis{grid-template-columns:1fr;gap:var(--s-3)}
@@ -1020,6 +1032,9 @@ select.field{cursor:pointer}
       <!-- ░░░░ PÁGINA: SAÚDE ░░░░ -->
       <section class="page" data-page="saude"><div id="saude-root"></div></section>
 
+      <!-- ░░░░ PÁGINA: HÁBITOS ░░░░ -->
+      <section class="page" data-page="habitos"><div id="habitos-root"></div></section>
+
     </div>
   </main>
 </div>
@@ -1079,13 +1094,13 @@ const ICONS={
   phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
   chat:'<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/>',
   menu:'<path d="M3 12h18M3 6h18M3 18h18"/>',
+  book:'<path d="M12 7v14"/><path d="M3 5.5C3 4.7 3.7 4 4.5 4H10a2 2 0 0 1 2 2 2 2 0 0 1 2-2h5.5c.8 0 1.5.7 1.5 1.5v12c0 .8-.7 1.5-1.5 1.5H14a2 2 0 0 0-2 2 2 2 0 0 0-2-2H4.5A1.5 1.5 0 0 1 3 17.5z"/>',
   chevleft:'<path d="M15 18l-6-6 6-6"/>',
   chevright:'<path d="M9 18l6-6-6-6"/>',
 };
 
 /* ─── PÁGINAS PLACEHOLDER (preenchidas a cada etapa do checklist) ─── */
 const PAGES=[
-  ['habitos','flame','Hábitos','Etapa 8','Acompanhamento de hábitos, sequências e métricas pessoais.'],
   ['contatos','users','Contatos','Etapa 9','Agenda de contatos com tags, aniversários e WhatsApp.'],
   ['vendas','cart','Vendas','Etapa 11','Carrinho, registro de venda, recibo e histórico.'],
   ['produtos','box','Produtos','Etapa 10','Cadastro de produtos com preço, custo, foto e margem.'],
@@ -1177,6 +1192,7 @@ function navigate(page){
   if(page==='tarefas') Tarefas.render();
   if(page==='agenda') Agenda.render();
   if(page==='saude') Saude.render();
+  if(page==='habitos') Habitos.render();
   document.body.classList.remove('drawer-open');
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1290,6 +1306,13 @@ const DB={
     {data:offset(-4),mood:2,nota:'Cansado',fatores:['Sono ruim','Estresse']},
     {data:offset(-5),mood:4,nota:'',fatores:['Exercício']},
     {data:offset(-6),mood:3,nota:'',fatores:[]},
+  ],
+  habitos:[
+    {id:nid(),nome:'Beber água',icone:'drop',cor:'#2D7FF9',tipo:'quantidade',meta:8,unidade:'copos',freq:7,horario:'',registros:{[offset(0)]:5,[offset(-1)]:8,[offset(-2)]:6,[offset(-3)]:8,[offset(-4)]:7,[offset(-5)]:4,[offset(-6)]:8,[offset(-7)]:8,[offset(-8)]:8}},
+    {id:nid(),nome:'Exercício',icone:'run',cor:'#1F9D55',tipo:'sim_nao',meta:1,unidade:'',freq:3,horario:'07:00',registros:{[offset(-1)]:1,[offset(-3)]:1,[offset(-4)]:1,[offset(-6)]:1,[offset(-8)]:1}},
+    {id:nid(),nome:'Ler 20 min',icone:'book',cor:'#168A7C',tipo:'sim_nao',meta:1,unidade:'',freq:7,horario:'21:00',registros:{[offset(0)]:1,[offset(-1)]:1,[offset(-2)]:1,[offset(-4)]:1,[offset(-5)]:1,[offset(-6)]:1}},
+    {id:nid(),nome:'Meditar',icone:'smile',cor:'#E0568C',tipo:'sim_nao',meta:1,unidade:'',freq:5,horario:'',registros:{[offset(-1)]:1,[offset(-2)]:1}},
+    {id:nid(),nome:'Dormir 8h',icone:'moon',cor:'#C8860B',tipo:'quantidade',meta:8,unidade:'h',freq:7,horario:'',registros:{[offset(-1)]:7,[offset(-2)]:8,[offset(-3)]:6,[offset(-4)]:8}},
   ],
 };
 
@@ -2157,6 +2180,86 @@ const Saude=(()=>{
 // seed histórico de doses (mock)
 (function(){const M=DB.medicamentos;[[0,-1,'08:00','tomado','08:12'],[0,-2,'08:00','tomado','08:05'],[1,-1,'08:00','tomado','08:20'],[1,-1,'20:00','pulado',''],[2,-1,'21:00','tomado','21:30'],[1,-2,'08:00','tomado','08:10'],[3,-1,'07:00','tomado','07:05'],[3,-1,'19:00','tomado','19:15'],[4,-1,'08:00','tomado','08:30'],[4,-1,'14:00','tomado','14:10']].forEach(a=>{if(M[a[0]])DB.tomadas.push({medId:M[a[0]].id,data:offset(a[1]),hora:a[2],status:a[3],tomadoEm:a[4]});});})();
 
+const Habitos=(()=>{
+  const cumprido=(h,d)=>{const v=h.registros[d]||0;return h.tipo==='quantidade'?v>=h.meta:v>=1;};
+  const valor=(h,d)=>h.registros[d]||0;
+  function streak(h){let s=0;for(let i=0;;i++){const d=offset(-i);if(cumprido(h,d))s++;else if(i===0)continue;else break;}return s;}
+  function recorde(h){let best=0,run=0;for(let i=120;i>=0;i--){if(cumprido(h,offset(-i))){run++;best=Math.max(best,run);}else run=0;}return best;}
+  function semana(h){let c=0;for(let i=0;i<7;i++)if(cumprido(h,offset(-i)))c++;return c;}
+  function toggle(id){const h=DB.habitos.find(x=>x.id===id);const d=offset(0);h.registros[d]=h.registros[d]?0:1;Toast.show(h.registros[d]?'Feito! 🔥':'Desmarcado');render();}
+  function qty(id,delta){const h=DB.habitos.find(x=>x.id===id);const d=offset(0);h.registros[d]=Math.max(0,(h.registros[d]||0)+delta);render();}
+  function cardHTML(h){
+    const st=streak(h),rec=recorde(h),sem=semana(h),hoje=offset(0);
+    const done=cumprido(h,hoje),v=valor(h,hoje);
+    let heat='';for(let i=34;i>=0;i--){const d=offset(-i);const dv=valor(h,d);let bg='var(--surface-3)';if(cumprido(h,d))bg=h.cor;else if(dv>0)bg=h.cor+'66';heat+=`<span style="background:${bg}" title="${d}"></span>`;}
+    return `<div class="card" style="padding:var(--s-5)">
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:13px">
+        <div class="meta-ic" style="width:40px;height:40px;border-radius:11px;background:${h.cor}22;color:${h.cor}">${svg(h.icone,18)}</div>
+        <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">${h.nome}</div><div style="font-size:11.5px;color:var(--text-3);font-weight:500;display:flex;gap:8px;align-items:center;margin-top:3px;flex-wrap:wrap"><span class="streak-chip">${svg('flame',11)} ${st}</span><span>recorde ${rec}</span>${h.horario?`<span>· ${h.horario}</span>`:''}</div></div>
+        <button class="icon-mini-btn" data-edit="${h.id}">${svg('pencil',15)}</button>
+        <button class="icon-mini-btn" data-del="${h.id}">${svg('trash',15)}</button>
+      </div>
+      ${h.tipo==='quantidade'?`<div class="qty"><button data-minus="${h.id}">−</button><div style="flex:1;text-align:center"><span class="qv" style="color:${done?h.cor:'var(--text-1)'}">${v}</span><span style="color:var(--text-3);font-weight:600"> / ${h.meta} ${h.unidade}</span></div><button data-plus="${h.id}">+</button></div><div class="bar" style="margin-top:10px"><i style="width:${Math.min(100,v/h.meta*100)}%;background:${h.cor}"></i></div>`:`<button class="hdone ${done?'on':''}" data-toggle="${h.id}">${done?svg('tick',16)+' Concluído hoje':'Marcar feito hoje'}</button>`}
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);font-weight:600;margin-top:12px"><span>Meta: ${h.freq>=7?'todo dia':h.freq+'×/semana'}</span><span>${sem}/${h.freq>=7?7:h.freq} esta semana</span></div>
+      <div class="heat">${heat}</div>
+    </div>`;
+  }
+  function render(){
+    const root=document.getElementById('habitos-root');if(!root)return;
+    const hoje=offset(0);
+    const feitos=DB.habitos.filter(h=>cumprido(h,hoje)).length;
+    const best=DB.habitos.reduce((m,h)=>Math.max(m,streak(h)),0);
+    root.innerHTML=`
+      <div class="page-kpis">
+        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--brand-soft);color:var(--brand-text)">${svg('check',14)}</span>Concluídos hoje</div><div class="kv">${feitos}/${DB.habitos.length}</div></div>
+        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--warning-soft);color:var(--warning)">${svg('flame',14)}</span>Melhor sequência</div><div class="kv" style="color:var(--warning)">${best} dias</div></div>
+        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--info-soft);color:var(--info)">${svg('target',14)}</span>Hábitos</div><div class="kv">${DB.habitos.length}</div></div>
+      </div>
+      <div class="toolbar"><div style="flex:1;font-size:13px;color:var(--text-3);font-weight:600">${DB.habitos.length} hábitos</div><button class="btn btn-primary" data-add>${svg('plus',16)} Novo hábito</button></div>
+      <div class="metas-grid">${DB.habitos.length?DB.habitos.map(cardHTML).join(''):`<div class="empty" style="grid-column:1/-1"><div class="eico">${svg('flame',24)}</div><h4>Nenhum hábito ainda</h4><p>Crie um hábito pra começar a construir consistência.</p></div>`}</div>`;
+    root.querySelector('[data-add]').onclick=()=>form();
+    root.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>toggle(+b.dataset.toggle));
+    root.querySelectorAll('[data-plus]').forEach(b=>b.onclick=()=>qty(+b.dataset.plus,1));
+    root.querySelectorAll('[data-minus]').forEach(b=>b.onclick=()=>qty(+b.dataset.minus,-1));
+    root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>form(+b.dataset.edit));
+    root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>del(+b.dataset.del));
+  }
+  function del(id){const h=DB.habitos.find(x=>x.id===id);if(!h)return;Modal.confirm('Excluir hábito?',`"${h.nome}" e seu histórico serão removidos.`,()=>{DB.habitos=DB.habitos.filter(x=>x.id!==id);Toast.show('Hábito excluído');render();});}
+  function form(id){
+    const h=id?DB.habitos.find(x=>x.id===id):null;
+    const cores=['#168A7C','#2D7FF9','#1F9D55','#C8860B','#DB4A4A','#E0568C'];
+    const icones=['drop','run','book','moon','smile','flame','heart','target','check'];
+    const curCor=h?h.cor:cores[0],curIc=h?h.icone:icones[0];
+    const body=`
+      <div class="fg"><label>Nome do hábito</label><input class="field" id="h-nome" value="${h?h.nome.replace(/"/g,'&quot;'):''}" placeholder="Ex: Beber água"></div>
+      <div class="frow">
+        <div class="fg"><label>Tipo</label><select class="field" id="h-tipo"><option value="sim_nao"${!h||h.tipo==='sim_nao'?' selected':''}>Sim / Não</option><option value="quantidade"${h&&h.tipo==='quantidade'?' selected':''}>Quantidade</option></select></div>
+        <div class="fg"><label>Meta</label><select class="field" id="h-freq">${[1,2,3,4,5,6,7].map(n=>`<option value="${n}"${(h?h.freq:7)===n?' selected':''}>${n===7?'Todo dia':n+'× por semana'}</option>`).join('')}</select></div>
+      </div>
+      <div class="frow" id="h-qtybox" style="display:none">
+        <div class="fg"><label>Meta diária</label><input class="field" id="h-meta" type="number" min="1" step="any" value="${h&&h.meta?h.meta:8}"></div>
+        <div class="fg"><label>Unidade</label><input class="field" id="h-uni" value="${h&&h.unidade?h.unidade:''}" placeholder="copos, min, h…"></div>
+      </div>
+      <div class="fg"><label>Lembrete (opcional)</label><input class="field" id="h-hora" type="time" value="${h&&h.horario?h.horario:''}"></div>
+      <div class="fg"><label>Cor</label><div class="swatches" id="h-cores">${cores.map(c=>`<button type="button" class="sw${c===curCor?' on':''}" data-cor="${c}" style="background:${c}"></button>`).join('')}</div></div>
+      <div class="fg"><label>Ícone</label><div class="icpick" id="h-icones">${icones.map(ic=>`<button type="button" class="icp${ic===curIc?' on':''}" data-ic="${ic}">${svg(ic,18)}</button>`).join('')}</div></div>`;
+    const back=Modal.open(id?'Editar hábito':'Novo hábito',body,(b)=>{
+      const nome=b.querySelector('#h-nome').value.trim();
+      if(!nome){Toast.show('Informe o nome','err');return false;}
+      const tipo=b.querySelector('#h-tipo').value;
+      const dd={nome,tipo,freq:+b.querySelector('#h-freq').value,meta:tipo==='quantidade'?(parseFloat(b.querySelector('#h-meta').value)||1):1,unidade:tipo==='quantidade'?b.querySelector('#h-uni').value.trim():'',horario:b.querySelector('#h-hora').value||'',cor:(b.querySelector('#h-cores .on')||{}).dataset?.cor||curCor,icone:(b.querySelector('#h-icones .on')||{}).dataset?.ic||curIc};
+      if(h){Object.assign(h,dd);Toast.show('Hábito atualizado');}else{DB.habitos.push(Object.assign({id:nid(),registros:{}},dd));Toast.show('Hábito criado');}
+      render();
+    },id?'Salvar':'Criar hábito');
+    const tipoSel=back.querySelector('#h-tipo'),qtyBox=back.querySelector('#h-qtybox');
+    const syncTipo=()=>{qtyBox.style.display=tipoSel.value==='quantidade'?'grid':'none';};
+    tipoSel.onchange=syncTipo;syncTipo();
+    back.querySelectorAll('[data-cor]').forEach(b=>b.onclick=()=>back.querySelectorAll('[data-cor]').forEach(x=>x.classList.toggle('on',x===b)));
+    back.querySelectorAll('[data-ic]').forEach(b=>b.onclick=()=>back.querySelectorAll('[data-ic]').forEach(x=>x.classList.toggle('on',x===b)));
+  }
+  return {render};
+})();
+
 Toast.init();
 Contas.render();
 Transacoes.render();
@@ -2166,6 +2269,7 @@ Categorias.render();
 Tarefas.render();
 Agenda.render();
 Saude.render();
+Habitos.render();
 const _topAdd=document.querySelector('.btn-add');
 if(_topAdd)_topAdd.addEventListener('click',()=>{const fin=document.querySelector('.page[data-page="financas"]');if(fin&&fin.classList.contains('show'))Contas.form();});
 </script>

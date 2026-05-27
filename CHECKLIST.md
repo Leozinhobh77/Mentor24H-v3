@@ -21,7 +21,8 @@
 - [x] **Etapa 6 — Agenda** (calendário, eventos, lembretes, datas importantes) ✅ aprovado por Léo
 - [x] **Etapa 7A — Saúde / Medicamentos** (cadastro rico + status ativo/pausado/encerrado, qtd por horário, hora real do tomado, dose atrasada, duração do tratamento, adesão hoje+7d, histórico navegável dia a dia) ✅ aprovado por Léo
 - [ ] **Etapa 7B — Médicos + Humor** (lista de médicos + mood tracker com histórico e nota)
-- [ ] **Etapa 8 — Hábitos** (tracking, streaks, métricas pessoais)
+- [ ] **Etapa 8A — Hábitos** (sim/não + quantidade, streak+recorde, meta semanal, heatmap, lembrete) ← EM ANDAMENTO
+- [ ] **Etapa 8B — Métricas pessoais** (peso/pressão/glicose + métrica customizável, gráfico de evolução)
 - [ ] **Etapa 9 — Contatos** (tags, aniversários, WhatsApp)
 
 ## Negócio
