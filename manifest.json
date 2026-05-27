@@ -1,0 +1,15 @@
+{
+  "name": "Mentor24h — Hub Pessoal & Negócio",
+  "short_name": "Mentor24h",
+  "description": "Organize sua vida pessoal e seu negócio num só app.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0B0D",
+  "theme_color": "#0B0B0D",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
