@@ -720,6 +720,15 @@ select.field{cursor:pointer}
 .pdv-prod-btn.sem-stock{opacity:.45;pointer-events:none}
 .pdv-avulso{display:flex;align-items:center;gap:8px;padding:var(--s-3);background:var(--surface-2);border-radius:var(--r-md);cursor:pointer;font-size:13px;font-weight:600;color:var(--brand);border:1.5px dashed var(--brand);transition:background .15s}
 .pdv-avulso:hover{background:var(--brand-soft)}
+.cat-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;-ms-overflow-style:none}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface-2);font-size:12px;font-weight:700;color:var(--text-2);cursor:pointer;white-space:nowrap;transition:all .15s var(--ease);flex-shrink:0}
+.cat-tab.on{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
+.cat-tab:hover:not(.on){border-color:var(--brand);color:var(--brand)}
+.pdv-prod-btn{position:relative}
+.fix-btn{position:absolute;top:4px;right:4px;font-size:13px;line-height:1;background:none;border:none;cursor:pointer;padding:2px;opacity:.45;transition:opacity .15s;z-index:2}
+.pdv-prod-btn:hover .fix-btn{opacity:1}
+.fix-btn.on{opacity:1}
 .pdv-cart{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);position:sticky;top:var(--s-4)}
 .pdv-cart-head{font-size:14px;font-weight:700;color:var(--text-1)}
 .pdv-cart-empty{text-align:center;padding:var(--s-6) 0;color:var(--text-3);font-size:13px}
@@ -1500,12 +1509,31 @@ const DB={
   ],
   vendas:[],
   produtos:[
-    {id:nid(),nome:'Brigadeiro Tradicional',emoji:'🍫',categoria:'Doces',preco:5.5,custo:1.8,estoque:80,estoqueMin:20,ativo:true},
-    {id:nid(),nome:'Beijinho de Coco',emoji:'🥥',categoria:'Doces',preco:5.5,custo:1.9,estoque:45,estoqueMin:20,ativo:true},
-    {id:nid(),nome:'Bicho de Pé',emoji:'🍓',categoria:'Doces',preco:5.5,custo:2.0,estoque:12,estoqueMin:20,ativo:true},
-    {id:nid(),nome:'Caixa 9 unid.',emoji:'📦',categoria:'Embalagens',preco:12,custo:3.5,estoque:30,estoqueMin:10,ativo:true},
-    {id:nid(),nome:'Caixa 16 unid.',emoji:'🎁',categoria:'Embalagens',preco:20,custo:6.0,estoque:8,estoqueMin:10,ativo:true},
-    {id:nid(),nome:'Papel Chumbo',emoji:'✨',categoria:'Embalagens',preco:2,custo:0.8,estoque:200,estoqueMin:50,ativo:true},
+    // Doces — índices 0-6 (0-2 usados pelo seed de movimentações)
+    {id:nid(),nome:'Brigadeiro Tradicional',emoji:'🍫',categoria:'Doces',preco:5.5,custo:1.8,estoque:80,estoqueMin:20,ativo:true,fixado:true},
+    {id:nid(),nome:'Beijinho de Coco',emoji:'🥥',categoria:'Doces',preco:5.5,custo:1.9,estoque:45,estoqueMin:20,ativo:true,fixado:true},
+    {id:nid(),nome:'Bicho de Pé',emoji:'🍓',categoria:'Doces',preco:5.5,custo:2.0,estoque:12,estoqueMin:20,ativo:true,fixado:false},
+    {id:nid(),nome:'Churros Recheado',emoji:'🥐',categoria:'Doces',preco:8.0,custo:2.5,estoque:35,estoqueMin:10,ativo:true,fixado:false},
+    {id:nid(),nome:'Brownie',emoji:'🍫',categoria:'Doces',preco:12.0,custo:4.0,estoque:20,estoqueMin:8,ativo:true,fixado:false},
+    {id:nid(),nome:'Trufa de Limão',emoji:'🍋',categoria:'Doces',preco:7.0,custo:2.2,estoque:30,estoqueMin:10,ativo:true,fixado:false},
+    {id:nid(),nome:'Palha Italiana',emoji:'🍬',categoria:'Doces',preco:5.0,custo:1.6,estoque:50,estoqueMin:15,ativo:true,fixado:false},
+    // Kits — índices 7-10
+    {id:nid(),nome:'Kit 9 Doces',emoji:'🎁',categoria:'Kits',preco:55.0,custo:18.0,estoque:15,estoqueMin:3,ativo:true,fixado:true},
+    {id:nid(),nome:'Kit 16 Doces',emoji:'🎀',categoria:'Kits',preco:95.0,custo:32.0,estoque:10,estoqueMin:2,ativo:true,fixado:true},
+    {id:nid(),nome:'Kit 25 Doces',emoji:'🎉',categoria:'Kits',preco:145.0,custo:48.0,estoque:6,estoqueMin:2,ativo:true,fixado:false},
+    {id:nid(),nome:'Kit Degustação (5 sabores)',emoji:'🍱',categoria:'Kits',preco:35.0,custo:12.0,estoque:8,estoqueMin:2,ativo:true,fixado:false},
+    // Embalagens — índices 11-15 (11-13 usados pelo seed de movimentações como ps[3-5])
+    {id:nid(),nome:'Caixa 9 unid.',emoji:'📦',categoria:'Embalagens',preco:12,custo:3.5,estoque:30,estoqueMin:10,ativo:true,fixado:false},
+    {id:nid(),nome:'Caixa 16 unid.',emoji:'📫',categoria:'Embalagens',preco:20,custo:6.0,estoque:8,estoqueMin:10,ativo:true,fixado:false},
+    {id:nid(),nome:'Papel Chumbo',emoji:'✨',categoria:'Embalagens',preco:2,custo:0.8,estoque:200,estoqueMin:50,ativo:true,fixado:false},
+    {id:nid(),nome:'Saco Celofane',emoji:'🛍️',categoria:'Embalagens',preco:0.5,custo:0.15,estoque:500,estoqueMin:100,ativo:true,fixado:false},
+    {id:nid(),nome:'Laço Decorativo',emoji:'🎀',categoria:'Embalagens',preco:1.5,custo:0.6,estoque:80,estoqueMin:20,ativo:true,fixado:false},
+    // Bebidas — índices 16-18
+    {id:nid(),nome:'Suco de Laranja',emoji:'🍊',categoria:'Bebidas',preco:8.0,custo:2.5,estoque:24,estoqueMin:6,ativo:true,fixado:false},
+    {id:nid(),nome:'Água Mineral',emoji:'💧',categoria:'Bebidas',preco:3.0,custo:1.2,estoque:48,estoqueMin:12,ativo:true,fixado:false},
+    {id:nid(),nome:'Refrigerante Lata',emoji:'🥤',categoria:'Bebidas',preco:5.0,custo:2.0,estoque:36,estoqueMin:12,ativo:true,fixado:false},
+    // Personalizados — índice 19
+    {id:nid(),nome:'Arte Digital (convite/logo)',emoji:'🎨',categoria:'Personalizados',preco:80.0,custo:0,estoque:999,estoqueMin:0,ativo:true,fixado:false},
   ],
   movimentacoes:[],
 };
@@ -1513,21 +1541,23 @@ const DB={
 // Seed movimentações com IDs corretos
 (function(){
   const ps=DB.produtos;
+  // ps[0]=Brigadeiro, ps[1]=Beijinho, ps[2]=Bicho de Pé
+  // ps[11]=Caixa9, ps[12]=Caixa16, ps[13]=Papel Chumbo
   DB.movimentacoes=[
     {id:nid(),produtoId:ps[0].id,tipo:'entrada',qtd:100,obs:'Produção — batch inicial',data:offset(-8)},
     {id:nid(),produtoId:ps[1].id,tipo:'entrada',qtd:60,obs:'Produção inicial',data:offset(-8)},
     {id:nid(),produtoId:ps[2].id,tipo:'entrada',qtd:30,obs:'Produção inicial',data:offset(-8)},
-    {id:nid(),produtoId:ps[3].id,tipo:'entrada',qtd:50,obs:'Compra de embalagens',data:offset(-7)},
-    {id:nid(),produtoId:ps[4].id,tipo:'entrada',qtd:20,obs:'Compra de embalagens',data:offset(-7)},
-    {id:nid(),produtoId:ps[5].id,tipo:'entrada',qtd:300,obs:'Rolo de papel chumbo',data:offset(-7)},
+    {id:nid(),produtoId:ps[11].id,tipo:'entrada',qtd:50,obs:'Compra de embalagens',data:offset(-7)},
+    {id:nid(),produtoId:ps[12].id,tipo:'entrada',qtd:20,obs:'Compra de embalagens',data:offset(-7)},
+    {id:nid(),produtoId:ps[13].id,tipo:'entrada',qtd:300,obs:'Rolo de papel chumbo',data:offset(-7)},
     {id:nid(),produtoId:ps[0].id,tipo:'saida',qtd:12,obs:'Venda — Maria Souza',data:offset(-5)},
     {id:nid(),produtoId:ps[1].id,tipo:'saida',qtd:9,obs:'Venda — João Pedro',data:offset(-5)},
-    {id:nid(),produtoId:ps[3].id,tipo:'saida',qtd:12,obs:'Caixas 9un. vendidas',data:offset(-5)},
-    {id:nid(),produtoId:ps[5].id,tipo:'saida',qtd:80,obs:'Uso na embalagem',data:offset(-5)},
+    {id:nid(),produtoId:ps[11].id,tipo:'saida',qtd:12,obs:'Caixas 9un. vendidas',data:offset(-5)},
+    {id:nid(),produtoId:ps[13].id,tipo:'saida',qtd:80,obs:'Uso na embalagem',data:offset(-5)},
     {id:nid(),produtoId:ps[0].id,tipo:'saida',qtd:8,obs:'Venda — encomenda festa',data:offset(-3)},
     {id:nid(),produtoId:ps[2].id,tipo:'saida',qtd:18,obs:'Venda — evento especial',data:offset(-3)},
-    {id:nid(),produtoId:ps[4].id,tipo:'saida',qtd:12,obs:'Caixas 16un. vendidas',data:offset(-3)},
-    {id:nid(),produtoId:ps[5].id,tipo:'saida',qtd:20,obs:'Uso na embalagem',data:offset(-3)},
+    {id:nid(),produtoId:ps[12].id,tipo:'saida',qtd:12,obs:'Caixas 16un. vendidas',data:offset(-3)},
+    {id:nid(),produtoId:ps[13].id,tipo:'saida',qtd:20,obs:'Uso na embalagem',data:offset(-3)},
     {id:nid(),produtoId:ps[1].id,tipo:'saida',qtd:6,obs:'Venda do dia',data:offset(-1)},
   ];
 })();
@@ -2770,12 +2800,17 @@ const Contatos=(()=>{
    ETAPA 11 — VENDAS (PDV + HISTÓRICO)
 ═══════════════════════════════════════════════ */
 const Vendas=(()=>{
-  let view='pdv'; // 'pdv' | 'historico'
-  let carrinho=[]; // [{produtoId,nome,emoji,preco,qtd}]
-  let desconto=0, descontoTipo='pct'; // 'pct' | 'val'
+  let view='pdv';
+  let carrinho=[];
+  let desconto=0, descontoTipo='pct';
   let pagamento='pix';
-  let clienteSel=null; // {id,nome} | null
-  let filtroStatus='todos';
+  let clienteSel=null;
+  // Pagamento dividido
+  let dividir=false, pgto2='a_prazo', valor1=0;
+  // Filtros histórico
+  let filtroStatus='todos', filtroPeriodo='tudo', periodoInicio='', periodoFim='';
+  // Catálogo
+  let catAtiva='fixados', buscaQ='';
 
   const PGTOS=[
     {k:'pix',l:'Pix'},
@@ -2841,11 +2876,13 @@ const Vendas=(()=>{
   function render(){
     const root=document.getElementById('vendas-root');if(!root)return;
     if(view==='historico'){renderHistorico();return;}
-
-    // KPIs
-    const hoje=DB.vendas.filter(v=>v.data===offset(0)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
-    const semana=DB.vendas.filter(v=>v.data>=offset(-7)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
-    const mes=DB.vendas.filter(v=>v.data>=offset(-30)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
+    const hojeVal=DB.vendas.filter(v=>v.data===offset(0)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
+    const semanaVal=DB.vendas.filter(v=>v.data>=offset(-7)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
+    const mesVal=DB.vendas.filter(v=>v.data>=offset(-30)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
+    const cats=[...new Set(DB.produtos.filter(p=>p.ativo).map(p=>p.categoria))].sort();
+    const temFixados=DB.produtos.some(p=>p.ativo&&p.fixado);
+    const tot=total();
+    const val2=Math.max(0,tot-valor1);
 
     root.innerHTML=`
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)">
@@ -2856,18 +2893,21 @@ const Vendas=(()=>{
         <button class="btn btn-ghost btn-sm" id="btn-hist">${svg('clock',15)} Histórico</button>
       </div>
       <div class="kpi-row" style="margin-bottom:var(--s-4)">
-        <div class="kpi-card"><span class="kpi-label">Hoje</span><span class="kpi-val" style="font-size:16px">${fmt(hoje)}</span></div>
-        <div class="kpi-card"><span class="kpi-label">7 dias</span><span class="kpi-val" style="font-size:16px">${fmt(semana)}</span></div>
-        <div class="kpi-card"><span class="kpi-label">30 dias</span><span class="kpi-val" style="font-size:16px">${fmt(mes)}</span></div>
+        <div class="kpi-card"><span class="kpi-label">Hoje</span><span class="kpi-val" style="font-size:16px">${fmt(hojeVal)}</span></div>
+        <div class="kpi-card"><span class="kpi-label">7 dias</span><span class="kpi-val" style="font-size:16px">${fmt(semanaVal)}</span></div>
+        <div class="kpi-card"><span class="kpi-label">30 dias</span><span class="kpi-val" style="font-size:16px">${fmt(mesVal)}</span></div>
       </div>
       <div class="pdv-layout">
-        <!-- CATÁLOGO -->
         <div class="pdv-catalog">
-          <input class="field" id="pdv-busca" placeholder="Buscar produto no catálogo…">
+          <input class="field" id="pdv-busca" placeholder="Buscar produto no catálogo…" value="${buscaQ}">
+          <div class="cat-tabs" id="cat-tabs">
+            ${temFixados?`<button class="cat-tab${catAtiva==='fixados'?' on':''}" data-cat="fixados">⭐ Fixados</button>`:''}
+            <button class="cat-tab${catAtiva==='todas'?' on':''}" data-cat="todas">Todas</button>
+            ${cats.map(c=>`<button class="cat-tab${catAtiva===c?' on':''}" data-cat="${c}">${c}</button>`).join('')}
+          </div>
           <div class="pdv-prod-grid" id="pdv-grid"></div>
           <div class="pdv-avulso" id="pdv-avulso">${svg('plus',16)} Item avulso (sem cadastro)</div>
         </div>
-        <!-- CARRINHO -->
         <div class="pdv-cart" id="pdv-cart">
           <div class="pdv-cart-head">Carrinho</div>
           <div id="cart-body"><div class="pdv-cart-empty">Toque nos produtos<br>para adicionar</div></div>
@@ -2883,16 +2923,33 @@ const Vendas=(()=>{
             </div>
           </div>
           <div style="padding-top:var(--s-2);border-top:1px solid var(--border)">
-            <div style="font-size:11px;font-weight:700;color:var(--text-3);margin-bottom:6px">PAGAMENTO</div>
-            <div class="pdv-pgto" id="pdv-pgto">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+              <div style="font-size:11px;font-weight:700;color:var(--text-3)">PAGAMENTO</div>
+              <button id="pdv-dividir-btn" style="font-size:11px;font-weight:700;color:${dividir?'var(--brand)':'var(--text-3)'};background:none;border:none;cursor:pointer">${dividir?'✕ Cancelar divisão':'+ Dividir pagamento'}</button>
+            </div>
+            ${!dividir?`
+            <div class="pdv-pgto">
               ${PGTOS.map(p=>`<button class="pdv-pgto-btn${pagamento===p.k?' on':''}" data-pgto="${p.k}">${p.l}</button>`).join('')}
             </div>
-            ${pagamento==='dinheiro'?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><label style="font-size:12px;color:var(--text-3);white-space:nowrap">Recebido:</label><input class="field" id="pdv-recebido" type="number" min="0" placeholder="${fmt(total()).replace('R$ ','')}" style="width:100px;text-align:right"></div>`:''}
+            ${pagamento==='dinheiro'?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><label style="font-size:12px;color:var(--text-3);white-space:nowrap">Recebido:</label><input class="field" id="pdv-recebido" type="number" min="0" placeholder="${tot.toFixed(2)}" style="width:110px;text-align:right"></div>`:''}
+            `:`
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;gap:8px;align-items:center">
+                <select class="field" id="pdv-pgto1" style="flex:1">${PGTOS.map(p=>`<option value="${p.k}"${pagamento===p.k?' selected':''}>${p.l}</option>`).join('')}</select>
+                <input class="field" id="pdv-val1" type="number" step="0.01" min="0" max="${tot}" value="${valor1>0?valor1:''}" placeholder="R$ parcial" style="width:110px;text-align:right">
+              </div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <select class="field" id="pdv-pgto2" style="flex:1">${PGTOS.map(p=>`<option value="${p.k}"${pgto2===p.k?' selected':''}>${p.l}</option>`).join('')}</select>
+                <div style="width:110px;text-align:right;font-size:13px;font-weight:700;color:var(--text-1);padding:8px 12px;background:var(--surface-2);border-radius:var(--r-md)">${fmt(val2)}</div>
+              </div>
+              <div style="font-size:11px;color:var(--text-3);text-align:center">O segundo valor é calculado automaticamente</div>
+            </div>
+            `}
           </div>
           <div style="padding-top:var(--s-2);border-top:1px solid var(--border)">
             <div style="font-size:11px;font-weight:700;color:var(--text-3);margin-bottom:6px">CLIENTE <span style="font-weight:400">(opcional)</span></div>
             <div style="display:flex;gap:6px">
-              <div style="flex:1;padding:8px 12px;background:var(--surface-2);border-radius:var(--r-md);font-size:13px;color:${clienteSel?'var(--text-1)':'var(--text-3)'}" id="pdv-cliente-display">${clienteSel?clienteSel.nome:'Sem cliente'}</div>
+              <div style="flex:1;padding:8px 12px;background:var(--surface-2);border-radius:var(--r-md);font-size:13px;color:${clienteSel?'var(--text-1)':'var(--text-3)'}">${clienteSel?clienteSel.nome:'Sem cliente'}</div>
               <button class="btn btn-ghost btn-sm" id="pdv-sel-cliente">${svg('users',15)}</button>
               ${clienteSel?`<button class="btn btn-ghost btn-sm" id="pdv-rm-cliente" style="color:var(--expense)">${svg('x',14)}</button>`:''}
             </div>
@@ -2902,35 +2959,56 @@ const Vendas=(()=>{
         </div>
       </div>`;
 
-    renderGrid(root);
-
-    root.querySelector('#pdv-busca').oninput=e=>renderGrid(root,e.target.value);
+    renderGrid();
+    root.querySelector('#pdv-busca').oninput=e=>{buscaQ=e.target.value;renderGrid();};
+    root.querySelectorAll('.cat-tab').forEach(b=>b.onclick=()=>{catAtiva=b.dataset.cat;buscaQ='';render();});
     root.querySelector('#pdv-avulso').onclick=()=>avulso();
     root.querySelector('#btn-hist').onclick=()=>{view='historico';render();};
     root.querySelector('#pdv-desc-val').oninput=e=>{desconto=+e.target.value||0;renderCarrinho();};
     root.querySelector('#pdv-desc-tipo').onchange=e=>{descontoTipo=e.target.value;renderCarrinho();};
-    root.querySelectorAll('.pdv-pgto-btn').forEach(b=>b.onclick=()=>{pagamento=b.dataset.pgto;render();});
+    root.querySelector('#pdv-dividir-btn').onclick=()=>{dividir=!dividir;valor1=0;render();};
+    if(!dividir){
+      root.querySelectorAll('.pdv-pgto-btn').forEach(b=>b.onclick=()=>{pagamento=b.dataset.pgto;render();});
+    } else {
+      root.querySelector('#pdv-pgto1').onchange=e=>{pagamento=e.target.value;};
+      root.querySelector('#pdv-pgto2').onchange=e=>{pgto2=e.target.value;};
+      root.querySelector('#pdv-val1').oninput=e=>{valor1=Math.min(+e.target.value||0,total());renderCarrinho();};
+    }
     root.querySelector('#pdv-sel-cliente').onclick=()=>selecionarCliente();
     if(root.querySelector('#pdv-rm-cliente'))root.querySelector('#pdv-rm-cliente').onclick=()=>{clienteSel=null;render();};
     root.querySelector('#pdv-finalizar').onclick=()=>finalizarVenda();
-    root.querySelector('#pdv-limpar').onclick=()=>{if(carrinho.length===0)return;Modal.confirm('Limpar carrinho?','Todos os itens serão removidos.',()=>{carrinho=[];desconto=0;clienteSel=null;render();});};
-
+    root.querySelector('#pdv-limpar').onclick=()=>{if(carrinho.length===0)return;Modal.confirm('Limpar carrinho?','Todos os itens serão removidos.',()=>{carrinho=[];desconto=0;dividir=false;valor1=0;clienteSel=null;render();});};
     renderCarrinho();
   }
 
-  function renderGrid(root,q=''){
-    const grid=root.querySelector('#pdv-grid');if(!grid)return;
-    const prods=DB.produtos.filter(p=>p.ativo&&(!q||p.nome.toLowerCase().includes(q.toLowerCase())));
-    grid.innerHTML=prods.map(p=>`
-      <button class="pdv-prod-btn${p.estoque<=0?' sem-stock':''}" data-pid="${p.id}" title="${p.nome}">
-        <div class="pe">${p.emoji}</div>
-        <div class="pn">${p.nome}</div>
-        <div class="pp">${fmt(p.preco)}</div>
-        <div class="pstock">${p.estoque} em estoque</div>
-      </button>`).join('');
-    grid.querySelectorAll('.pdv-prod-btn:not(.sem-stock)').forEach(b=>b.onclick=()=>{
-      const p=DB.produtos.find(x=>x.id===+b.dataset.pid);if(p)addAoCarrinho(p);
+  function renderGrid(){
+    const grid=document.getElementById('pdv-grid');if(!grid)return;
+    let prods=DB.produtos.filter(p=>p.ativo);
+    if(catAtiva==='fixados') prods=prods.filter(p=>p.fixado);
+    else if(catAtiva!=='todas') prods=prods.filter(p=>p.categoria===catAtiva);
+    if(buscaQ) prods=prods.filter(p=>p.nome.toLowerCase().includes(buscaQ.toLowerCase()));
+    grid.innerHTML=prods.length===0
+      ?`<div style="grid-column:1/-1;text-align:center;padding:var(--s-6);color:var(--text-3);font-size:13px">${catAtiva==='fixados'?'Nenhum produto fixado — toque ⭐ nos produtos para fixar':'Nenhum produto encontrado'}</div>`
+      :prods.map(p=>`
+        <div class="pdv-prod-btn${p.estoque<=0?' sem-stock':''}" data-pid="${p.id}" title="${p.nome}">
+          <button class="fix-btn${p.fixado?' on':''}" data-fixar="${p.id}">${p.fixado?'⭐':'☆'}</button>
+          <div class="pe">${p.emoji}</div>
+          <div class="pn">${p.nome}</div>
+          <div class="pp">${fmt(p.preco)}</div>
+          <div class="pstock">${p.estoque>=999?'∞':p.estoque+' em estoque'}</div>
+        </div>`).join('');
+    grid.querySelectorAll('.pdv-prod-btn').forEach(card=>{
+      card.addEventListener('click',e=>{
+        if(e.target.closest('[data-fixar]'))return;
+        const p=DB.produtos.find(x=>x.id===+card.dataset.pid);
+        if(p&&p.estoque>0)addAoCarrinho(p);
+      });
     });
+    grid.querySelectorAll('[data-fixar]').forEach(b=>b.addEventListener('click',e=>{
+      e.stopPropagation();
+      const p=DB.produtos.find(x=>x.id===+b.dataset.fixar);
+      if(p){p.fixado=!p.fixado;renderGrid();}
+    }));
   }
 
   function avulso(){
@@ -2982,55 +3060,65 @@ const Vendas=(()=>{
   function finalizarVenda(){
     if(carrinho.length===0){Toast.show('Adicione ao menos um produto','err');return;}
     const tot=total();
+    // Validação pagamento dividido
+    if(dividir){
+      if(valor1<=0||valor1>=tot){Toast.show('Informe um valor parcial válido para o 1º método','err');return;}
+      if(pagamento===pgto2){Toast.show('Escolha métodos de pagamento diferentes','err');return;}
+    }
     let troco=0;
-    if(pagamento==='dinheiro'){
+    if(!dividir&&pagamento==='dinheiro'){
       const recebido=+document.getElementById('pdv-recebido')?.value||0;
       if(recebido>0&&recebido<tot){Toast.show('Valor recebido menor que o total','err');return;}
       troco=recebido>0?recebido-tot:0;
     }
-    const status=pagamento==='a_prazo'?'pendente':'pago';
+    // Montar pagamentos
+    const pagamentos=dividir
+      ?[{metodo:pagamento,valor:valor1},{metodo:pgto2,valor:Math.max(0,tot-valor1)}]
+      :[{metodo:pagamento,valor:tot}];
+    const temPrazo=pagamentos.some(p=>p.metodo==='a_prazo');
+    const status=temPrazo?'pendente':'pago';
+    const pgtoLabel=pagamentos.map(p=>PGTO_LABEL[p.metodo]).join(' + ');
     const venda={
-      id:nid(),
-      data:offset(0),
+      id:nid(),data:offset(0),
       itens:carrinho.map(i=>({...i})),
-      subtotal:subtotal(),
-      desconto:descontoVal(),
-      total:tot,
-      pagamento,
-      clienteId:clienteSel?.id||null,
-      clienteNome:clienteSel?.nome||'',
-      status,
-      obs:'',
+      subtotal:subtotal(),desconto:descontoVal(),total:tot,
+      pagamento:pagamentos[0].metodo,
+      pagamentos,dividido:dividir,
+      clienteId:clienteSel?.id||null,clienteNome:clienteSel?.nome||'',
+      status,obs:'',
     };
     DB.vendas.unshift(venda);
-    // Baixar estoque dos produtos cadastrados
     venda.itens.forEach(it=>{
       if(!it.produtoId)return;
       const p=DB.produtos.find(x=>x.id===it.produtoId);
-      if(p){p.estoque=Math.max(0,p.estoque-it.qtd);}
+      if(p)p.estoque=Math.max(0,p.estoque-it.qtd);
       DB.movimentacoes.push({id:nid(),produtoId:it.produtoId,tipo:'saida',qtd:it.qtd,obs:`Venda #${venda.id}${venda.clienteNome?' — '+venda.clienteNome:''}`,data:offset(0)});
     });
-    // Criar transação financeira (só para vendas pagas)
-    if(status==='pago'){
-      DB.transacoes.unshift({id:nid(),tipo:'entrada',descricao:`Venda — ${venda.itens.map(i=>i.nome).join(', ')}${venda.clienteNome?' ('+venda.clienteNome+')':''}`,valor:tot,cat:'receita',metodo:PGTO_LABEL[pagamento]||pagamento,data:offset(0)});
+    // Transação: valor pago à vista (não a prazo)
+    const valorAvista=pagamentos.filter(p=>p.metodo!=='a_prazo').reduce((s,p)=>s+p.valor,0);
+    if(valorAvista>0){
+      DB.transacoes.unshift({id:nid(),tipo:'entrada',descricao:`Venda — ${venda.itens.map(i=>i.nome).join(', ')}${venda.clienteNome?' ('+venda.clienteNome+')':''}`,valor:valorAvista,cat:'receita',metodo:pgtoLabel,data:offset(0)});
     }
-    // Reset carrinho
     const itensVenda=[...carrinho];
-    carrinho=[];desconto=0;descontoTipo='pct';clienteSel=null;
+    carrinho=[];desconto=0;descontoTipo='pct';dividir=false;valor1=0;clienteSel=null;
     updateEstoqueBadge();
-    recibo(venda,troco,itensVenda);
+    recibo(venda,troco,itensVenda,pagamentos);
   }
 
-  function recibo(venda,troco,itens){
-    const nomesCurtos=itens.slice(0,3).map(i=>`${i.emoji} ${i.nome} ×${i.qtd}`).join('\n');
-    const whatsText=encodeURIComponent(`🧾 *Recibo — Mentor24h*\n\nData: ${new Date().toLocaleDateString('pt-BR')}\n${venda.clienteNome?'Cliente: '+venda.clienteNome+'\n':''}\n${itens.map(i=>`${i.emoji} ${i.nome} ×${i.qtd} = ${fmt(i.preco*i.qtd)}`).join('\n')}\n${venda.desconto>0?`\nDesconto: − ${fmt(venda.desconto)}`:''}${troco>0?`\nTroco: ${fmt(troco)}`:''}\n\n*Total: ${fmt(venda.total)}*\nPagamento: ${PGTO_LABEL[venda.pagamento]}\n\nObrigado! 🙏`);
-    const {back,close}=Modal._build('Venda registrada!',`
+  function recibo(venda,troco,itens,pagamentos){
+    const pgtoLabel=pagamentos?pagamentos.map(p=>PGTO_LABEL[p.metodo]).join(' + '):PGTO_LABEL[venda.pagamento];
+    const pgtoDetalhe=pagamentos&&pagamentos.length>1
+      ?pagamentos.map(p=>`${PGTO_LABEL[p.metodo]}: ${fmt(p.valor)}${p.metodo==='a_prazo'?' ⏳':' ✅'}`).join('\n')
+      :'';
+    const whatsText=encodeURIComponent(`🧾 *Recibo — Mentor24h*\n\nData: ${new Date().toLocaleDateString('pt-BR')}\n${venda.clienteNome?'Cliente: '+venda.clienteNome+'\n':''}\n${itens.map(i=>`${i.emoji} ${i.nome} ×${i.qtd} = ${fmt(i.preco*i.qtd)}`).join('\n')}\n${venda.desconto>0?`\nDesconto: − ${fmt(venda.desconto)}`:''}${troco>0?`\nTroco: ${fmt(troco)}`:''}\n\n*Total: ${fmt(venda.total)}*\n💳 Pagamento: ${pgtoLabel}${pgtoDetalhe?'\n'+pgtoDetalhe:''}\n\nObrigado! 🙏`);
+    const {back}=Modal._build('Venda registrada!',`
       <div style="text-align:center;margin-bottom:var(--s-4)">
         <div style="font-size:40px;margin-bottom:8px">🎉</div>
         <div style="font-size:24px;font-weight:800;color:var(--brand)">${fmt(venda.total)}</div>
-        <div style="font-size:13px;color:var(--text-3);margin-top:4px">${PGTO_LABEL[venda.pagamento]} · ${venda.clienteNome||'Sem cliente'}</div>
+        <div style="font-size:13px;color:var(--text-3);margin-top:4px">${pgtoLabel} · ${venda.clienteNome||'Sem cliente'}</div>
         ${troco>0?`<div style="margin-top:8px;padding:8px 16px;background:var(--brand-soft);border-radius:var(--r-md);font-size:14px;font-weight:700;color:var(--brand)">Troco: ${fmt(troco)}</div>`:''}
-        ${venda.status==='pendente'?`<div style="margin-top:8px;padding:8px 16px;background:#C8860B22;border-radius:var(--r-md);font-size:13px;font-weight:700;color:var(--warning)">⏳ A prazo — registrar recebimento depois</div>`:''}
+        ${pagamentos&&pagamentos.length>1?`<div style="margin-top:8px;background:var(--surface-2);border-radius:var(--r-md);padding:var(--s-3);text-align:left">${pagamentos.map(p=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span>${PGTO_LABEL[p.metodo]}</span><span style="font-weight:700;color:${p.metodo==='a_prazo'?'var(--warning)':'var(--income)'}">${fmt(p.valor)} ${p.metodo==='a_prazo'?'⏳':'✅'}</span></div>`).join('')}</div>`:''}
+        ${venda.status==='pendente'?`<div style="margin-top:8px;padding:8px 16px;background:#C8860B22;border-radius:var(--r-md);font-size:12px;font-weight:700;color:var(--warning)">⏳ Parte a prazo — registrar recebimento depois</div>`:''}
       </div>
       <div style="background:var(--surface-2);border-radius:var(--r-md);padding:var(--s-3) var(--s-4);font-size:12px;color:var(--text-2);line-height:1.8">
         ${itens.map(i=>`<div style="display:flex;justify-content:space-between">${i.emoji} ${i.nome} ×${i.qtd}<span style="font-weight:700">${fmt(i.preco*i.qtd)}</span></div>`).join('')}
@@ -3038,8 +3126,22 @@ const Vendas=(()=>{
         <div style="display:flex;justify-content:space-between;font-weight:800;color:var(--text-1);border-top:1px solid var(--border);margin-top:6px;padding-top:6px">Total<span>${fmt(venda.total)}</span></div>
       </div>
     `,`<button class="btn btn-ghost" data-close>Fechar</button><a class="btn btn-primary" href="https://wa.me/?text=${whatsText}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;text-decoration:none">${svg('chat',16)} WhatsApp</a>`);
-    setTimeout(()=>render(),100); // refresh PDV after modal closes via click
     back.querySelector('[data-close]').addEventListener('click',()=>render(),{once:true});
+    setTimeout(()=>render(),100);
+  }
+
+  function filteredVendas(){
+    return [...DB.vendas].filter(v=>{
+      if(filtroPeriodo==='hoje'&&v.data!==offset(0))return false;
+      if(filtroPeriodo==='7d'&&v.data<offset(-7))return false;
+      if(filtroPeriodo==='mes'&&v.data<offset(-30))return false;
+      if(filtroPeriodo==='custom'){
+        if(periodoInicio&&v.data<periodoInicio)return false;
+        if(periodoFim&&v.data>periodoFim)return false;
+      }
+      if(filtroStatus!=='todos'&&v.status!==filtroStatus)return false;
+      return true;
+    }).sort((a,b)=>b.data.localeCompare(a.data));
   }
 
   function renderHistorico(){
@@ -3047,46 +3149,69 @@ const Vendas=(()=>{
     const pendentes=DB.vendas.filter(v=>v.status==='pendente').reduce((s,v)=>s+v.total,0);
     const hoje=DB.vendas.filter(v=>v.data===offset(0)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
     const semana=DB.vendas.filter(v=>v.data>=offset(-7)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
-    const lista=[...DB.vendas].filter(v=>filtroStatus==='todos'||v.status===filtroStatus).sort((a,b)=>b.data.localeCompare(a.data));
+    const lista=filteredVendas();
+    const totalFiltrado=lista.filter(v=>v.status==='pago').reduce((s,v)=>s+v.total,0);
+    const PERIODOS=[['hoje','Hoje'],['7d','7 dias'],['mes','Mês'],['tudo','Tudo'],['custom','Período...']];
     root.innerHTML=`
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)">
         <div>
           <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin:0">Histórico de Vendas</h2>
-          <p style="font-size:13px;color:var(--text-3);margin:4px 0 0">${DB.vendas.length} venda${DB.vendas.length!==1?'s':''} registrada${DB.vendas.length!==1?'s':''}</p>
+          <p style="font-size:13px;color:var(--text-3);margin:4px 0 0">${lista.length} venda${lista.length!==1?'s':''} encontrada${lista.length!==1?'s':''}</p>
         </div>
         <button class="btn btn-primary btn-sm" id="btn-pdv">${svg('cart',15)} Nova Venda</button>
       </div>
       ${pendentes>0?`<div style="background:#C8860B15;border:1px solid var(--warning);border-radius:var(--r-lg);padding:var(--s-3) var(--s-4);margin-bottom:var(--s-4);display:flex;align-items:center;gap:10px;font-size:13px"><span style="font-size:18px">⏳</span><span>Você tem <b style="color:var(--warning)">${fmt(pendentes)}</b> a receber (vendas a prazo)</span></div>`:''}
       <div class="kpi-row" style="margin-bottom:var(--s-4)">
-        <div class="kpi-card"><span class="kpi-label">Hoje (pago)</span><span class="kpi-val" style="font-size:16px">${fmt(hoje)}</span></div>
-        <div class="kpi-card"><span class="kpi-label">7 dias (pago)</span><span class="kpi-val" style="font-size:16px">${fmt(semana)}</span></div>
-        <div class="kpi-card"><span class="kpi-label">A receber</span><span class="kpi-val" style="font-size:16px;color:var(--warning)">${fmt(pendentes)}</span></div>
+        <div class="kpi-card"><span class="kpi-label">Hoje (pago)</span><span class="kpi-val" style="font-size:15px">${fmt(hoje)}</span></div>
+        <div class="kpi-card"><span class="kpi-label">7 dias (pago)</span><span class="kpi-val" style="font-size:15px">${fmt(semana)}</span></div>
+        <div class="kpi-card"><span class="kpi-label">A receber</span><span class="kpi-val" style="font-size:15px;color:var(--warning)">${fmt(pendentes)}</span></div>
       </div>
-      <div style="display:flex;gap:var(--s-2);margin-bottom:var(--s-4)">
-        ${[['todos','Todas'],['pago','Pagas'],['pendente','A prazo'],['cancelado','Canceladas']].map(([k,l])=>`<button class="tagx${filtroStatus===k?' on':''}" data-fs="${k}" style="cursor:pointer;border:1.5px solid ${filtroStatus===k?'var(--brand)':'var(--border)'};background:${filtroStatus===k?'var(--brand-soft)':'var(--surface-2)'};color:${filtroStatus===k?'var(--brand)':'var(--text-2)'}">${l}</button>`).join('')}
+      <!-- Filtros de período -->
+      <div style="margin-bottom:var(--s-3)">
+        <div class="cat-tabs" style="margin-bottom:var(--s-2)">
+          ${PERIODOS.map(([k,l])=>`<button class="cat-tab${filtroPeriodo===k?' on':''}" data-fp="${k}">${l}</button>`).join('')}
+        </div>
+        ${filtroPeriodo==='custom'?`<div style="display:flex;gap:var(--s-2);align-items:center">
+          <div style="font-size:12px;color:var(--text-3);font-weight:600;white-space:nowrap">De</div>
+          <input class="field" id="fp-inicio" type="date" value="${periodoInicio}" style="flex:1">
+          <div style="font-size:12px;color:var(--text-3);font-weight:600;white-space:nowrap">Até</div>
+          <input class="field" id="fp-fim" type="date" value="${periodoFim}" style="flex:1">
+        </div>`:''}
+      </div>
+      <!-- Filtros de status -->
+      <div style="display:flex;gap:var(--s-2);margin-bottom:var(--s-4);flex-wrap:wrap">
+        ${[['todos','Todas'],['pago','Pagas'],['pendente','A prazo'],['cancelado','Canceladas']].map(([k,l])=>`<button class="cat-tab${filtroStatus===k?' on':''}" data-fs="${k}">${l}</button>`).join('')}
+        ${filtroPeriodo!=='tudo'?`<span style="margin-left:auto;font-size:12px;color:var(--brand);font-weight:700;align-self:center">Total: ${fmt(totalFiltrado)}</span>`:''}
       </div>
       <div style="display:flex;flex-direction:column;gap:var(--s-2)">
         ${lista.length===0?`<div class="empty"><div style="font-size:32px;margin-bottom:8px">🛒</div><p style="color:var(--text-3)">Nenhuma venda encontrada</p></div>`
-        :lista.map(v=>`
-          <div class="venda-row">
+        :lista.map(v=>{
+          const pgtoLabel=v.dividido&&v.pagamentos?v.pagamentos.map(p=>PGTO_LABEL[p.metodo]).join(' + '):PGTO_LABEL[v.pagamento];
+          const d=new Date(v.data+'T00:00:00');
+          const mes=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+          return `<div class="venda-row">
             <div style="min-width:42px;text-align:center">
-              <div style="font-size:12px;font-weight:700;color:var(--text-1)">${new Date(v.data+'T00:00:00').getDate()}</div>
-              <div style="font-size:10px;color:var(--text-3)">${['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][new Date(v.data+'T00:00:00').getMonth()]}</div>
+              <div style="font-size:12px;font-weight:700;color:var(--text-1)">${d.getDate()}</div>
+              <div style="font-size:10px;color:var(--text-3)">${mes[d.getMonth()]}</div>
             </div>
             <div class="venda-row-info">
               <div class="venda-cliente">${v.clienteNome||'Sem cliente'}</div>
-              <div class="venda-detalhe">${PGTO_LABEL[v.pagamento]} · ${v.itens.map(i=>`${i.emoji} ×${i.qtd}`).join(' ')}</div>
+              <div class="venda-detalhe">${pgtoLabel} · ${v.itens.map(i=>`${i.emoji} ×${i.qtd}`).join(' ')}</div>
             </div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
               <div class="venda-valor">${fmt(v.total)}</div>
               <span class="venda-status ${v.status}">${v.status==='pago'?'✅ Pago':v.status==='pendente'?'⏳ A prazo':'❌ Cancelado'}</span>
               ${v.status==='pendente'?`<button class="btn btn-ghost btn-sm" data-receber="${v.id}" style="font-size:10px;padding:3px 8px">Receber</button>`:''}
             </div>
-          </div>`).join('')}
+          </div>`;
+        }).join('')}
       </div>`;
 
     root.querySelector('#btn-pdv').onclick=()=>{view='pdv';render();};
+    root.querySelectorAll('[data-fp]').forEach(b=>b.onclick=()=>{filtroPeriodo=b.dataset.fp;if(filtroPeriodo!=='custom'){periodoInicio='';periodoFim='';}renderHistorico();});
     root.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>{filtroStatus=b.dataset.fs;renderHistorico();});
+    if(root.querySelector('#fp-inicio'))root.querySelector('#fp-inicio').onchange=e=>{periodoInicio=e.target.value;renderHistorico();};
+    if(root.querySelector('#fp-fim'))root.querySelector('#fp-fim').onchange=e=>{periodoFim=e.target.value;renderHistorico();};
     root.querySelectorAll('[data-receber]').forEach(b=>b.onclick=()=>{
       const v=DB.vendas.find(x=>x.id===+b.dataset.receber);if(!v)return;
       Modal.confirm('Marcar como recebido?',`Venda de ${fmt(v.total)} para ${v.clienteNome||'sem cliente'} será marcada como paga.`,()=>{
