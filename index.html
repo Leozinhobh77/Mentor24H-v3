@@ -2934,6 +2934,7 @@ const Vendas=(()=>{
             </div>
             ${pagamento==='dinheiro'?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><label style="font-size:12px;color:var(--text-3);white-space:nowrap">Recebido:</label><input class="field" id="pdv-recebido" type="number" min="0" placeholder="${tot.toFixed(2)}" style="width:110px;text-align:right"></div>`:''}
             ${pagamento==='credito'?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><label style="font-size:12px;color:var(--text-3);white-space:nowrap">Parcelas:</label><select class="field" id="pdv-parcelas" style="width:auto">${[1,2,3,4,5,6,7,8,9,10,11,12].map(n=>`<option value="${n}"${parcelas===n?' selected':''}>${n}x</option>`).join('')}</select><span style="font-size:11px;color:var(--text-3)">só registro, sem juros</span></div>`:''}
+            `:`
             <div style="display:flex;flex-direction:column;gap:8px">
               <div style="display:flex;gap:8px;align-items:center">
                 <select class="field" id="pdv-pgto1" style="flex:1">${PGTOS.map(p=>`<option value="${p.k}"${pagamento===p.k?' selected':''}>${p.l}</option>`).join('')}</select>
