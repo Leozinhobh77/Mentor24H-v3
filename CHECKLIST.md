@@ -22,8 +22,9 @@
 - [x] **Etapa 7A — Saúde / Medicamentos** (cadastro rico + status ativo/pausado/encerrado, qtd por horário, hora real do tomado, dose atrasada, duração do tratamento, adesão hoje+7d, histórico navegável dia a dia) ✅ aprovado por Léo
 - [ ] **Etapa 7B — Médicos + Humor** (lista de médicos + mood tracker com histórico e nota)
 - [x] **Etapa 8A — Hábitos** (sim/não + quantidade, streak+recorde, meta semanal, heatmap, lembrete) ✅ aprovado por Léo
-- [ ] **Etapa 8B — Métricas pessoais** (peso/pressão/glicose + métrica customizável, gráfico de evolução)
-- [ ] **Etapa 9 — Contatos** (tags, aniversários, WhatsApp)
+- [x] **Etapa 8B — Métricas pessoais** (peso/pressão/glicose + métrica customizável, gráfico de evolução) ✅ aprovado por Léo
+- [ ] **Etapa 9A — Contatos / Lista** (avatar, tags, contexto duplo, favoritos, busca/filtro, ações rápidas WhatsApp/ligar/email, aniversários) ← EM ANDAMENTO
+- [ ] **Etapa 9B — Contatos / Ficha rica** (manter-contato/reconexão, timeline de interações, datas importantes)
 
 ## Negócio
 - [ ] **Etapa 10 — Produtos + Estoque** (cadastro, margem, alertas, movimentações)
