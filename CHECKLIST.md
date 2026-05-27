@@ -20,7 +20,7 @@
 - [x] **Etapa 5 — Tarefas / Kanban** (board drag & drop, prioridades, subtarefas) ✅ aprovado por Léo
 - [x] **Etapa 6 — Agenda** (calendário, eventos, lembretes, datas importantes) ✅ aprovado por Léo
 - [x] **Etapa 7A — Saúde / Medicamentos** (cadastro rico + status ativo/pausado/encerrado, qtd por horário, hora real do tomado, dose atrasada, duração do tratamento, adesão hoje+7d, histórico navegável dia a dia) ✅ aprovado por Léo
-- [ ] **Etapa 7B — Médicos + Humor** (lista de médicos + mood tracker com histórico e nota)
+- [x] **Etapa 7B — Médicos + Humor** (lista de médicos + mood tracker com histórico e nota) ✅ aprovado por Léo
 - [x] **Etapa 8A — Hábitos** (sim/não + quantidade, streak+recorde, meta semanal, heatmap, lembrete) ✅ aprovado por Léo
 - [x] **Etapa 8B — Métricas pessoais** (peso/pressão/glicose + métrica customizável, gráfico de evolução) ✅ aprovado por Léo
 - [x] **Etapa 9A — Contatos / Lista** (avatar, tags, contexto duplo, favoritos, busca/filtro, ações rápidas WhatsApp/ligar/email, aniversários) ✅ aprovado por Léo
@@ -47,4 +47,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 5 ✅ aprovada — 2026-05-26. Próxima: Etapa 6 (Agenda).*
+*Atualizado a cada etapa. Última: Etapa 7B ✅ aprovada — 2026-05-27. Próxima: Etapa 9B (Contatos / Ficha rica).*

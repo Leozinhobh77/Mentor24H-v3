@@ -604,6 +604,16 @@ select.field{cursor:pointer}
 .docbtn:hover{background:var(--surface-3);color:var(--text-1)}
 .docbtn.wa:hover{background:var(--income-soft);color:var(--income)}
 .docbtn svg{width:16px;height:16px}
+.med-doc-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:5px}
+.med-doc-meta span{font-size:11px;color:var(--text-3);font-weight:600;display:flex;align-items:center;gap:4px}
+.med-doc-meta span svg{width:11px;height:11px}
+.med-doc-acts{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.cons-list{margin-top:10px;border-top:1px solid var(--border);padding-top:10px;display:none}
+.cons-list.open{display:block}
+.cons-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--surface-2)}
+.cons-row:last-child{border-bottom:none}
+.cons-date{font-size:11px;font-weight:700;color:var(--brand-text);white-space:nowrap;min-width:52px}
+.cons-obs{font-size:12px;color:var(--text-2);flex:1}
 .streak-chip{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--warning);background:var(--warning-soft);padding:2px 8px;border-radius:var(--r-full)}
 .streak-chip svg{width:11px;height:11px}
 .hdone{width:100%;padding:11px;border-radius:var(--r-md);background:var(--surface-2);font-weight:700;font-size:13px;color:var(--text-2);display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s var(--ease);cursor:pointer}
@@ -1370,9 +1380,9 @@ const DB={
   ],
   tomadas:[],
   medicos:[
-    {id:nid(),nome:'Dr. João Pereira',especialidade:'Clínico geral',telefone:'31988887777',clinica:'Clínica Vida',obs:'Pediu hemograma no retorno'},
-    {id:nid(),nome:'Dra. Ana Costa',especialidade:'Cardiologista',telefone:'31977776666',clinica:'Hospital Santa Lúcia',obs:''},
-    {id:nid(),nome:'Dra. Marina Reis',especialidade:'Endocrinologista',telefone:'31966665555',clinica:'Consultório Centro',obs:'Acompanhamento da insulina'},
+    {id:nid(),nome:'Dr. João Pereira',especialidade:'Clínico geral',telefone:'31988887777',clinica:'Clínica Vida',plano:'Unimed',obs:'Pediu hemograma no retorno',consultas:[{data:offset(-30),obs:'Check-up anual. Pediu hemograma e colesterol.'},{data:offset(-90),obs:'Pressão elevada. Ajuste na medicação.'}]},
+    {id:nid(),nome:'Dra. Ana Costa',especialidade:'Cardiologista',telefone:'31977776666',clinica:'Hospital Santa Lúcia',plano:'Bradesco Saúde',obs:'',consultas:[{data:offset(-45),obs:'ECG normal. Retorno em 3 meses.'},{data:offset(-180),obs:'Primeira consulta. Solicitou ecocardiograma.'}]},
+    {id:nid(),nome:'Dra. Marina Reis',especialidade:'Endocrinologista',telefone:'31966665555',clinica:'Consultório Centro',plano:'Particular',obs:'Acompanhamento da insulina',consultas:[{data:offset(-15),obs:'Ajuste na dose da insulina. Glicose controlando bem.'}]},
   ],
   humor:[
     {data:offset(-1),mood:4,nota:'Dia produtivo',fatores:['Exercício','Sono bom']},
@@ -2230,36 +2240,73 @@ const Saude=(()=>{
       </div>
       <div class="toolbar"><div style="flex:1;font-size:13px;color:var(--text-3);font-weight:600">${DB.medicos.length} médicos</div><button class="btn btn-primary" data-add>${svg('plus',16)} Novo médico</button></div>
       <div class="card">
-        ${DB.medicos.length?DB.medicos.map(d=>{const ini=d.nome.replace(/^(Dr|Dra)\.?\s*/i,'').trim().charAt(0).toUpperCase();const tel=(d.telefone||'').replace(/\D/g,'');return `<div class="med-doc">
-          <div class="dav">${ini||'M'}</div>
-          <div class="mc-main" style="flex:1;min-width:0">
-            <div class="mc-t">${d.nome}</div>
-            <div class="mc-s">${d.especialidade||''}${d.clinica?` · ${d.clinica}`:''}</div>
-            ${d.obs?`<div class="mc-s" style="margin-top:3px;display:flex;align-items:center;gap:5px">${svg('pencil',11)} ${d.obs}</div>`:''}
-          </div>
-          <div style="display:flex;gap:5px;align-items:center">
-            ${tel?`<a class="docbtn wa" href="https://wa.me/55${tel}" target="_blank" rel="noopener" title="WhatsApp">${svg('chat',16)}</a><a class="docbtn" href="tel:+55${tel}" title="Ligar">${svg('phone',16)}</a>`:''}
-            <button class="docbtn" data-edit="${d.id}" title="Editar">${svg('pencil',15)}</button>
-            <button class="docbtn" data-del="${d.id}" title="Excluir">${svg('trash',15)}</button>
-          </div>
-        </div>`;}).join(''):`<div class="empty" style="padding:var(--s-6) 0"><div class="eico">${svg('users',24)}</div><h4>Nenhum médico cadastrado</h4><p>Adicione seus médicos para acesso rápido.</p></div>`}
+        ${DB.medicos.length?DB.medicos.map(d=>{
+          const ini=d.nome.replace(/^(Dr|Dra)\.?\s*/i,'').trim().charAt(0).toUpperCase();
+          const tel=(d.telefone||'').replace(/\D/g,'');
+          const cons=(d.consultas||[]).slice().sort((a,b)=>b.data.localeCompare(a.data));
+          const ultima=cons[0];
+          return `<div class="med-doc" style="flex-direction:column;align-items:stretch">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="dav">${ini||'M'}</div>
+              <div class="mc-main" style="flex:1;min-width:0">
+                <div class="mc-t">${d.nome}</div>
+                <div class="mc-s">${d.especialidade||''}${d.clinica?` · ${d.clinica}`:''}</div>
+                <div class="med-doc-meta">
+                  ${d.plano?`<span>${svg('card',11)} ${d.plano}</span>`:''}
+                  ${ultima?`<span>${svg('calendar',11)} Última: ${fmtNav(ultima.data)}</span>`:'<span style="color:var(--text-4)">Sem consultas</span>'}
+                </div>
+              </div>
+              <div style="display:flex;gap:5px;align-self:flex-start">
+                ${tel?`<a class="docbtn wa" href="https://wa.me/55${tel}" target="_blank" rel="noopener" title="WhatsApp">${svg('chat',16)}</a><a class="docbtn" href="tel:+55${tel}" title="Ligar">${svg('phone',16)}</a>`:''}
+                <button class="docbtn" data-edit="${d.id}" title="Editar">${svg('pencil',15)}</button>
+                <button class="docbtn" data-del="${d.id}" title="Excluir">${svg('trash',15)}</button>
+              </div>
+            </div>
+            <div class="med-doc-acts">
+              <button class="btn btn-soft" style="font-size:12px;padding:6px 12px" data-nova-cons="${d.id}">${svg('plus',13)} Nova consulta</button>
+              <button class="btn btn-soft" style="font-size:12px;padding:6px 12px" data-agendar="${d.id}">${svg('calendar',13)} Agendar consulta</button>
+              ${cons.length?`<button class="btn btn-ghost" style="font-size:12px;padding:6px 12px" data-toggle-cons="${d.id}">${svg('activity',13)} ${cons.length} consulta${cons.length>1?'s':''} ▾</button>`:''}
+            </div>
+            ${cons.length?`<div class="cons-list" id="cons-${d.id}">${cons.map(c=>`<div class="cons-row"><span class="cons-date">${fmtNav(c.data)}</span><span class="cons-obs">${c.obs||'Sem observações'}</span><button class="docbtn" style="width:26px;height:26px" data-del-cons="${d.id}|${c.data}" title="Remover">${svg('x',12)}</button></div>`).join('')}</div>`:''}
+          </div>`;
+        }).join(''):`<div class="empty" style="padding:var(--s-6) 0"><div class="eico">${svg('users',24)}</div><h4>Nenhum médico cadastrado</h4><p>Adicione seus médicos para acesso rápido.</p></div>`}
       </div>`;
     root.querySelector('[data-add]').onclick=()=>formDoc();
     root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>formDoc(+b.dataset.edit));
     root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const id=+b.dataset.del;const d=DB.medicos.find(x=>x.id===id);Modal.confirm('Excluir médico?',`"${d.nome}" será removido.`,()=>{DB.medicos=DB.medicos.filter(x=>x.id!==id);Toast.show('Médico excluído');render();});});
+    root.querySelectorAll('[data-nova-cons]').forEach(b=>b.onclick=()=>formCons(+b.dataset.novaCons));
+    root.querySelectorAll('[data-agendar]').forEach(b=>b.onclick=()=>{
+      const d=DB.medicos.find(x=>x.id===+b.dataset.agendar);if(!d)return;
+      Modal.open('Agendar consulta',`<div class="fg"><label>Data</label><input class="field" id="ag-data" type="date" value="${offset(7)}"></div><div class="fg"><label>Horário</label><input class="field" id="ag-hora" type="time" value="09:00"></div><div class="fg"><label>Observação (opcional)</label><input class="field" id="ag-obs" placeholder="Ex: levar exames"></div>`,(b2)=>{
+        const data=b2.querySelector('#ag-data').value;if(!data){Toast.show('Informe a data','err');return false;}
+        DB.eventos.push({id:nid(),titulo:`Consulta — ${d.nome}`,data,hora:b2.querySelector('#ag-hora').value,tipo:'saude',obs:b2.querySelector('#ag-obs').value.trim()});
+        Toast.show('Consulta agendada');
+      },'Agendar');
+    });
+    root.querySelectorAll('[data-toggle-cons]').forEach(b=>b.onclick=()=>{const el=document.getElementById('cons-'+b.dataset.toggleCons);if(el){el.classList.toggle('open');b.textContent=el.classList.contains('open')?'▴ Fechar consultas':'▾ '+((DB.medicos.find(x=>x.id===+b.dataset.toggleCons)||{}).consultas||[]).length+' consulta(s)';}});
+    root.querySelectorAll('[data-del-cons]').forEach(b=>b.onclick=()=>{const[mid,data]=b.dataset.delCons.split('|');const d=DB.medicos.find(x=>x.id===+mid);if(d){d.consultas=d.consultas.filter(c=>c.data!==data);Toast.show('Consulta removida');render();}});
+  }
+  function formCons(medId){
+    const d=DB.medicos.find(x=>x.id===medId);if(!d)return;
+    if(!d.consultas)d.consultas=[];
+    Modal.open(`Nova consulta — ${d.nome}`,`<div class="fg"><label>Data da consulta</label><input class="field" id="c-data" type="date" value="${offset(0)}"></div><div class="fg"><label>Observações</label><textarea class="field" id="c-obs" rows="3" placeholder="Ex: Pediu exame de sangue, pressão ok..."style="resize:vertical"></textarea></div>`,(b)=>{
+      const data=b.querySelector('#c-data').value;if(!data){Toast.show('Informe a data','err');return false;}
+      d.consultas.push({data,obs:b.querySelector('#c-obs').value.trim()});
+      Toast.show('Consulta registrada');render();
+    },'Salvar');
   }
   function formDoc(id){
     const d=id?DB.medicos.find(x=>x.id===id):null;
     const body=`
       <div class="fg"><label>Nome</label><input class="field" id="d-nome" value="${d?d.nome.replace(/"/g,'&quot;'):''}" placeholder="Ex: Dr. João Pereira"></div>
       <div class="frow"><div class="fg"><label>Especialidade</label><input class="field" id="d-esp" value="${d&&d.especialidade?d.especialidade.replace(/"/g,'&quot;'):''}" placeholder="Cardiologista"></div><div class="fg"><label>Telefone / WhatsApp</label><input class="field" id="d-tel" value="${d&&d.telefone?d.telefone:''}" placeholder="(31) 98888-7777"></div></div>
-      <div class="fg"><label>Clínica / Local</label><input class="field" id="d-cli" value="${d&&d.clinica?d.clinica.replace(/"/g,'&quot;'):''}" placeholder="Clínica Vida"></div>
+      <div class="frow"><div class="fg"><label>Clínica / Local</label><input class="field" id="d-cli" value="${d&&d.clinica?d.clinica.replace(/"/g,'&quot;'):''}" placeholder="Clínica Vida"></div><div class="fg"><label>Plano de saúde</label><input class="field" id="d-plano" value="${d&&d.plano?d.plano.replace(/"/g,'&quot;'):''}" placeholder="Unimed, Particular…"></div></div>
       <div class="fg"><label>Anotações</label><input class="field" id="d-obs" value="${d&&d.obs?d.obs.replace(/"/g,'&quot;'):''}" placeholder="Ex: pediu exame de sangue"></div>`;
     Modal.open(id?'Editar médico':'Novo médico',body,(b)=>{
       const nome=b.querySelector('#d-nome').value.trim();
       if(!nome){Toast.show('Informe o nome','err');return false;}
-      const dd={nome,especialidade:b.querySelector('#d-esp').value.trim(),telefone:b.querySelector('#d-tel').value.trim(),clinica:b.querySelector('#d-cli').value.trim(),obs:b.querySelector('#d-obs').value.trim()};
-      if(d){Object.assign(d,dd);Toast.show('Médico atualizado');}else{DB.medicos.push(Object.assign({id:nid()},dd));Toast.show('Médico adicionado');}
+      const dd={nome,especialidade:b.querySelector('#d-esp').value.trim(),telefone:b.querySelector('#d-tel').value.trim(),clinica:b.querySelector('#d-cli').value.trim(),plano:b.querySelector('#d-plano').value.trim(),obs:b.querySelector('#d-obs').value.trim()};
+      if(d){Object.assign(d,dd);Toast.show('Médico atualizado');}else{DB.medicos.push(Object.assign({id:nid(),consultas:[]},dd));Toast.show('Médico adicionado');}
       render();
     },id?'Salvar':'Adicionar');
   }
