@@ -705,6 +705,37 @@ select.field{cursor:pointer}
   .hero-stats{flex-wrap:wrap;gap:var(--s-4)}
   .hero-stat{flex:1;min-width:42%}
 }
+/* ─── ETAPA 10: PRODUTOS & ESTOQUE ─── */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--s-4)}
+.prod-card{background:var(--surface-1);border-radius:var(--r-lg);border:1px solid var(--border);padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);transition:box-shadow .2s var(--ease)}
+.prod-card:hover{box-shadow:var(--shadow-sm)}
+.prod-head{display:flex;align-items:flex-start;gap:var(--s-3)}
+.prod-emoji{width:48px;height:48px;border-radius:var(--r-md);background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.prod-info{flex:1;min-width:0}
+.prod-name{font-size:14px;font-weight:700;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod-cat{font-size:11px;color:var(--text-3);font-weight:600;margin-top:2px}
+.prod-badge-low{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:#fff;background:var(--expense);padding:2px 7px;border-radius:20px;margin-top:4px}
+.prod-prices{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--s-2);padding:var(--s-3);background:var(--surface-2);border-radius:var(--r-md)}
+.prod-prices>div{text-align:center}
+.prod-prices label{display:block;font-size:10px;color:var(--text-3);font-weight:600;margin-bottom:2px}
+.prod-prices span{font-size:13px;font-weight:700;color:var(--text-1)}
+.prod-prices .mg{color:var(--income)}
+.prod-estoque-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-2)}
+.prod-actions{display:flex;gap:var(--s-2)}
+.prod-actions .btn{flex:1;font-size:12px;padding:7px 4px}
+.mov-list{display:flex;flex-direction:column;gap:var(--s-2)}
+.mov-row{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-3) var(--s-4);display:flex;align-items:center;gap:var(--s-3)}
+.mov-tipo{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;flex-shrink:0;text-transform:uppercase}
+.mov-tipo.entrada{background:#1F9D5522;color:var(--income)}
+.mov-tipo.saida{background:var(--expense-soft,#DB4A4A22);color:var(--expense)}
+.mov-tipo.ajuste{background:var(--brand-soft);color:var(--brand)}
+.mov-info{flex:1;min-width:0}
+.mov-prod{font-size:13px;font-weight:600;color:var(--text-1)}
+.mov-obs{font-size:11px;color:var(--text-3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mov-qtd{font-size:14px;font-weight:700;flex-shrink:0}
+.mov-qtd.entrada{color:var(--income)}
+.mov-qtd.saida{color:var(--expense)}
+.mov-qtd.ajuste{color:var(--brand)}
 </style>
 </head>
 <body>
@@ -745,7 +776,7 @@ select.field{cursor:pointer}
       <div class="nav-item" data-nav="dashboard">{i:home}<span>Painel</span></div>
       <div class="nav-item" data-nav="vendas">{i:cart}<span>Vendas</span></div>
       <div class="nav-item" data-nav="produtos">{i:box}<span>Produtos</span></div>
-      <div class="nav-item" data-nav="estoque">{i:archive}<span>Estoque</span><span class="badge">2</span></div>
+      <div class="nav-item" data-nav="estoque">{i:archive}<span>Estoque</span><span class="badge" id="badge-estoque" style="display:none"></span></div>
       <div class="nav-item" data-nav="clientes">{i:users}<span>Clientes</span></div>
       <div class="nav-item" data-nav="relatorios">{i:chart}<span>Relatórios</span></div>
     </div>
@@ -1084,6 +1115,12 @@ select.field{cursor:pointer}
       <!-- ░░░░ PÁGINA: CONTATOS ░░░░ -->
       <section class="page" data-page="contatos"><div id="contatos-root"></div></section>
 
+      <!-- ░░░░ PÁGINA: PRODUTOS ░░░░ -->
+      <section class="page" data-page="produtos"><div id="produtos-root"></div></section>
+
+      <!-- ░░░░ PÁGINA: ESTOQUE ░░░░ -->
+      <section class="page" data-page="estoque"><div id="estoque-root"></div></section>
+
     </div>
   </main>
 </div>
@@ -1156,8 +1193,6 @@ const ICONS={
 /* ─── PÁGINAS PLACEHOLDER (preenchidas a cada etapa do checklist) ─── */
 const PAGES=[
   ['vendas','cart','Vendas','Etapa 11','Carrinho, registro de venda, recibo e histórico.'],
-  ['produtos','box','Produtos','Etapa 10','Cadastro de produtos com preço, custo, foto e margem.'],
-  ['estoque','archive','Estoque','Etapa 10','Quantidade por produto, alertas de estoque baixo e movimentações.'],
   ['clientes','users','Clientes','Etapa 12','CRM simples com histórico de compras e saldo devedor.'],
   ['relatorios','chart','Relatórios','Etapa 13','Vendas por período, mais vendidos e receita x lucro x custo.'],
   ['mentor','spark','Mentor','Etapa 14','Assistente que lê seus dados e gera resumos e alertas por regra (sem IA por enquanto).'],
@@ -1282,6 +1317,8 @@ function navigate(page){
   if(page==='habitos') Habitos.render();
   if(page==='metricas') Metricas.render();
   if(page==='contatos') Contatos.render();
+  if(page==='produtos') Produtos.render();
+  if(page==='estoque') Estoque.render();
   document.body.classList.remove('drawer-open');
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1417,7 +1454,38 @@ const DB={
     {id:nid(),nome:'Bruno Fornecedor',telefone:'31933336666',email:'bruno@fornec.com',tags:['Fornecedor'],contexto:'negocio',aniversario:'',favorito:false,comoConheci:'',anotacoes:'Embalagens e insumos',ultimoContato:offset(-20),manterContato:30,proximaAcao:{data:offset(10),nota:'Negociar preço para pedido grande'},interacoes:[{data:offset(-20),tipo:'whatsapp',nota:'Confirmou estoque de caixinhas disponível'},{data:offset(-50),tipo:'email',nota:'Enviou catálogo de novos produtos'}],datas:[]},
     {id:nid(),nome:'Lucas Amigo',telefone:'31922227777',email:'lucas@email.com',tags:['Amigos'],contexto:'pessoal',aniversario:'1993-05-30',favorito:false,comoConheci:'Faculdade',anotacoes:'',ultimoContato:offset(-40),manterContato:60,proximaAcao:null,interacoes:[{data:offset(-40),tipo:'whatsapp',nota:'Mandou meme, respondeu rindo'},{data:offset(-65),tipo:'presencial',nota:'Saíram para jantar'}],datas:[]},
   ],
+  produtos:[
+    {id:nid(),nome:'Brigadeiro Tradicional',emoji:'🍫',categoria:'Doces',preco:5.5,custo:1.8,estoque:80,estoqueMin:20,ativo:true},
+    {id:nid(),nome:'Beijinho de Coco',emoji:'🥥',categoria:'Doces',preco:5.5,custo:1.9,estoque:45,estoqueMin:20,ativo:true},
+    {id:nid(),nome:'Bicho de Pé',emoji:'🍓',categoria:'Doces',preco:5.5,custo:2.0,estoque:12,estoqueMin:20,ativo:true},
+    {id:nid(),nome:'Caixa 9 unid.',emoji:'📦',categoria:'Embalagens',preco:12,custo:3.5,estoque:30,estoqueMin:10,ativo:true},
+    {id:nid(),nome:'Caixa 16 unid.',emoji:'🎁',categoria:'Embalagens',preco:20,custo:6.0,estoque:8,estoqueMin:10,ativo:true},
+    {id:nid(),nome:'Papel Chumbo',emoji:'✨',categoria:'Embalagens',preco:2,custo:0.8,estoque:200,estoqueMin:50,ativo:true},
+  ],
+  movimentacoes:[],
 };
+
+// Seed movimentações com IDs corretos
+(function(){
+  const ps=DB.produtos;
+  DB.movimentacoes=[
+    {id:nid(),produtoId:ps[0].id,tipo:'entrada',qtd:100,obs:'Produção — batch inicial',data:offset(-8)},
+    {id:nid(),produtoId:ps[1].id,tipo:'entrada',qtd:60,obs:'Produção inicial',data:offset(-8)},
+    {id:nid(),produtoId:ps[2].id,tipo:'entrada',qtd:30,obs:'Produção inicial',data:offset(-8)},
+    {id:nid(),produtoId:ps[3].id,tipo:'entrada',qtd:50,obs:'Compra de embalagens',data:offset(-7)},
+    {id:nid(),produtoId:ps[4].id,tipo:'entrada',qtd:20,obs:'Compra de embalagens',data:offset(-7)},
+    {id:nid(),produtoId:ps[5].id,tipo:'entrada',qtd:300,obs:'Rolo de papel chumbo',data:offset(-7)},
+    {id:nid(),produtoId:ps[0].id,tipo:'saida',qtd:12,obs:'Venda — Maria Souza',data:offset(-5)},
+    {id:nid(),produtoId:ps[1].id,tipo:'saida',qtd:9,obs:'Venda — João Pedro',data:offset(-5)},
+    {id:nid(),produtoId:ps[3].id,tipo:'saida',qtd:12,obs:'Caixas 9un. vendidas',data:offset(-5)},
+    {id:nid(),produtoId:ps[5].id,tipo:'saida',qtd:80,obs:'Uso na embalagem',data:offset(-5)},
+    {id:nid(),produtoId:ps[0].id,tipo:'saida',qtd:8,obs:'Venda — encomenda festa',data:offset(-3)},
+    {id:nid(),produtoId:ps[2].id,tipo:'saida',qtd:18,obs:'Venda — evento especial',data:offset(-3)},
+    {id:nid(),produtoId:ps[4].id,tipo:'saida',qtd:12,obs:'Caixas 16un. vendidas',data:offset(-3)},
+    {id:nid(),produtoId:ps[5].id,tipo:'saida',qtd:20,obs:'Uso na embalagem',data:offset(-3)},
+    {id:nid(),produtoId:ps[1].id,tipo:'saida',qtd:6,obs:'Venda do dia',data:offset(-1)},
+  ];
+})();
 
 const Toast={el:null,
   init(){this.el=document.createElement('div');this.el.className='toasts';document.body.appendChild(this.el);},
@@ -2641,6 +2709,283 @@ const Contatos=(()=>{
   return {render};
 })();
 
+/* ═══════════════════════════════════════════════
+   ETAPA 10 — PRODUTOS + ESTOQUE + PRECIFICAÇÃO
+═══════════════════════════════════════════════ */
+function updateEstoqueBadge(){
+  const b=document.getElementById('badge-estoque');if(!b)return;
+  const n=DB.produtos.filter(p=>p.ativo&&p.estoque<p.estoqueMin).length;
+  b.textContent=n;b.style.display=n>0?'':'none';
+}
+const Produtos=(()=>{
+  let filtroQ='',filtroAtivo='todos',filtroCategoria='todas';
+
+  function margem(p){if(!p.custo||!p.preco)return 0;return Math.round(((p.preco-p.custo)/p.preco)*100);}
+  function estoqueStatus(p){if(p.estoque<=0)return 'sem';if(p.estoque<p.estoqueMin)return 'baixo';return 'ok';}
+
+  function render(){
+    const root=document.getElementById('produtos-root');if(!root)return;
+    const categorias=[...new Set(DB.produtos.map(p=>p.categoria))].sort();
+    const lista=DB.produtos.filter(p=>{
+      if(filtroAtivo==='ativos'&&!p.ativo)return false;
+      if(filtroAtivo==='inativos'&&p.ativo)return false;
+      if(filtroCategoria!=='todas'&&p.categoria!==filtroCategoria)return false;
+      if(filtroQ&&!p.nome.toLowerCase().includes(filtroQ.toLowerCase()))return false;
+      return true;
+    });
+    const ativos=DB.produtos.filter(p=>p.ativo).length;
+    const baixos=DB.produtos.filter(p=>p.ativo&&p.estoque<p.estoqueMin).length;
+    const mgMedia=DB.produtos.length?Math.round(DB.produtos.reduce((s,p)=>s+margem(p),0)/DB.produtos.length):0;
+    root.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)">
+        <div>
+          <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin:0">Produtos</h2>
+          <p style="font-size:13px;color:var(--text-3);margin:4px 0 0">${ativos} ativo${ativos!==1?'s':''} · ${baixos>0?`<span style="color:var(--expense);font-weight:700">${baixos} c/ estoque baixo</span>`:'estoque ok'}</p>
+        </div>
+        <button class="btn btn-primary btn-sm" data-new-prod>${svg('plus',16)} Produto</button>
+      </div>
+      <div class="kpi-row" style="margin-bottom:var(--s-4)">
+        <div class="kpi-card"><span class="kpi-label">Total produtos</span><span class="kpi-val">${DB.produtos.length}</span></div>
+        <div class="kpi-card"><span class="kpi-label">Estoque baixo</span><span class="kpi-val" style="color:${baixos>0?'var(--expense)':'var(--income)'}">${baixos}</span></div>
+        <div class="kpi-card"><span class="kpi-label">Margem média</span><span class="kpi-val" style="color:var(--income)">${mgMedia}%</span></div>
+      </div>
+      <div class="filter-row" style="margin-bottom:var(--s-4)">
+        <input class="field" id="prod-q" placeholder="Buscar produto…" value="${filtroQ}" style="flex:1;max-width:240px">
+        <select class="field" id="prod-cat" style="width:auto">
+          <option value="todas">Todas categorias</option>
+          ${categorias.map(c=>`<option value="${c}"${filtroCategoria===c?' selected':''}>${c}</option>`).join('')}
+        </select>
+        <select class="field" id="prod-status" style="width:auto">
+          <option value="todos"${filtroAtivo==='todos'?' selected':''}>Todos</option>
+          <option value="ativos"${filtroAtivo==='ativos'?' selected':''}>Ativos</option>
+          <option value="inativos"${filtroAtivo==='inativos'?' selected':''}>Inativos</option>
+        </select>
+      </div>
+      ${lista.length===0
+        ?`<div class="empty"><div style="font-size:32px;margin-bottom:8px">📦</div><p style="color:var(--text-3)">Nenhum produto encontrado</p></div>`
+        :`<div class="prod-grid">${lista.map(p=>{
+          const mg=margem(p);const st=estoqueStatus(p);
+          return `<div class="prod-card">
+            <div class="prod-head">
+              <div class="prod-emoji">${p.emoji}</div>
+              <div class="prod-info">
+                <div class="prod-name">${p.nome}</div>
+                <div class="prod-cat">${p.categoria}${!p.ativo?' · <span style="color:var(--text-3)">Inativo</span>':''}</div>
+                ${st!=='ok'?`<div class="prod-badge-low">${svg('alert',10)} ${st==='sem'?'Sem estoque':'Estoque baixo'}</div>`:''}
+              </div>
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <button class="btn-icon" title="Editar" data-edit="${p.id}">${svg('pencil',15)}</button>
+                <button class="btn-icon" title="Excluir" data-del="${p.id}" style="color:var(--expense)">${svg('trash',15)}</button>
+              </div>
+            </div>
+            <div class="prod-prices">
+              <div><label>Custo</label><span>${fmt(p.custo)}</span></div>
+              <div><label>Venda</label><span>${fmt(p.preco)}</span></div>
+              <div><label>Margem</label><span class="mg">${mg}%</span></div>
+            </div>
+            <div class="prod-estoque-row">
+              <span>Estoque: <b style="color:${st!=='ok'?'var(--expense)':'var(--text-1)'}">${p.estoque} unid.</b></span>
+              <span style="font-size:11px;color:var(--text-3)">Mín: ${p.estoqueMin}</span>
+            </div>
+            <div class="prod-actions">
+              <button class="btn btn-ghost btn-sm" data-repor="${p.id}">${svg('arrowup',14)} Repor</button>
+              <button class="btn btn-ghost btn-sm" data-saida="${p.id}">${svg('arrowdown',14)} Saída</button>
+              <button class="btn btn-ghost btn-sm" data-preco="${p.id}">${svg('zap',14)} Precif.</button>
+            </div>
+          </div>`;
+        }).join('')}</div>`}
+    `;
+    updateEstoqueBadge();
+    root.querySelector('#prod-q').oninput=e=>{filtroQ=e.target.value;render();};
+    root.querySelector('#prod-cat').onchange=e=>{filtroCategoria=e.target.value;render();};
+    root.querySelector('#prod-status').onchange=e=>{filtroAtivo=e.target.value;render();};
+    root.querySelector('[data-new-prod]').onclick=()=>form();
+    root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>form(+b.dataset.edit));
+    root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+      const p=DB.produtos.find(x=>x.id===+b.dataset.del);
+      if(p)Modal.confirm('Excluir produto?',`"${p.nome}" será removido permanentemente.`,()=>{DB.produtos=DB.produtos.filter(x=>x.id!==+b.dataset.del);Toast.show('Produto excluído');render();});
+    });
+    root.querySelectorAll('[data-repor]').forEach(b=>b.onclick=()=>movModal(+b.dataset.repor,'entrada'));
+    root.querySelectorAll('[data-saida]').forEach(b=>b.onclick=()=>movModal(+b.dataset.saida,'saida'));
+    root.querySelectorAll('[data-preco]').forEach(b=>b.onclick=()=>calcPreco(+b.dataset.preco));
+  }
+
+  function movModal(prodId,tipo){
+    const p=DB.produtos.find(x=>x.id===prodId);if(!p)return;
+    const label=tipo==='entrada'?'Repor estoque':'Registrar saída';
+    Modal.open(`${label} — ${p.nome}`,`
+      <div class="fg"><label>Quantidade</label><input class="field" id="mv-qtd" type="number" min="1" value="1" placeholder="Ex: 10"></div>
+      <div class="fg"><label>Observação (opcional)</label><input class="field" id="mv-obs" placeholder="Motivo, pedido, produção…"></div>
+    `,(b)=>{
+      const qtd=+b.querySelector('#mv-qtd').value;
+      if(!qtd||qtd<1){Toast.show('Informe a quantidade','err');return false;}
+      if(tipo==='saida'&&qtd>p.estoque){Toast.show('Quantidade maior que o estoque disponível','err');return false;}
+      const obs=b.querySelector('#mv-obs').value.trim();
+      DB.movimentacoes.push({id:nid(),produtoId:prodId,tipo,qtd,obs,data:offset(0)});
+      if(tipo==='entrada')p.estoque+=qtd;else p.estoque-=qtd;
+      Toast.show(tipo==='entrada'?'Entrada registrada':'Saída registrada');
+      render();
+    },'Registrar');
+  }
+
+  function calcPreco(prodId){
+    const p=DB.produtos.find(x=>x.id===prodId);if(!p)return;
+    const mg=margem(p)||30;
+    Modal.open(`Precificação — ${p.nome}`,`
+      <p style="font-size:13px;color:var(--text-3);margin:0 0 var(--s-4)">Informe o custo total e a margem desejada. O preço sugerido é calculado na hora.</p>
+      <div class="frow">
+        <div class="fg"><label>Custo total (R$)</label><input class="field" id="pc-custo" type="number" step="0.01" min="0" value="${p.custo}" placeholder="0,00"></div>
+        <div class="fg"><label>Margem desejada (%)</label><input class="field" id="pc-mg" type="number" min="1" max="99" value="${mg}" placeholder="30"></div>
+      </div>
+      <div style="margin-top:var(--s-4);padding:var(--s-4);background:var(--surface-2);border-radius:var(--r-md);text-align:center">
+        <div style="font-size:11px;color:var(--text-3);font-weight:600;margin-bottom:4px">PREÇO SUGERIDO</div>
+        <div style="font-size:26px;font-weight:800;color:var(--brand)" id="pc-sugerido">${fmt(p.preco)}</div>
+      </div>
+    `,(b)=>{
+      const custo=+b.querySelector('#pc-custo').value;
+      const mgv=+b.querySelector('#pc-mg').value;
+      if(!custo||custo<=0){Toast.show('Informe o custo','err');return false;}
+      if(!mgv||mgv<=0||mgv>=100){Toast.show('Margem deve ser entre 1% e 99%','err');return false;}
+      const novoPreco=Math.round((custo/(1-mgv/100))*100)/100;
+      p.custo=custo;p.preco=novoPreco;
+      Toast.show(`Preço atualizado para ${fmt(novoPreco)}`);
+      render();
+    },'Aplicar preço');
+    setTimeout(()=>{
+      const upd=()=>{const c=+document.getElementById('pc-custo')?.value||0,m=+document.getElementById('pc-mg')?.value||0,el=document.getElementById('pc-sugerido');if(el&&c>0&&m>0&&m<100)el.textContent=fmt(Math.round((c/(1-m/100))*100)/100);};
+      document.getElementById('pc-custo')?.addEventListener('input',upd);
+      document.getElementById('pc-mg')?.addEventListener('input',upd);
+    },50);
+  }
+
+  function form(id){
+    const p=id?DB.produtos.find(x=>x.id===id):null;
+    const categorias=[...new Set(DB.produtos.map(x=>x.categoria))].sort();
+    Modal.open(id?'Editar produto':'Novo produto',`
+      <div class="frow">
+        <div class="fg" style="flex:0 0 90px"><label>Emoji</label><input class="field" id="pf-emoji" value="${p?p.emoji:'📦'}" placeholder="📦" maxlength="2"></div>
+        <div class="fg"><label>Nome do produto</label><input class="field" id="pf-nome" value="${p?p.nome.replace(/"/g,'&quot;'):''}" placeholder="Ex: Brigadeiro Tradicional"></div>
+      </div>
+      <div class="frow">
+        <div class="fg">
+          <label>Categoria</label>
+          <input class="field" id="pf-cat" value="${p?p.categoria:''}" list="pf-cat-list" placeholder="Doces, Embalagens…">
+          <datalist id="pf-cat-list">${categorias.map(c=>`<option value="${c}">`).join('')}</datalist>
+        </div>
+        <div class="fg"><label>Status</label><select class="field" id="pf-ativo"><option value="1"${!p||p.ativo?' selected':''}>Ativo</option><option value="0"${p&&!p.ativo?' selected':''}>Inativo</option></select></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Custo (R$)</label><input class="field" id="pf-custo" type="number" step="0.01" min="0" value="${p?p.custo:''}" placeholder="0,00"></div>
+        <div class="fg"><label>Preço de venda (R$)</label><input class="field" id="pf-preco" type="number" step="0.01" min="0" value="${p?p.preco:''}" placeholder="0,00"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Estoque atual</label><input class="field" id="pf-estoque" type="number" min="0" value="${p?p.estoque:0}" placeholder="0"></div>
+        <div class="fg"><label>Estoque mínimo (alerta)</label><input class="field" id="pf-estoquemin" type="number" min="0" value="${p?p.estoqueMin:10}" placeholder="10"></div>
+      </div>
+    `,(b)=>{
+      const nome=b.querySelector('#pf-nome').value.trim();
+      if(!nome){Toast.show('Informe o nome do produto','err');return false;}
+      const dd={nome,emoji:b.querySelector('#pf-emoji').value.trim()||'📦',categoria:b.querySelector('#pf-cat').value.trim()||'Geral',ativo:b.querySelector('#pf-ativo').value==='1',custo:+b.querySelector('#pf-custo').value||0,preco:+b.querySelector('#pf-preco').value||0,estoque:+b.querySelector('#pf-estoque').value||0,estoqueMin:+b.querySelector('#pf-estoquemin').value||0};
+      if(p){Object.assign(p,dd);Toast.show('Produto atualizado');}
+      else{DB.produtos.push(Object.assign({id:nid()},dd));Toast.show('Produto adicionado');}
+      render();
+    },id?'Salvar':'Adicionar');
+  }
+
+  return {render};
+})();
+
+const Estoque=(()=>{
+  let filtroTipo='todos',filtroProd='todos';
+
+  function render(){
+    const root=document.getElementById('estoque-root');if(!root)return;
+    const movs=[...DB.movimentacoes].sort((a,b)=>b.data.localeCompare(a.data));
+    const filtered=movs.filter(m=>{
+      if(filtroTipo!=='todos'&&m.tipo!==filtroTipo)return false;
+      if(filtroProd!=='todos'&&m.produtoId!==+filtroProd)return false;
+      return true;
+    });
+    const baixos=DB.produtos.filter(p=>p.ativo&&p.estoque<p.estoqueMin);
+    const totalItens=DB.produtos.reduce((s,p)=>s+p.estoque,0);
+    const entradas=DB.movimentacoes.filter(m=>m.tipo==='entrada').reduce((s,m)=>s+m.qtd,0);
+    const saidas=DB.movimentacoes.filter(m=>m.tipo==='saida').reduce((s,m)=>s+m.qtd,0);
+    const byDate={};
+    filtered.forEach(m=>{if(!byDate[m.data])byDate[m.data]=[];byDate[m.data].push(m);});
+    root.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)">
+        <div>
+          <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin:0">Estoque</h2>
+          <p style="font-size:13px;color:var(--text-3);margin:4px 0 0">${DB.movimentacoes.length} movimentações registradas</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="est-btn-produtos">${svg('box',16)} Produtos</button>
+      </div>
+      ${baixos.length>0?`
+      <div style="background:#DB4A4A15;border:1px solid var(--expense);border-radius:var(--r-lg);padding:var(--s-4);margin-bottom:var(--s-4)">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--expense);margin-bottom:var(--s-2)">${svg('alert',15)} ${baixos.length} produto${baixos.length!==1?'s':''} com estoque baixo</div>
+        ${baixos.map(p=>`<div style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text-2);padding:3px 0">${p.emoji} ${p.nome}<span style="color:var(--expense);font-weight:700">${p.estoque} / mín ${p.estoqueMin}</span></div>`).join('')}
+      </div>
+      `:''}
+      <div class="kpi-row" style="margin-bottom:var(--s-4)">
+        <div class="kpi-card"><span class="kpi-label">Total em estoque</span><span class="kpi-val">${totalItens}</span></div>
+        <div class="kpi-card"><span class="kpi-label">Entradas (total)</span><span class="kpi-val" style="color:var(--income)">+${entradas}</span></div>
+        <div class="kpi-card"><span class="kpi-label">Saídas (total)</span><span class="kpi-val" style="color:var(--expense)">−${saidas}</span></div>
+      </div>
+      <div class="card" style="margin-bottom:var(--s-4)">
+        <div style="font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:var(--s-3)">Posição por produto</div>
+        ${DB.produtos.map(p=>{
+          const pct=p.estoqueMin>0?Math.min(100,Math.round(p.estoque/p.estoqueMin*100)):100;
+          const cor=p.estoque<p.estoqueMin?'var(--expense)':p.estoque<p.estoqueMin*1.5?'var(--warning)':'var(--income)';
+          return `<div style="display:flex;align-items:center;gap:var(--s-3);margin-bottom:var(--s-3)">
+            <span style="font-size:18px;width:24px;text-align:center">${p.emoji}</span>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <span style="font-size:12px;font-weight:600;color:var(--text-1)">${p.nome}</span>
+                <span style="font-size:12px;font-weight:700;color:${cor}">${p.estoque} unid.</span>
+              </div>
+              <div style="height:5px;background:var(--border);border-radius:3px"><div style="height:5px;width:${pct}%;background:${cor};border-radius:3px;transition:width .3s"></div></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-3)">
+        <div style="font-size:15px;font-weight:700;color:var(--text-1)">Movimentações</div>
+        <div style="display:flex;gap:var(--s-2)">
+          <select class="field" id="est-tipo" style="width:auto;font-size:12px;padding:6px 10px">
+            <option value="todos">Todos</option>
+            <option value="entrada"${filtroTipo==='entrada'?' selected':''}>Entradas</option>
+            <option value="saida"${filtroTipo==='saida'?' selected':''}>Saídas</option>
+            <option value="ajuste"${filtroTipo==='ajuste'?' selected':''}>Ajustes</option>
+          </select>
+          <select class="field" id="est-prod" style="width:auto;font-size:12px;padding:6px 10px">
+            <option value="todos">Todos produtos</option>
+            ${DB.produtos.map(p=>`<option value="${p.id}"${filtroProd===String(p.id)?' selected':''}>${p.emoji} ${p.nome}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      ${Object.keys(byDate).length===0
+        ?`<div class="empty"><div style="font-size:32px;margin-bottom:8px">📊</div><p style="color:var(--text-3)">Nenhuma movimentação encontrada</p></div>`
+        :`<div class="mov-list">
+        ${Object.entries(byDate).map(([data,ms])=>{
+          const d=new Date(data+'T00:00:00');
+          const mes=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+          const label=data===offset(0)?'Hoje':data===offset(-1)?'Ontem':`${d.getDate()} ${mes[d.getMonth()]}`;
+          return `<div class="date-group"><div class="date-sep">${label}</div>${ms.map(m=>{
+            const prod=DB.produtos.find(x=>x.id===m.produtoId)||{nome:'Produto',emoji:'📦'};
+            const sinal=m.tipo==='entrada'?'+':m.tipo==='saida'?'−':'~';
+            return `<div class="mov-row"><span class="mov-tipo ${m.tipo}">${m.tipo==='entrada'?'Entrada':m.tipo==='saida'?'Saída':'Ajuste'}</span><div class="mov-info"><div class="mov-prod">${prod.emoji} ${prod.nome}</div>${m.obs?`<div class="mov-obs">${m.obs}</div>`:''}</div><div class="mov-qtd ${m.tipo}">${sinal}${m.qtd}</div></div>`;
+          }).join('')}</div>`;
+        }).join('')}</div>`}
+    `;
+    updateEstoqueBadge();
+    root.querySelector('#est-btn-produtos').onclick=()=>navigate('produtos');
+    root.querySelector('#est-tipo').onchange=e=>{filtroTipo=e.target.value;render();};
+    root.querySelector('#est-prod').onchange=e=>{filtroProd=e.target.value;render();};
+  }
+
+  return {render};
+})();
+
 Toast.init();
 Contas.render();
 Transacoes.render();
@@ -2653,6 +2998,8 @@ Saude.render();
 Habitos.render();
 Metricas.render();
 Contatos.render();
+Produtos.render();
+Estoque.render();
 const _topAdd=document.querySelector('.btn-add');
 if(_topAdd)_topAdd.addEventListener('click',()=>{const fin=document.querySelector('.page[data-page="financas"]');if(fin&&fin.classList.contains('show'))Contas.form();});
 </script>

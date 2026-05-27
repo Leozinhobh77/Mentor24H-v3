@@ -27,7 +27,7 @@
 - [x] **Etapa 9B — Contatos / Ficha rica** (manter-contato/reconexão, timeline de interações, datas importantes) ✅ aprovado por Léo
 
 ## Negócio
-- [ ] **Etapa 10 — Produtos + Estoque** (cadastro, margem, alertas, movimentações)
+- [x] **Etapa 10 — Produtos + Estoque** (cadastro, margem, alertas, movimentações, precificação simplificada) ✅
 - [ ] **Etapa 11 — Vendas** (carrinho → registrar → recibo → histórico)
 - [ ] **Etapa 12 — Clientes + Fornecedores + Precificação**
 - [ ] **Etapa 13 — Relatórios do negócio** (vendas por período, mais vendidos, receita x lucro x custo)
@@ -47,4 +47,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 9B ✅ aprovada — 2026-05-27. Próxima: Etapa 10 (Produtos + Estoque).*
+*Atualizado a cada etapa. Última: Etapa 10 ✅ aprovada — 2026-05-27. Próxima: Etapa 11 (Vendas).*
