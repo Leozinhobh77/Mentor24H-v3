@@ -2977,7 +2977,8 @@ const Vendas=(()=>{
     }
     root.querySelector('#pdv-sel-cliente').onclick=()=>selecionarCliente();
     if(root.querySelector('#pdv-rm-cliente'))root.querySelector('#pdv-rm-cliente').onclick=()=>{clienteSel=null;render();};
-    root.querySelector('#pdv-parcelas')?.onchange=e=>{parcelas=+e.target.value;};
+    const parcelasEl=root.querySelector('#pdv-parcelas');
+    if(parcelasEl)parcelasEl.onchange=e=>{parcelas=+e.target.value;};
     root.querySelector('#pdv-finalizar').onclick=()=>finalizarVenda();
     root.querySelector('#pdv-limpar').onclick=()=>{if(carrinho.length===0)return;Modal.confirm('Limpar carrinho?','Todos os itens serão removidos.',()=>{carrinho=[];desconto=0;dividir=false;valor1=0;clienteSel=null;render();});};
     renderCarrinho();
