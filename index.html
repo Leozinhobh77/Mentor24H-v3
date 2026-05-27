@@ -705,6 +705,47 @@ select.field{cursor:pointer}
   .hero-stats{flex-wrap:wrap;gap:var(--s-4)}
   .hero-stat{flex:1;min-width:42%}
 }
+/* ─── ETAPA 11: VENDAS / PDV ─── */
+.pdv-layout{display:grid;grid-template-columns:1fr 340px;gap:var(--s-4);align-items:start}
+@media(max-width:860px){.pdv-layout{grid-template-columns:1fr}}
+.pdv-catalog{display:flex;flex-direction:column;gap:var(--s-3)}
+.pdv-prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--s-2)}
+.pdv-prod-btn{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-3);display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:all .15s var(--ease);text-align:center}
+.pdv-prod-btn:hover{border-color:var(--brand);background:var(--brand-soft)}
+.pdv-prod-btn:active{transform:scale(.96)}
+.pdv-prod-btn .pe{font-size:28px}
+.pdv-prod-btn .pn{font-size:11px;font-weight:700;color:var(--text-1);line-height:1.2}
+.pdv-prod-btn .pp{font-size:12px;font-weight:700;color:var(--brand)}
+.pdv-prod-btn .pstock{font-size:10px;color:var(--text-3)}
+.pdv-prod-btn.sem-stock{opacity:.45;pointer-events:none}
+.pdv-avulso{display:flex;align-items:center;gap:8px;padding:var(--s-3);background:var(--surface-2);border-radius:var(--r-md);cursor:pointer;font-size:13px;font-weight:600;color:var(--brand);border:1.5px dashed var(--brand);transition:background .15s}
+.pdv-avulso:hover{background:var(--brand-soft)}
+.pdv-cart{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);position:sticky;top:var(--s-4)}
+.pdv-cart-head{font-size:14px;font-weight:700;color:var(--text-1)}
+.pdv-cart-empty{text-align:center;padding:var(--s-6) 0;color:var(--text-3);font-size:13px}
+.pdv-item{display:flex;align-items:center;gap:var(--s-2);padding:var(--s-2) 0;border-bottom:1px solid var(--border)}
+.pdv-item:last-child{border-bottom:none}
+.pdv-item-info{flex:1;min-width:0}
+.pdv-item-name{font-size:12px;font-weight:600;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdv-item-price{font-size:11px;color:var(--text-3)}
+.pdv-qty{display:flex;align-items:center;gap:4px}
+.pdv-qty button{width:24px;height:24px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);font-size:14px;font-weight:700;color:var(--text-1);cursor:pointer;transition:background .1s;display:flex;align-items:center;justify-content:center}
+.pdv-qty button:hover{background:var(--brand-soft);color:var(--brand)}
+.pdv-qty span{font-size:13px;font-weight:700;color:var(--text-1);min-width:20px;text-align:center}
+.pdv-total-row{display:flex;justify-content:space-between;font-size:13px;color:var(--text-2);padding:2px 0}
+.pdv-total-row.big{font-size:18px;font-weight:800;color:var(--text-1);padding-top:var(--s-2)}
+.pdv-pgto{display:flex;flex-wrap:wrap;gap:6px}
+.pdv-pgto-btn{flex:1;min-width:70px;padding:8px 4px;border-radius:var(--r-md);border:1.5px solid var(--border);background:var(--surface-2);font-size:11px;font-weight:700;color:var(--text-2);cursor:pointer;transition:all .15s;text-align:center}
+.pdv-pgto-btn.on{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
+.venda-row{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-3) var(--s-4);display:flex;align-items:center;gap:var(--s-3)}
+.venda-row-info{flex:1;min-width:0}
+.venda-cliente{font-size:13px;font-weight:700;color:var(--text-1)}
+.venda-detalhe{font-size:11px;color:var(--text-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.venda-valor{font-size:15px;font-weight:800;color:var(--text-1);text-align:right}
+.venda-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.venda-status.pago{background:#1F9D5522;color:var(--income)}
+.venda-status.pendente{background:#C8860B22;color:var(--warning)}
+.venda-status.cancelado{background:var(--expense-soft,#DB4A4A22);color:var(--expense)}
 /* ─── ETAPA 10: PRODUTOS & ESTOQUE ─── */
 .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--s-4)}
 .prod-card{background:var(--surface-1);border-radius:var(--r-lg);border:1px solid var(--border);padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);transition:box-shadow .2s var(--ease)}
@@ -1121,6 +1162,9 @@ select.field{cursor:pointer}
       <!-- ░░░░ PÁGINA: ESTOQUE ░░░░ -->
       <section class="page" data-page="estoque"><div id="estoque-root"></div></section>
 
+      <!-- ░░░░ PÁGINA: VENDAS ░░░░ -->
+      <section class="page" data-page="vendas"><div id="vendas-root"></div></section>
+
     </div>
   </main>
 </div>
@@ -1192,7 +1236,6 @@ const ICONS={
 
 /* ─── PÁGINAS PLACEHOLDER (preenchidas a cada etapa do checklist) ─── */
 const PAGES=[
-  ['vendas','cart','Vendas','Etapa 11','Carrinho, registro de venda, recibo e histórico.'],
   ['clientes','users','Clientes','Etapa 12','CRM simples com histórico de compras e saldo devedor.'],
   ['relatorios','chart','Relatórios','Etapa 13','Vendas por período, mais vendidos e receita x lucro x custo.'],
   ['mentor','spark','Mentor','Etapa 14','Assistente que lê seus dados e gera resumos e alertas por regra (sem IA por enquanto).'],
@@ -1319,6 +1362,7 @@ function navigate(page){
   if(page==='contatos') Contatos.render();
   if(page==='produtos') Produtos.render();
   if(page==='estoque') Estoque.render();
+  if(page==='vendas') Vendas.render();
   document.body.classList.remove('drawer-open');
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1454,6 +1498,7 @@ const DB={
     {id:nid(),nome:'Bruno Fornecedor',telefone:'31933336666',email:'bruno@fornec.com',tags:['Fornecedor'],contexto:'negocio',aniversario:'',favorito:false,comoConheci:'',anotacoes:'Embalagens e insumos',ultimoContato:offset(-20),manterContato:30,proximaAcao:{data:offset(10),nota:'Negociar preço para pedido grande'},interacoes:[{data:offset(-20),tipo:'whatsapp',nota:'Confirmou estoque de caixinhas disponível'},{data:offset(-50),tipo:'email',nota:'Enviou catálogo de novos produtos'}],datas:[]},
     {id:nid(),nome:'Lucas Amigo',telefone:'31922227777',email:'lucas@email.com',tags:['Amigos'],contexto:'pessoal',aniversario:'1993-05-30',favorito:false,comoConheci:'Faculdade',anotacoes:'',ultimoContato:offset(-40),manterContato:60,proximaAcao:null,interacoes:[{data:offset(-40),tipo:'whatsapp',nota:'Mandou meme, respondeu rindo'},{data:offset(-65),tipo:'presencial',nota:'Saíram para jantar'}],datas:[]},
   ],
+  vendas:[],
   produtos:[
     {id:nid(),nome:'Brigadeiro Tradicional',emoji:'🍫',categoria:'Doces',preco:5.5,custo:1.8,estoque:80,estoqueMin:20,ativo:true},
     {id:nid(),nome:'Beijinho de Coco',emoji:'🥥',categoria:'Doces',preco:5.5,custo:1.9,estoque:45,estoqueMin:20,ativo:true},
@@ -1484,6 +1529,18 @@ const DB={
     {id:nid(),produtoId:ps[4].id,tipo:'saida',qtd:12,obs:'Caixas 16un. vendidas',data:offset(-3)},
     {id:nid(),produtoId:ps[5].id,tipo:'saida',qtd:20,obs:'Uso na embalagem',data:offset(-3)},
     {id:nid(),produtoId:ps[1].id,tipo:'saida',qtd:6,obs:'Venda do dia',data:offset(-1)},
+  ];
+})();
+
+// Seed vendas mock
+(function(){
+  const ps=DB.produtos,cs=DB.contatos;
+  const maria=cs.find(c=>c.nome==='Maria Souza'),joao=cs.find(c=>c.nome==='João Pedro');
+  DB.vendas=[
+    {id:nid(),data:offset(-5),itens:[{produtoId:ps[0].id,nome:ps[0].nome,emoji:ps[0].emoji,preco:ps[0].preco,qtd:12},{produtoId:ps[3].id,nome:ps[3].nome,emoji:ps[3].emoji,preco:ps[3].preco,qtd:3}],subtotal:66+36,desconto:0,total:102,pagamento:'pix',clienteId:maria?maria.id:null,clienteNome:maria?maria.nome:'Maria Souza',status:'pago',obs:''},
+    {id:nid(),data:offset(-5),itens:[{produtoId:ps[1].id,nome:ps[1].nome,emoji:ps[1].emoji,preco:ps[1].preco,qtd:9},{produtoId:ps[4].id,nome:ps[4].nome,emoji:ps[4].emoji,preco:ps[4].preco,qtd:3}],subtotal:49.5+60,desconto:0,total:109.5,pagamento:'a_prazo',clienteId:joao?joao.id:null,clienteNome:joao?joao.nome:'João Pedro',status:'pendente',obs:'Prazo: 2 semanas'},
+    {id:nid(),data:offset(-3),itens:[{produtoId:ps[0].id,nome:ps[0].nome,emoji:ps[0].emoji,preco:ps[0].preco,qtd:8},{produtoId:ps[2].id,nome:ps[2].nome,emoji:ps[2].emoji,preco:ps[2].preco,qtd:18},{produtoId:ps[4].id,nome:ps[4].nome,emoji:ps[4].emoji,preco:ps[4].preco,qtd:3}],subtotal:44+99+60,desconto:10,total:193,pagamento:'pix',clienteId:null,clienteNome:'',status:'pago',obs:'Encomenda festa'},
+    {id:nid(),data:offset(-1),itens:[{produtoId:ps[1].id,nome:ps[1].nome,emoji:ps[1].emoji,preco:ps[1].preco,qtd:6}],subtotal:33,desconto:0,total:33,pagamento:'dinheiro',clienteId:null,clienteNome:'',status:'pago',obs:''},
   ];
 })();
 
@@ -2710,6 +2767,340 @@ const Contatos=(()=>{
 })();
 
 /* ═══════════════════════════════════════════════
+   ETAPA 11 — VENDAS (PDV + HISTÓRICO)
+═══════════════════════════════════════════════ */
+const Vendas=(()=>{
+  let view='pdv'; // 'pdv' | 'historico'
+  let carrinho=[]; // [{produtoId,nome,emoji,preco,qtd}]
+  let desconto=0, descontoTipo='pct'; // 'pct' | 'val'
+  let pagamento='pix';
+  let clienteSel=null; // {id,nome} | null
+  let filtroStatus='todos';
+
+  const PGTOS=[
+    {k:'pix',l:'Pix'},
+    {k:'dinheiro',l:'Dinheiro'},
+    {k:'debito',l:'Débito'},
+    {k:'credito',l:'Crédito'},
+    {k:'a_prazo',l:'A prazo'},
+  ];
+  const PGTO_LABEL={pix:'Pix',dinheiro:'Dinheiro',debito:'Débito',credito:'Crédito',a_prazo:'A prazo'};
+
+  function subtotal(){return carrinho.reduce((s,i)=>s+i.preco*i.qtd,0);}
+  function descontoVal(){
+    const sub=subtotal();
+    if(descontoTipo==='pct') return Math.min(sub,sub*descontoVal_pct()/100);
+    return Math.min(sub,desconto);
+  }
+  function descontoVal_pct(){return descontoTipo==='pct'?desconto:0;}
+  function total(){return Math.max(0,subtotal()-descontoVal());}
+
+  function addAoCarrinho(prod){
+    const ex=carrinho.find(i=>i.produtoId===prod.id);
+    if(ex){if(ex.qtd<prod.estoque){ex.qtd++;renderCarrinho();}else{Toast.show('Estoque insuficiente','err');}return;}
+    carrinho.push({produtoId:prod.id,nome:prod.nome,emoji:prod.emoji,preco:prod.preco,qtd:1});
+    renderCarrinho();
+  }
+
+  function renderCarrinho(){
+    const root=document.getElementById('pdv-cart');if(!root)return;
+    const sub=subtotal(),desc=descontoVal(),tot=total();
+    const qtdTotal=carrinho.reduce((s,i)=>s+i.qtd,0);
+    root.querySelector('.pdv-cart-head').textContent=`Carrinho${qtdTotal>0?' ('+qtdTotal+')':''}`;
+    const body=root.querySelector('#cart-body');
+    if(!body)return;
+    if(carrinho.length===0){body.innerHTML='<div class="pdv-cart-empty">Toque nos produtos<br>para adicionar</div>';return;}
+    body.innerHTML=carrinho.map((it,idx)=>`
+      <div class="pdv-item">
+        <span style="font-size:20px">${it.emoji}</span>
+        <div class="pdv-item-info">
+          <div class="pdv-item-name">${it.nome}</div>
+          <div class="pdv-item-price">${fmt(it.preco)} un.</div>
+        </div>
+        <div class="pdv-qty">
+          <button data-minus="${idx}">−</button>
+          <span>${it.qtd}</span>
+          <button data-plus="${idx}">+</button>
+        </div>
+        <div style="min-width:52px;text-align:right;font-size:12px;font-weight:700;color:var(--text-1)">${fmt(it.preco*it.qtd)}</div>
+        <button data-rm="${idx}" style="color:var(--expense);background:none;border:none;cursor:pointer;padding:2px;display:flex">${svg('x',14)}</button>
+      </div>`).join('');
+
+    body.querySelectorAll('[data-minus]').forEach(b=>b.onclick=()=>{const i=carrinho[+b.dataset.minus];if(i.qtd>1){i.qtd--;}else{carrinho.splice(+b.dataset.minus,1);}renderCarrinho();});
+    body.querySelectorAll('[data-plus]').forEach(b=>b.onclick=()=>{const i=carrinho[+b.dataset.plus],p=DB.produtos.find(x=>x.id===i.produtoId);if(!p||i.qtd>=p.estoque){Toast.show('Limite do estoque','err');return;}i.qtd++;renderCarrinho();});
+    body.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{carrinho.splice(+b.dataset.rm,1);renderCarrinho();});
+
+    // Totais
+    const totEl=root.querySelector('#cart-totals');
+    if(totEl) totEl.innerHTML=`
+      <div class="pdv-total-row"><span>Subtotal</span><span>${fmt(sub)}</span></div>
+      ${desc>0?`<div class="pdv-total-row" style="color:var(--income)"><span>Desconto</span><span>− ${fmt(desc)}</span></div>`:''}
+      <div class="pdv-total-row big"><span>Total</span><span>${fmt(tot)}</span></div>`;
+  }
+
+  function render(){
+    const root=document.getElementById('vendas-root');if(!root)return;
+    if(view==='historico'){renderHistorico();return;}
+
+    // KPIs
+    const hoje=DB.vendas.filter(v=>v.data===offset(0)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
+    const semana=DB.vendas.filter(v=>v.data>=offset(-7)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
+    const mes=DB.vendas.filter(v=>v.data>=offset(-30)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
+
+    root.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)">
+        <div>
+          <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin:0">Vendas</h2>
+          <p style="font-size:13px;color:var(--text-3);margin:4px 0 0">PDV — ponto de venda</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="btn-hist">${svg('clock',15)} Histórico</button>
+      </div>
+      <div class="kpi-row" style="margin-bottom:var(--s-4)">
+        <div class="kpi-card"><span class="kpi-label">Hoje</span><span class="kpi-val" style="font-size:16px">${fmt(hoje)}</span></div>
+        <div class="kpi-card"><span class="kpi-label">7 dias</span><span class="kpi-val" style="font-size:16px">${fmt(semana)}</span></div>
+        <div class="kpi-card"><span class="kpi-label">30 dias</span><span class="kpi-val" style="font-size:16px">${fmt(mes)}</span></div>
+      </div>
+      <div class="pdv-layout">
+        <!-- CATÁLOGO -->
+        <div class="pdv-catalog">
+          <input class="field" id="pdv-busca" placeholder="Buscar produto no catálogo…">
+          <div class="pdv-prod-grid" id="pdv-grid"></div>
+          <div class="pdv-avulso" id="pdv-avulso">${svg('plus',16)} Item avulso (sem cadastro)</div>
+        </div>
+        <!-- CARRINHO -->
+        <div class="pdv-cart" id="pdv-cart">
+          <div class="pdv-cart-head">Carrinho</div>
+          <div id="cart-body"><div class="pdv-cart-empty">Toque nos produtos<br>para adicionar</div></div>
+          <div id="cart-totals"></div>
+          <div style="padding-top:var(--s-2);border-top:1px solid var(--border)">
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);margin-bottom:6px">DESCONTO</div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <input class="field" id="pdv-desc-val" type="number" min="0" placeholder="0" value="${desconto>0?desconto:''}" style="width:80px;text-align:right">
+              <select class="field" id="pdv-desc-tipo" style="width:auto">
+                <option value="pct"${descontoTipo==='pct'?' selected':''}>%</option>
+                <option value="val"${descontoTipo==='val'?' selected':''}>R$</option>
+              </select>
+            </div>
+          </div>
+          <div style="padding-top:var(--s-2);border-top:1px solid var(--border)">
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);margin-bottom:6px">PAGAMENTO</div>
+            <div class="pdv-pgto" id="pdv-pgto">
+              ${PGTOS.map(p=>`<button class="pdv-pgto-btn${pagamento===p.k?' on':''}" data-pgto="${p.k}">${p.l}</button>`).join('')}
+            </div>
+            ${pagamento==='dinheiro'?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><label style="font-size:12px;color:var(--text-3);white-space:nowrap">Recebido:</label><input class="field" id="pdv-recebido" type="number" min="0" placeholder="${fmt(total()).replace('R$ ','')}" style="width:100px;text-align:right"></div>`:''}
+          </div>
+          <div style="padding-top:var(--s-2);border-top:1px solid var(--border)">
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);margin-bottom:6px">CLIENTE <span style="font-weight:400">(opcional)</span></div>
+            <div style="display:flex;gap:6px">
+              <div style="flex:1;padding:8px 12px;background:var(--surface-2);border-radius:var(--r-md);font-size:13px;color:${clienteSel?'var(--text-1)':'var(--text-3)'}" id="pdv-cliente-display">${clienteSel?clienteSel.nome:'Sem cliente'}</div>
+              <button class="btn btn-ghost btn-sm" id="pdv-sel-cliente">${svg('users',15)}</button>
+              ${clienteSel?`<button class="btn btn-ghost btn-sm" id="pdv-rm-cliente" style="color:var(--expense)">${svg('x',14)}</button>`:''}
+            </div>
+          </div>
+          <button class="btn btn-primary" id="pdv-finalizar" style="width:100%;padding:14px;font-size:15px;font-weight:700;border-radius:var(--r-md)">${svg('check',18)} Finalizar Venda</button>
+          <button class="btn btn-ghost" id="pdv-limpar" style="width:100%;font-size:12px">Limpar carrinho</button>
+        </div>
+      </div>`;
+
+    renderGrid(root);
+
+    root.querySelector('#pdv-busca').oninput=e=>renderGrid(root,e.target.value);
+    root.querySelector('#pdv-avulso').onclick=()=>avulso();
+    root.querySelector('#btn-hist').onclick=()=>{view='historico';render();};
+    root.querySelector('#pdv-desc-val').oninput=e=>{desconto=+e.target.value||0;renderCarrinho();};
+    root.querySelector('#pdv-desc-tipo').onchange=e=>{descontoTipo=e.target.value;renderCarrinho();};
+    root.querySelectorAll('.pdv-pgto-btn').forEach(b=>b.onclick=()=>{pagamento=b.dataset.pgto;render();});
+    root.querySelector('#pdv-sel-cliente').onclick=()=>selecionarCliente();
+    if(root.querySelector('#pdv-rm-cliente'))root.querySelector('#pdv-rm-cliente').onclick=()=>{clienteSel=null;render();};
+    root.querySelector('#pdv-finalizar').onclick=()=>finalizarVenda();
+    root.querySelector('#pdv-limpar').onclick=()=>{if(carrinho.length===0)return;Modal.confirm('Limpar carrinho?','Todos os itens serão removidos.',()=>{carrinho=[];desconto=0;clienteSel=null;render();});};
+
+    renderCarrinho();
+  }
+
+  function renderGrid(root,q=''){
+    const grid=root.querySelector('#pdv-grid');if(!grid)return;
+    const prods=DB.produtos.filter(p=>p.ativo&&(!q||p.nome.toLowerCase().includes(q.toLowerCase())));
+    grid.innerHTML=prods.map(p=>`
+      <button class="pdv-prod-btn${p.estoque<=0?' sem-stock':''}" data-pid="${p.id}" title="${p.nome}">
+        <div class="pe">${p.emoji}</div>
+        <div class="pn">${p.nome}</div>
+        <div class="pp">${fmt(p.preco)}</div>
+        <div class="pstock">${p.estoque} em estoque</div>
+      </button>`).join('');
+    grid.querySelectorAll('.pdv-prod-btn:not(.sem-stock)').forEach(b=>b.onclick=()=>{
+      const p=DB.produtos.find(x=>x.id===+b.dataset.pid);if(p)addAoCarrinho(p);
+    });
+  }
+
+  function avulso(){
+    Modal.open('Item avulso',`
+      <div class="fg"><label>Descrição</label><input class="field" id="av-nome" placeholder="Ex: Embalagem especial, frete…"></div>
+      <div class="fg"><label>Preço (R$)</label><input class="field" id="av-preco" type="number" step="0.01" min="0" placeholder="0,00"></div>
+      <div class="fg"><label>Quantidade</label><input class="field" id="av-qtd" type="number" min="1" value="1"></div>
+    `,(b)=>{
+      const nome=b.querySelector('#av-nome').value.trim();
+      const preco=+b.querySelector('#av-preco').value;
+      const qtd=+b.querySelector('#av-qtd').value||1;
+      if(!nome){Toast.show('Informe a descrição','err');return false;}
+      if(!preco||preco<=0){Toast.show('Informe o preço','err');return false;}
+      carrinho.push({produtoId:null,nome,emoji:'🏷️',preco,qtd});
+      renderCarrinho();
+    },'Adicionar');
+  }
+
+  function selecionarCliente(){
+    const lista=DB.contatos.filter(c=>c.contexto==='negocio'||c.contexto==='ambos').concat(DB.contatos.filter(c=>c.contexto==='pessoal'));
+    Modal.open('Selecionar cliente',`
+      <input class="field" id="cli-busca" placeholder="Buscar…" style="margin-bottom:var(--s-3)">
+      <div style="display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto" id="cli-lista">
+        ${lista.map(c=>`<button class="lrow" data-cid="${c.id}" data-cnome="${c.nome.replace(/"/g,'&quot;')}" style="text-align:left;cursor:pointer;padding:var(--s-3) var(--s-4);border-radius:var(--r-md)">
+          <div style="font-size:13px;font-weight:700;color:var(--text-1)">${c.nome}</div>
+          <div style="font-size:11px;color:var(--text-3)">${c.tags.join(', ')||'—'}</div>
+        </button>`).join('')}
+      </div>
+    `,(b)=>{
+      const sel=b.querySelector('.lrow.selected');
+      if(!sel){Toast.show('Selecione um cliente','err');return false;}
+      clienteSel={id:+sel.dataset.cid,nome:sel.dataset.cnome};
+      render();
+    },'Confirmar');
+    setTimeout(()=>{
+      document.querySelectorAll('#cli-lista .lrow').forEach(b=>b.onclick=()=>{
+        document.querySelectorAll('#cli-lista .lrow').forEach(x=>x.classList.remove('selected'));
+        b.classList.add('selected');
+        b.style.background='var(--brand-soft)';b.style.borderColor='var(--brand)';
+      });
+      const busca=document.getElementById('cli-busca');
+      if(busca)busca.oninput=e=>{
+        const q=e.target.value.toLowerCase();
+        document.querySelectorAll('#cli-lista .lrow').forEach(b=>b.style.display=b.querySelector('div').textContent.toLowerCase().includes(q)?'':'none');
+      };
+    },50);
+  }
+
+  function finalizarVenda(){
+    if(carrinho.length===0){Toast.show('Adicione ao menos um produto','err');return;}
+    const tot=total();
+    let troco=0;
+    if(pagamento==='dinheiro'){
+      const recebido=+document.getElementById('pdv-recebido')?.value||0;
+      if(recebido>0&&recebido<tot){Toast.show('Valor recebido menor que o total','err');return;}
+      troco=recebido>0?recebido-tot:0;
+    }
+    const status=pagamento==='a_prazo'?'pendente':'pago';
+    const venda={
+      id:nid(),
+      data:offset(0),
+      itens:carrinho.map(i=>({...i})),
+      subtotal:subtotal(),
+      desconto:descontoVal(),
+      total:tot,
+      pagamento,
+      clienteId:clienteSel?.id||null,
+      clienteNome:clienteSel?.nome||'',
+      status,
+      obs:'',
+    };
+    DB.vendas.unshift(venda);
+    // Baixar estoque dos produtos cadastrados
+    venda.itens.forEach(it=>{
+      if(!it.produtoId)return;
+      const p=DB.produtos.find(x=>x.id===it.produtoId);
+      if(p){p.estoque=Math.max(0,p.estoque-it.qtd);}
+      DB.movimentacoes.push({id:nid(),produtoId:it.produtoId,tipo:'saida',qtd:it.qtd,obs:`Venda #${venda.id}${venda.clienteNome?' — '+venda.clienteNome:''}`,data:offset(0)});
+    });
+    // Criar transação financeira (só para vendas pagas)
+    if(status==='pago'){
+      DB.transacoes.unshift({id:nid(),tipo:'entrada',descricao:`Venda — ${venda.itens.map(i=>i.nome).join(', ')}${venda.clienteNome?' ('+venda.clienteNome+')':''}`,valor:tot,cat:'receita',metodo:PGTO_LABEL[pagamento]||pagamento,data:offset(0)});
+    }
+    // Reset carrinho
+    const itensVenda=[...carrinho];
+    carrinho=[];desconto=0;descontoTipo='pct';clienteSel=null;
+    updateEstoqueBadge();
+    recibo(venda,troco,itensVenda);
+  }
+
+  function recibo(venda,troco,itens){
+    const nomesCurtos=itens.slice(0,3).map(i=>`${i.emoji} ${i.nome} ×${i.qtd}`).join('\n');
+    const whatsText=encodeURIComponent(`🧾 *Recibo — Mentor24h*\n\nData: ${new Date().toLocaleDateString('pt-BR')}\n${venda.clienteNome?'Cliente: '+venda.clienteNome+'\n':''}\n${itens.map(i=>`${i.emoji} ${i.nome} ×${i.qtd} = ${fmt(i.preco*i.qtd)}`).join('\n')}\n${venda.desconto>0?`\nDesconto: − ${fmt(venda.desconto)}`:''}${troco>0?`\nTroco: ${fmt(troco)}`:''}\n\n*Total: ${fmt(venda.total)}*\nPagamento: ${PGTO_LABEL[venda.pagamento]}\n\nObrigado! 🙏`);
+    const {back,close}=Modal._build('Venda registrada!',`
+      <div style="text-align:center;margin-bottom:var(--s-4)">
+        <div style="font-size:40px;margin-bottom:8px">🎉</div>
+        <div style="font-size:24px;font-weight:800;color:var(--brand)">${fmt(venda.total)}</div>
+        <div style="font-size:13px;color:var(--text-3);margin-top:4px">${PGTO_LABEL[venda.pagamento]} · ${venda.clienteNome||'Sem cliente'}</div>
+        ${troco>0?`<div style="margin-top:8px;padding:8px 16px;background:var(--brand-soft);border-radius:var(--r-md);font-size:14px;font-weight:700;color:var(--brand)">Troco: ${fmt(troco)}</div>`:''}
+        ${venda.status==='pendente'?`<div style="margin-top:8px;padding:8px 16px;background:#C8860B22;border-radius:var(--r-md);font-size:13px;font-weight:700;color:var(--warning)">⏳ A prazo — registrar recebimento depois</div>`:''}
+      </div>
+      <div style="background:var(--surface-2);border-radius:var(--r-md);padding:var(--s-3) var(--s-4);font-size:12px;color:var(--text-2);line-height:1.8">
+        ${itens.map(i=>`<div style="display:flex;justify-content:space-between">${i.emoji} ${i.nome} ×${i.qtd}<span style="font-weight:700">${fmt(i.preco*i.qtd)}</span></div>`).join('')}
+        ${venda.desconto>0?`<div style="display:flex;justify-content:space-between;color:var(--income)">Desconto<span>− ${fmt(venda.desconto)}</span></div>`:''}
+        <div style="display:flex;justify-content:space-between;font-weight:800;color:var(--text-1);border-top:1px solid var(--border);margin-top:6px;padding-top:6px">Total<span>${fmt(venda.total)}</span></div>
+      </div>
+    `,`<button class="btn btn-ghost" data-close>Fechar</button><a class="btn btn-primary" href="https://wa.me/?text=${whatsText}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;text-decoration:none">${svg('chat',16)} WhatsApp</a>`);
+    setTimeout(()=>render(),100); // refresh PDV after modal closes via click
+    back.querySelector('[data-close]').addEventListener('click',()=>render(),{once:true});
+  }
+
+  function renderHistorico(){
+    const root=document.getElementById('vendas-root');if(!root)return;
+    const pendentes=DB.vendas.filter(v=>v.status==='pendente').reduce((s,v)=>s+v.total,0);
+    const hoje=DB.vendas.filter(v=>v.data===offset(0)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
+    const semana=DB.vendas.filter(v=>v.data>=offset(-7)&&v.status==='pago').reduce((s,v)=>s+v.total,0);
+    const lista=[...DB.vendas].filter(v=>filtroStatus==='todos'||v.status===filtroStatus).sort((a,b)=>b.data.localeCompare(a.data));
+    root.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)">
+        <div>
+          <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin:0">Histórico de Vendas</h2>
+          <p style="font-size:13px;color:var(--text-3);margin:4px 0 0">${DB.vendas.length} venda${DB.vendas.length!==1?'s':''} registrada${DB.vendas.length!==1?'s':''}</p>
+        </div>
+        <button class="btn btn-primary btn-sm" id="btn-pdv">${svg('cart',15)} Nova Venda</button>
+      </div>
+      ${pendentes>0?`<div style="background:#C8860B15;border:1px solid var(--warning);border-radius:var(--r-lg);padding:var(--s-3) var(--s-4);margin-bottom:var(--s-4);display:flex;align-items:center;gap:10px;font-size:13px"><span style="font-size:18px">⏳</span><span>Você tem <b style="color:var(--warning)">${fmt(pendentes)}</b> a receber (vendas a prazo)</span></div>`:''}
+      <div class="kpi-row" style="margin-bottom:var(--s-4)">
+        <div class="kpi-card"><span class="kpi-label">Hoje (pago)</span><span class="kpi-val" style="font-size:16px">${fmt(hoje)}</span></div>
+        <div class="kpi-card"><span class="kpi-label">7 dias (pago)</span><span class="kpi-val" style="font-size:16px">${fmt(semana)}</span></div>
+        <div class="kpi-card"><span class="kpi-label">A receber</span><span class="kpi-val" style="font-size:16px;color:var(--warning)">${fmt(pendentes)}</span></div>
+      </div>
+      <div style="display:flex;gap:var(--s-2);margin-bottom:var(--s-4)">
+        ${[['todos','Todas'],['pago','Pagas'],['pendente','A prazo'],['cancelado','Canceladas']].map(([k,l])=>`<button class="tagx${filtroStatus===k?' on':''}" data-fs="${k}" style="cursor:pointer;border:1.5px solid ${filtroStatus===k?'var(--brand)':'var(--border)'};background:${filtroStatus===k?'var(--brand-soft)':'var(--surface-2)'};color:${filtroStatus===k?'var(--brand)':'var(--text-2)'}">${l}</button>`).join('')}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:var(--s-2)">
+        ${lista.length===0?`<div class="empty"><div style="font-size:32px;margin-bottom:8px">🛒</div><p style="color:var(--text-3)">Nenhuma venda encontrada</p></div>`
+        :lista.map(v=>`
+          <div class="venda-row">
+            <div style="min-width:42px;text-align:center">
+              <div style="font-size:12px;font-weight:700;color:var(--text-1)">${new Date(v.data+'T00:00:00').getDate()}</div>
+              <div style="font-size:10px;color:var(--text-3)">${['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][new Date(v.data+'T00:00:00').getMonth()]}</div>
+            </div>
+            <div class="venda-row-info">
+              <div class="venda-cliente">${v.clienteNome||'Sem cliente'}</div>
+              <div class="venda-detalhe">${PGTO_LABEL[v.pagamento]} · ${v.itens.map(i=>`${i.emoji} ×${i.qtd}`).join(' ')}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="venda-valor">${fmt(v.total)}</div>
+              <span class="venda-status ${v.status}">${v.status==='pago'?'✅ Pago':v.status==='pendente'?'⏳ A prazo':'❌ Cancelado'}</span>
+              ${v.status==='pendente'?`<button class="btn btn-ghost btn-sm" data-receber="${v.id}" style="font-size:10px;padding:3px 8px">Receber</button>`:''}
+            </div>
+          </div>`).join('')}
+      </div>`;
+
+    root.querySelector('#btn-pdv').onclick=()=>{view='pdv';render();};
+    root.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>{filtroStatus=b.dataset.fs;renderHistorico();});
+    root.querySelectorAll('[data-receber]').forEach(b=>b.onclick=()=>{
+      const v=DB.vendas.find(x=>x.id===+b.dataset.receber);if(!v)return;
+      Modal.confirm('Marcar como recebido?',`Venda de ${fmt(v.total)} para ${v.clienteNome||'sem cliente'} será marcada como paga.`,()=>{
+        v.status='pago';
+        DB.transacoes.unshift({id:nid(),tipo:'entrada',descricao:`Recebimento — ${v.itens.map(i=>i.nome).join(', ')}${v.clienteNome?' ('+v.clienteNome+')':''}`,valor:v.total,cat:'receita',metodo:PGTO_LABEL[v.pagamento]||v.pagamento,data:offset(0)});
+        Toast.show('Venda marcada como paga');renderHistorico();
+      },'Confirmar recebimento');
+    });
+  }
+
+  return {render};
+})();
+
+/* ═══════════════════════════════════════════════
    ETAPA 10 — PRODUTOS + ESTOQUE + PRECIFICAÇÃO
 ═══════════════════════════════════════════════ */
 function updateEstoqueBadge(){
@@ -3000,6 +3391,7 @@ Metricas.render();
 Contatos.render();
 Produtos.render();
 Estoque.render();
+Vendas.render();
 const _topAdd=document.querySelector('.btn-add');
 if(_topAdd)_topAdd.addEventListener('click',()=>{const fin=document.querySelector('.page[data-page="financas"]');if(fin&&fin.classList.contains('show'))Contas.form();});
 </script>

@@ -28,7 +28,7 @@
 
 ## Negócio
 - [x] **Etapa 10 — Produtos + Estoque** (cadastro, margem, alertas, movimentações, precificação simplificada) ✅
-- [ ] **Etapa 11 — Vendas** (carrinho → registrar → recibo → histórico)
+- [x] **Etapa 11 — Vendas** (PDV com carrinho, item avulso, desconto, pagamento, recibo WhatsApp, histórico com "a prazo" e receber) ✅
 - [ ] **Etapa 12 — Clientes + Fornecedores + Precificação**
 - [ ] **Etapa 13 — Relatórios do negócio** (vendas por período, mais vendidos, receita x lucro x custo)
 
@@ -47,4 +47,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 10 ✅ aprovada — 2026-05-27. Próxima: Etapa 11 (Vendas).*
+*Atualizado a cada etapa. Última: Etapa 11 ✅ — 2026-05-27. Próxima: Etapa 12 (Clientes + Fornecedores).*
