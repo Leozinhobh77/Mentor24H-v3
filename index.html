@@ -2810,7 +2810,8 @@ const Vendas=(()=>{
   // Filtros histórico
   let filtroStatus='todos', filtroPeriodo='tudo', periodoInicio='', periodoFim='';
   // Catálogo
-  let catAtiva='fixados', buscaQ='';
+  let catAtiva='fixados', buscaQ='', gridExpandido=false;
+  let parcelas=1;
 
   const PGTOS=[
     {k:'pix',l:'Pix'},
@@ -2932,7 +2933,7 @@ const Vendas=(()=>{
               ${PGTOS.map(p=>`<button class="pdv-pgto-btn${pagamento===p.k?' on':''}" data-pgto="${p.k}">${p.l}</button>`).join('')}
             </div>
             ${pagamento==='dinheiro'?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><label style="font-size:12px;color:var(--text-3);white-space:nowrap">Recebido:</label><input class="field" id="pdv-recebido" type="number" min="0" placeholder="${tot.toFixed(2)}" style="width:110px;text-align:right"></div>`:''}
-            `:`
+            ${pagamento==='credito'?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><label style="font-size:12px;color:var(--text-3);white-space:nowrap">Parcelas:</label><select class="field" id="pdv-parcelas" style="width:auto">${[1,2,3,4,5,6,7,8,9,10,11,12].map(n=>`<option value="${n}"${parcelas===n?' selected':''}>${n}x</option>`).join('')}</select><span style="font-size:11px;color:var(--text-3)">só registro, sem juros</span></div>`:''}
             <div style="display:flex;flex-direction:column;gap:8px">
               <div style="display:flex;gap:8px;align-items:center">
                 <select class="field" id="pdv-pgto1" style="flex:1">${PGTOS.map(p=>`<option value="${p.k}"${pagamento===p.k?' selected':''}>${p.l}</option>`).join('')}</select>
@@ -2960,8 +2961,8 @@ const Vendas=(()=>{
       </div>`;
 
     renderGrid();
-    root.querySelector('#pdv-busca').oninput=e=>{buscaQ=e.target.value;renderGrid();};
-    root.querySelectorAll('.cat-tab').forEach(b=>b.onclick=()=>{catAtiva=b.dataset.cat;buscaQ='';render();});
+    root.querySelector('#pdv-busca').oninput=e=>{buscaQ=e.target.value;gridExpandido=false;renderGrid();};
+    root.querySelectorAll('.cat-tab').forEach(b=>b.onclick=()=>{catAtiva=b.dataset.cat;buscaQ='';gridExpandido=false;render();});
     root.querySelector('#pdv-avulso').onclick=()=>avulso();
     root.querySelector('#btn-hist').onclick=()=>{view='historico';render();};
     root.querySelector('#pdv-desc-val').oninput=e=>{desconto=+e.target.value||0;renderCarrinho();};
@@ -2976,6 +2977,7 @@ const Vendas=(()=>{
     }
     root.querySelector('#pdv-sel-cliente').onclick=()=>selecionarCliente();
     if(root.querySelector('#pdv-rm-cliente'))root.querySelector('#pdv-rm-cliente').onclick=()=>{clienteSel=null;render();};
+    root.querySelector('#pdv-parcelas')?.onchange=e=>{parcelas=+e.target.value;};
     root.querySelector('#pdv-finalizar').onclick=()=>finalizarVenda();
     root.querySelector('#pdv-limpar').onclick=()=>{if(carrinho.length===0)return;Modal.confirm('Limpar carrinho?','Todos os itens serão removidos.',()=>{carrinho=[];desconto=0;dividir=false;valor1=0;clienteSel=null;render();});};
     renderCarrinho();
@@ -2987,16 +2989,21 @@ const Vendas=(()=>{
     if(catAtiva==='fixados') prods=prods.filter(p=>p.fixado);
     else if(catAtiva!=='todas') prods=prods.filter(p=>p.categoria===catAtiva);
     if(buscaQ) prods=prods.filter(p=>p.nome.toLowerCase().includes(buscaQ.toLowerCase()));
+    const LIMIT=6;
+    const mostrar=gridExpandido?prods:prods.slice(0,LIMIT);
+    const temMais=prods.length>LIMIT;
+    const cardMap=p=>`
+      <div class="pdv-prod-btn${p.estoque<=0?' sem-stock':''}" data-pid="${p.id}" title="${p.nome}">
+        <button class="fix-btn${p.fixado?' on':''}" data-fixar="${p.id}">${p.fixado?'⭐':'☆'}</button>
+        <div class="pe">${p.emoji}</div>
+        <div class="pn">${p.nome}</div>
+        <div class="pp">${fmt(p.preco)}</div>
+        <div class="pstock">${p.estoque>=999?'∞':p.estoque+' em estoque'}</div>
+      </div>`;
     grid.innerHTML=prods.length===0
       ?`<div style="grid-column:1/-1;text-align:center;padding:var(--s-6);color:var(--text-3);font-size:13px">${catAtiva==='fixados'?'Nenhum produto fixado — toque ⭐ nos produtos para fixar':'Nenhum produto encontrado'}</div>`
-      :prods.map(p=>`
-        <div class="pdv-prod-btn${p.estoque<=0?' sem-stock':''}" data-pid="${p.id}" title="${p.nome}">
-          <button class="fix-btn${p.fixado?' on':''}" data-fixar="${p.id}">${p.fixado?'⭐':'☆'}</button>
-          <div class="pe">${p.emoji}</div>
-          <div class="pn">${p.nome}</div>
-          <div class="pp">${fmt(p.preco)}</div>
-          <div class="pstock">${p.estoque>=999?'∞':p.estoque+' em estoque'}</div>
-        </div>`).join('');
+      :(mostrar.map(cardMap).join('')+
+        (temMais?`<div style="grid-column:1/-1;padding:2px 0"><button data-toggle-grid class="btn btn-ghost" style="width:100%;font-size:12px;padding:8px 0;border:1px dashed var(--border);border-radius:var(--r-md)">${gridExpandido?`▲ Ver menos`:`▼ Ver mais (${prods.length-LIMIT} produto${prods.length-LIMIT!==1?'s':''})`}</button></div>`:``));
     grid.querySelectorAll('.pdv-prod-btn').forEach(card=>{
       card.addEventListener('click',e=>{
         if(e.target.closest('[data-fixar]'))return;
@@ -3009,6 +3016,8 @@ const Vendas=(()=>{
       const p=DB.produtos.find(x=>x.id===+b.dataset.fixar);
       if(p){p.fixado=!p.fixado;renderGrid();}
     }));
+    const toggleBtn=grid.querySelector('[data-toggle-grid]');
+    if(toggleBtn)toggleBtn.onclick=()=>{gridExpandido=!gridExpandido;renderGrid();};
   }
 
   function avulso(){
@@ -3084,6 +3093,7 @@ const Vendas=(()=>{
       subtotal:subtotal(),desconto:descontoVal(),total:tot,
       pagamento:pagamentos[0].metodo,
       pagamentos,dividido:dividir,
+      parcelas:pagamentos.some(p=>p.metodo==='credito')?parcelas:1,
       clienteId:clienteSel?.id||null,clienteNome:clienteSel?.nome||'',
       status,obs:'',
     };
@@ -3100,13 +3110,14 @@ const Vendas=(()=>{
       DB.transacoes.unshift({id:nid(),tipo:'entrada',descricao:`Venda — ${venda.itens.map(i=>i.nome).join(', ')}${venda.clienteNome?' ('+venda.clienteNome+')':''}`,valor:valorAvista,cat:'receita',metodo:pgtoLabel,data:offset(0)});
     }
     const itensVenda=[...carrinho];
-    carrinho=[];desconto=0;descontoTipo='pct';dividir=false;valor1=0;clienteSel=null;
+    carrinho=[];desconto=0;descontoTipo='pct';dividir=false;valor1=0;clienteSel=null;parcelas=1;
     updateEstoqueBadge();
     recibo(venda,troco,itensVenda,pagamentos);
   }
 
   function recibo(venda,troco,itens,pagamentos){
-    const pgtoLabel=pagamentos?pagamentos.map(p=>PGTO_LABEL[p.metodo]).join(' + '):PGTO_LABEL[venda.pagamento];
+    const _pgtoStr=p=>p.metodo==='credito'&&venda.parcelas>1?`Crédito ${venda.parcelas}x`:PGTO_LABEL[p.metodo];
+    const pgtoLabel=pagamentos?pagamentos.map(_pgtoStr).join(' + '):_pgtoStr({metodo:venda.pagamento});
     const pgtoDetalhe=pagamentos&&pagamentos.length>1
       ?pagamentos.map(p=>`${PGTO_LABEL[p.metodo]}: ${fmt(p.valor)}${p.metodo==='a_prazo'?' ⏳':' ✅'}`).join('\n')
       :'';
@@ -3186,7 +3197,8 @@ const Vendas=(()=>{
       <div style="display:flex;flex-direction:column;gap:var(--s-2)">
         ${lista.length===0?`<div class="empty"><div style="font-size:32px;margin-bottom:8px">🛒</div><p style="color:var(--text-3)">Nenhuma venda encontrada</p></div>`
         :lista.map(v=>{
-          const pgtoLabel=v.dividido&&v.pagamentos?v.pagamentos.map(p=>PGTO_LABEL[p.metodo]).join(' + '):PGTO_LABEL[v.pagamento];
+          const _ps=p=>p.metodo==='credito'&&v.parcelas>1?`Crédito ${v.parcelas}x`:PGTO_LABEL[p.metodo];
+          const pgtoLabel=v.dividido&&v.pagamentos?v.pagamentos.map(_ps).join(' + '):_ps({metodo:v.pagamento});
           const d=new Date(v.data+'T00:00:00');
           const mes=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
           return `<div class="venda-row">
