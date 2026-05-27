@@ -662,21 +662,32 @@ select.field{cursor:pointer}
   .col-6,.col-5,.col-4,.col-7,.col-8{grid-column:span 12}
   .hero .big{font-size:34px}
   .hero-stats{gap:var(--s-5)}
-  .mode-switch{order:3;flex-basis:100%}
-  .mode-switch button{flex:1;justify-content:center}
+  .mode-switch{display:none}
   .bottomnav{
     display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;
-    background:color-mix(in srgb,var(--surface-1) 92%,transparent);
-    backdrop-filter:blur(16px);
+    background:color-mix(in srgb,var(--surface-1) 94%,transparent);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
     border-top:1px solid var(--border);
-    padding:8px 8px calc(8px + env(safe-area-inset-bottom));
-    justify-content:space-around;
+    padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+    align-items:center;
   }
-  .bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--text-3);padding:5px 12px;border-radius:var(--r-md);flex:1}
-  .bn-item svg{width:21px;height:21px;stroke-width:1.9}
-  .bn-item.active{color:var(--brand-text)}
-  .bn-add{background:var(--brand);color:#fff!important;margin-top:-22px;width:50px;height:50px;border-radius:16px;box-shadow:var(--shadow-lg);flex:none}
-  .bn-add svg{width:24px;height:24px;stroke-width:2.4}
+  .bn-pill{
+    position:absolute;width:20%;
+    top:8px;bottom:calc(8px + env(safe-area-inset-bottom));
+    left:0;transform:translateX(0);
+    background:var(--brand-soft);border-radius:12px;
+    transition:transform .28s cubic-bezier(.22,.61,.36,1);
+    pointer-events:none;z-index:0;
+  }
+  .bn-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-size:10px;font-weight:600;color:var(--text-3);
+    padding:6px 4px;flex:1;position:relative;z-index:1;
+    transition:color .2s var(--ease);
+  }
+  .bn-item svg{width:21px;height:21px;stroke-width:1.9;transition:stroke-width .2s var(--ease)}
+  .bn-item.active{color:var(--brand)}
+  .bn-item.active svg{stroke-width:2.3}
 }
 @media(max-width:560px){
   .hero-stats{flex-wrap:wrap;gap:var(--s-4)}
@@ -1068,11 +1079,12 @@ select.field{cursor:pointer}
 
 <!-- ═══ BOTTOM NAV (mobile) ═══ -->
 <nav class="bottomnav">
-  <button class="bn-item active" data-nav="dashboard">{i:home}<span>Início</span></button>
-  <button class="bn-item" data-nav="financas">{i:wallet}<span>Finanças</span></button>
-  <button class="bn-item bn-add">{i:plus}</button>
-  <button class="bn-item" data-nav="mentor">{i:spark}<span>Mentor</span></button>
-  <button class="bn-item" data-nav="tarefas">{i:check}<span>Tarefas</span></button>
+  <div class="bn-pill"></div>
+  <button class="bn-item" data-bn="perfil">{i:user}<span>Perfil</span></button>
+  <button class="bn-item active" data-bn="pessoal">{i:home}<span>Pessoal</span></button>
+  <button class="bn-item" data-bn="hibrido">{i:layers}<span>Híbrido</span></button>
+  <button class="bn-item" data-bn="negocio">{i:briefcase}<span>Negócio</span></button>
+  <button class="bn-item" data-bn="vendas">{i:cart}<span>Vendas</span></button>
 </nav>
 
 <script>
@@ -1138,6 +1150,7 @@ const PAGES=[
   ['clientes','users','Clientes','Etapa 12','CRM simples com histórico de compras e saldo devedor.'],
   ['relatorios','chart','Relatórios','Etapa 13','Vendas por período, mais vendidos e receita x lucro x custo.'],
   ['mentor','spark','Mentor','Etapa 14','Assistente que lê seus dados e gera resumos e alertas por regra (sem IA por enquanto).'],
+  ['perfil','user','Perfil','Etapa 16','Conta, preferências e configurações do Mentor24h.'],
 ];
 (function(){
   const content=document.querySelector('.content');
@@ -1178,7 +1191,7 @@ themeBtn.addEventListener('click',()=>{
   themeBtn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${dark?ICONS.sun:ICONS.moon}</svg>`;
 });
 
-/* ─── MODO PESSOAL / NEGÓCIO ─── */
+/* ─── MODO PESSOAL / NEGÓCIO (desktop — mode-switch na topbar) ─── */
 document.querySelectorAll('.mode-switch button').forEach(b=>{
   b.addEventListener('click',()=>{
     const mode=b.dataset.mode;
@@ -1188,6 +1201,39 @@ document.querySelectorAll('.mode-switch button').forEach(b=>{
     document.querySelectorAll('[data-ctx]').forEach(g=>g.style.display=(mode==='hibrido'||g.dataset.ctx===mode)?'':'none');
   });
 });
+
+/* ─── BOTTOM NAV PREMIUM (mobile) ─── */
+(function(){
+  const pill=document.querySelector('.bn-pill');
+  const bnItems=document.querySelectorAll('.bn-item[data-bn]');
+
+  function switchMode(mode){
+    document.documentElement.setAttribute('data-mode',mode);
+    document.querySelectorAll('.mode-switch button').forEach(x=>x.classList.toggle('on',x.dataset.mode===mode));
+    document.querySelectorAll('.mode-pane').forEach(p=>p.classList.toggle('show',p.dataset.pane===mode));
+    document.querySelectorAll('[data-ctx]').forEach(g=>g.style.display=(mode==='hibrido'||g.dataset.ctx===mode)?'':'none');
+  }
+
+  function setBnActive(index){
+    bnItems.forEach((item,i)=>item.classList.toggle('active',i===index));
+    if(pill) pill.style.transform=`translateX(${index*100}%)`;
+  }
+
+  bnItems.forEach((item,index)=>{
+    item.addEventListener('click',()=>{
+      setBnActive(index);
+      const bn=item.dataset.bn;
+      if(bn==='pessoal'){navigate('dashboard');switchMode('pessoal');}
+      else if(bn==='hibrido'){navigate('dashboard');switchMode('hibrido');}
+      else if(bn==='negocio'){navigate('dashboard');switchMode('negocio');}
+      else if(bn==='vendas') navigate('vendas');
+      else if(bn==='perfil') navigate('perfil');
+    });
+  });
+
+  // Pessoal (índice 1) ativo por padrão — reflete o modo inicial do app
+  setBnActive(1);
+})();
 
 /* ─── TAREFAS / REMÉDIOS (toggle visual) ─── */
 document.querySelectorAll('.task').forEach(t=>t.addEventListener('click',()=>t.classList.toggle('done')));
@@ -1201,7 +1247,7 @@ document.querySelectorAll('.mood-pick').forEach(p=>p.querySelectorAll('.mood').f
 })));
 
 /* ─── ROUTER (navegação SPA) ─── */
-const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios',mentor:'Mentor'};
+const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios',mentor:'Mentor',perfil:'Perfil'};
 function navigate(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===page));
   document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));

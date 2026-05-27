@@ -41,4 +41,10 @@
 
 ---
 
+## Nota de Arquitetura
+
+> **Single-file por enquanto (decisão 2026-05-27):** continuar com `index.html` único até fechar todas as etapas do protótipo. Quando chegar na Etapa 17 (Supabase), **avisar Léo para separar em projeto real** com estrutura adequada (HTML + CSS + JS separados ou framework). O protótipo vira guia de referência de UX e dados.
+
+---
+
 *Atualizado a cada etapa. Última: Etapa 5 ✅ aprovada — 2026-05-26. Próxima: Etapa 6 (Agenda).*
