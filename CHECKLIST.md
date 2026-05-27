@@ -24,7 +24,7 @@
 - [x] **Etapa 8A — Hábitos** (sim/não + quantidade, streak+recorde, meta semanal, heatmap, lembrete) ✅ aprovado por Léo
 - [x] **Etapa 8B — Métricas pessoais** (peso/pressão/glicose + métrica customizável, gráfico de evolução) ✅ aprovado por Léo
 - [x] **Etapa 9A — Contatos / Lista** (avatar, tags, contexto duplo, favoritos, busca/filtro, ações rápidas WhatsApp/ligar/email, aniversários) ✅ aprovado por Léo
-- [ ] **Etapa 9B — Contatos / Ficha rica** (manter-contato/reconexão, timeline de interações, datas importantes)
+- [x] **Etapa 9B — Contatos / Ficha rica** (manter-contato/reconexão, timeline de interações, datas importantes) ✅ aprovado por Léo
 
 ## Negócio
 - [ ] **Etapa 10 — Produtos + Estoque** (cadastro, margem, alertas, movimentações)
@@ -47,4 +47,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 7B ✅ aprovada — 2026-05-27. Próxima: Etapa 9B (Contatos / Ficha rica).*
+*Atualizado a cada etapa. Última: Etapa 9B ✅ aprovada — 2026-05-27. Próxima: Etapa 10 (Produtos + Estoque).*

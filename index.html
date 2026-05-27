@@ -604,6 +604,10 @@ select.field{cursor:pointer}
 .docbtn:hover{background:var(--surface-3);color:var(--text-1)}
 .docbtn.wa:hover{background:var(--income-soft);color:var(--income)}
 .docbtn svg{width:16px;height:16px}
+.int-tipo{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700}
+.rel-score{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--r-full);background:var(--surface-2);margin-top:6px}
+.prox-acao{display:flex;align-items:center;gap:8px;background:var(--info-soft);border-radius:var(--r-md);padding:10px 12px;margin-top:var(--s-3);font-size:12.5px}
+.prox-acao b{color:var(--info);font-weight:700}
 .med-doc-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:5px}
 .med-doc-meta span{font-size:11px;color:var(--text-3);font-weight:600;display:flex;align-items:center;gap:4px}
 .med-doc-meta span svg{width:11px;height:11px}
@@ -1405,13 +1409,13 @@ const DB={
     {id:nid(),nome:'Glicose',unidade:'mg/dL',cor:'#C8860B',icone:'drop',tipo:'simples',registros:[{data:offset(-7),v:98},{data:offset(-4),v:102},{data:offset(-2),v:95},{data:offset(0),v:92}]},
   ],
   contatos:[
-    {id:nid(),nome:'Maria Souza',telefone:'31988881111',email:'maria@email.com',tags:['Cliente'],contexto:'negocio',aniversario:'1992-05-29',favorito:true,comoConheci:'Indicação',anotacoes:'Compra brigadeiros toda semana',ultimoContato:offset(-3),manterContato:15,interacoes:[{data:offset(-3),nota:'Pedido de 6 brigadeiros'}],datas:[]},
-    {id:nid(),nome:'João Pedro',telefone:'31977772222',email:'',tags:['Cliente'],contexto:'negocio',aniversario:'1988-06-02',favorito:false,comoConheci:'Instagram',anotacoes:'',ultimoContato:offset(-1),manterContato:30,interacoes:[],datas:[]},
-    {id:nid(),nome:'Ana Lima',telefone:'31966663333',email:'ana@email.com',tags:['Cliente','A prazo'],contexto:'negocio',aniversario:'',favorito:false,comoConheci:'',anotacoes:'Deve R$ 90',ultimoContato:offset(-10),manterContato:null,interacoes:[],datas:[]},
-    {id:nid(),nome:'Carla Mãe',telefone:'31955554444',email:'',tags:['Família'],contexto:'pessoal',aniversario:'1965-08-12',favorito:true,comoConheci:'',anotacoes:'',ultimoContato:offset(-2),manterContato:7,interacoes:[],datas:[]},
-    {id:nid(),nome:'Pedro Irmão',telefone:'31944445555',email:'',tags:['Família'],contexto:'pessoal',aniversario:'1995-12-01',favorito:false,comoConheci:'',anotacoes:'',ultimoContato:'',manterContato:null,interacoes:[],datas:[]},
-    {id:nid(),nome:'Bruno Fornecedor',telefone:'31933336666',email:'bruno@fornec.com',tags:['Fornecedor'],contexto:'negocio',aniversario:'',favorito:false,comoConheci:'',anotacoes:'Embalagens e insumos',ultimoContato:offset(-20),manterContato:30,interacoes:[],datas:[]},
-    {id:nid(),nome:'Lucas Amigo',telefone:'31922227777',email:'lucas@email.com',tags:['Amigos'],contexto:'pessoal',aniversario:'1993-05-30',favorito:false,comoConheci:'Faculdade',anotacoes:'',ultimoContato:offset(-40),manterContato:60,interacoes:[],datas:[]},
+    {id:nid(),nome:'Maria Souza',telefone:'31988881111',email:'maria@email.com',tags:['Cliente'],contexto:'negocio',aniversario:'1992-05-29',favorito:true,comoConheci:'Indicação',anotacoes:'Compra brigadeiros toda semana',ultimoContato:offset(-3),manterContato:15,proximaAcao:{data:offset(5),nota:'Confirmar pedido para festa'},interacoes:[{data:offset(-3),tipo:'whatsapp',nota:'Pedido de 6 brigadeiros para o fim de semana'},{data:offset(-18),tipo:'presencial',nota:'Entregou encomenda pessoalmente'},{data:offset(-35),tipo:'whatsapp',nota:'Pediu cardápio atualizado'}],datas:[]},
+    {id:nid(),nome:'João Pedro',telefone:'31977772222',email:'',tags:['Cliente'],contexto:'negocio',aniversario:'1988-06-02',favorito:false,comoConheci:'Instagram',anotacoes:'',ultimoContato:offset(-1),manterContato:30,proximaAcao:null,interacoes:[{data:offset(-1),tipo:'whatsapp',nota:'Pediu orçamento para 50 unidades'},{data:offset(-15),tipo:'ligacao',nota:'Ligou para saber prazo de entrega'}],datas:[]},
+    {id:nid(),nome:'Ana Lima',telefone:'31966663333',email:'ana@email.com',tags:['Cliente','A prazo'],contexto:'negocio',aniversario:'',favorito:false,comoConheci:'',anotacoes:'Deve R$ 90',ultimoContato:offset(-10),manterContato:null,proximaAcao:{data:offset(3),nota:'Cobrar valor pendente de R$ 90'},interacoes:[{data:offset(-10),tipo:'whatsapp',nota:'Recebeu pedido, vai pagar semana que vem'}],datas:[]},
+    {id:nid(),nome:'Carla Mãe',telefone:'31955554444',email:'',tags:['Família'],contexto:'pessoal',aniversario:'1965-08-12',favorito:true,comoConheci:'',anotacoes:'',ultimoContato:offset(-2),manterContato:7,proximaAcao:null,interacoes:[{data:offset(-2),tipo:'ligacao',nota:'Ligou para saber como estava'},{data:offset(-9),tipo:'presencial',nota:'Almoço de domingo em família'}],datas:[]},
+    {id:nid(),nome:'Pedro Irmão',telefone:'31944445555',email:'',tags:['Família'],contexto:'pessoal',aniversario:'1995-12-01',favorito:false,comoConheci:'',anotacoes:'',ultimoContato:'',manterContato:null,proximaAcao:null,interacoes:[],datas:[]},
+    {id:nid(),nome:'Bruno Fornecedor',telefone:'31933336666',email:'bruno@fornec.com',tags:['Fornecedor'],contexto:'negocio',aniversario:'',favorito:false,comoConheci:'',anotacoes:'Embalagens e insumos',ultimoContato:offset(-20),manterContato:30,proximaAcao:{data:offset(10),nota:'Negociar preço para pedido grande'},interacoes:[{data:offset(-20),tipo:'whatsapp',nota:'Confirmou estoque de caixinhas disponível'},{data:offset(-50),tipo:'email',nota:'Enviou catálogo de novos produtos'}],datas:[]},
+    {id:nid(),nome:'Lucas Amigo',telefone:'31922227777',email:'lucas@email.com',tags:['Amigos'],contexto:'pessoal',aniversario:'1993-05-30',favorito:false,comoConheci:'Faculdade',anotacoes:'',ultimoContato:offset(-40),manterContato:60,proximaAcao:null,interacoes:[{data:offset(-40),tipo:'whatsapp',nota:'Mandou meme, respondeu rindo'},{data:offset(-65),tipo:'presencial',nota:'Saíram para jantar'}],datas:[]},
   ],
 };
 
@@ -2476,6 +2480,9 @@ const Metricas=(()=>{
 
 const Contatos=(()=>{
   const AVCOR=['#168A7C','#2D7FF9','#1F9D55','#C8860B','#DB4A4A','#E0568C','#7B6CFF','#27B6A3'];
+  const INT_TIPOS={whatsapp:{l:'WhatsApp',e:'💬',c:'var(--income)'},ligacao:{l:'Ligação',e:'📞',c:'var(--brand)'},presencial:{l:'Presencial',e:'🤝',c:'var(--warning)'},email:{l:'E-mail',e:'📧',c:'var(--info)'}};
+  function relScore(c){if(!c.manterContato)return null;const dd=c.ultimoContato?-diasAte(c.ultimoContato):null;if(dd===null)return{l:'Sem contato',e:'❄️',cor:'var(--text-3)'};const r=dd/c.manterContato;if(r<0.5)return{l:'Frequente',e:'🔥',cor:'var(--income)'};if(r<1)return{l:'Em dia',e:'💚',cor:'var(--income)'};if(r<1.5)return{l:'Atrasado',e:'⚠️',cor:'var(--warning)'};return{l:'Esfriando',e:'❄️',cor:'var(--expense)'};}
+  function tipoRadios(name){return Object.entries(INT_TIPOS).map(([k,v])=>`<label style="display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:var(--r-md);background:var(--surface-2);cursor:pointer;font-size:13px;font-weight:600"><input type="radio" name="${name}" value="${k}" style="accent-color:var(--brand)"> ${v.e} ${v.l}</label>`).join('')}
   const hash=s=>[...(s||'')].reduce((a,c)=>a+c.charCodeAt(0),0);
   const avCor=n=>AVCOR[hash(n)%AVCOR.length];
   const ini=n=>n.trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
@@ -2552,6 +2559,7 @@ const Contatos=(()=>{
     const precisa=c.manterContato!=null&&(dd==null||dd>=c.manterContato);
     const ints=[...(c.interacoes||[])].sort((a,b)=>a.data<b.data?1:-1);
     const datas=[...(c.datas||[])];
+    const score=relScore(c);
     const fmtD=s=>{const p=s.split('-');return `${p[2]}/${p[1]}/${p[0].slice(2)}`;};
     const diasProx=av=>{const p=av.split('-');const mm=+p[1],d2=+p[2];const h=new Date();h.setHours(0,0,0,0);let nx=new Date(h.getFullYear(),mm-1,d2);if(nx<h)nx=new Date(h.getFullYear()+1,mm-1,d2);return Math.round((nx-h)/86400000);};
     root.innerHTML=`
@@ -2569,6 +2577,7 @@ const Contatos=(()=>{
             <div style="font-size:20px;font-weight:800;letter-spacing:-.02em">${c.nome}</div>
             <div style="font-size:12.5px;color:var(--text-3);font-weight:600;margin-top:2px">${CTX[c.contexto]||''}${c.comoConheci?` · conheci por ${c.comoConheci}`:''}</div>
             <div class="ct-tags" style="margin-top:7px">${(c.tags||[]).map(t=>`<span class="ct-tag" style="background:${avCor(t)}22;color:${avCor(t)}">${t}</span>`).join('')}</div>
+            ${score?`<span class="rel-score" style="color:${score.cor}">${score.e} ${score.l}</span>`:''}
           </div>
           <div style="display:flex;gap:8px">
             ${tel?`<a class="docbtn wa" href="https://wa.me/55${tel}" target="_blank" rel="noopener" title="WhatsApp">${svg('chat',18)}</a><a class="docbtn" href="tel:+55${tel}" title="Ligar">${svg('phone',18)}</a>`:''}
@@ -2580,7 +2589,11 @@ const Contatos=(()=>{
           <div style="font-size:13px;color:var(--text-2);font-weight:600">Último contato: <b style="color:${precisa?'var(--expense)':'var(--text-1)'}">${ultTxt}</b></div>
           ${precisa?`<div style="color:var(--expense);font-weight:700;font-size:12px;margin-top:6px;display:flex;align-items:center;gap:5px">${svg('alert',12)} Hora de reconectar!</div>`:''}
           <div class="fg" style="margin-top:var(--s-4)"><label>Lembrar de falar a cada</label><select class="field" data-freq><option value="">Não lembrar</option>${[7,15,30,60,90].map(n=>`<option value="${n}"${c.manterContato===n?' selected':''}>${n} dias</option>`).join('')}</select></div>
-          <button class="btn btn-primary" data-falei style="margin-top:var(--s-4);width:100%">${svg('tick',15)} Registrar que falei hoje</button>
+          ${c.proximaAcao?`<div class="prox-acao">${svg('zap',13)} <span style="flex:1"><b>Próxima ação:</b> ${c.proximaAcao.nota}</span><span style="font-size:11px;color:var(--info);font-weight:700;white-space:nowrap">${fmtD(c.proximaAcao.data)}</span><button class="icon-mini-btn" data-rmprox style="width:24px;height:24px">${svg('x',12)}</button></div>`:''}
+          <div style="display:flex;gap:8px;margin-top:var(--s-4)">
+            <button class="btn btn-primary" data-falei style="flex:1">${svg('tick',15)} Falei hoje</button>
+            <button class="btn btn-soft" data-addprox style="flex:1">${svg('zap',14)} ${c.proximaAcao?'Editar ação':'+ Próxima ação'}</button>
+          </div>
         </div>
         <div class="card col-6">
           <div class="card-head"><div class="ico" style="background:var(--warning-soft);color:var(--warning)">${svg('cake',17)}</div><h3>Datas importantes</h3></div>
@@ -2592,7 +2605,7 @@ const Contatos=(()=>{
         ${c.anotacoes?`<div class="card col-12"><div class="card-head"><div class="ico" style="background:var(--surface-3);color:var(--text-2)">${svg('book',17)}</div><h3>Anotações</h3></div><p style="font-size:13.5px;color:var(--text-2);line-height:1.5">${c.anotacoes}</p></div>`:''}
         <div class="card col-12">
           <div class="card-head"><div class="ico" style="background:var(--info-soft);color:var(--info)">${svg('repeat',17)}</div><h3>Histórico de interações</h3><button class="btn btn-primary" data-addint style="font-size:12px;padding:7px 12px">${svg('plus',14)} Registrar</button></div>
-          ${ints.length?ints.map((it,i)=>`<div class="ev-item"><div class="ev-time">${it.data.slice(8,10)}/${it.data.slice(5,7)}</div><div class="ev-bar" style="background:var(--info)"></div><div class="ev-main"><div class="et">${it.nota||'Contato'}</div></div><button class="icon-mini-btn" data-rmint="${i}">${svg('x',14)}</button></div>`).join(''):`<p style="font-size:12.5px;color:var(--text-4)">Nenhuma interação registrada. Use "Registrar" pra começar a timeline.</p>`}
+          ${ints.length?ints.map((it,i)=>{const tp=INT_TIPOS[it.tipo]||{l:'Contato',e:'💬',c:'var(--info)'};return`<div class="ev-item"><div class="ev-time">${it.data.slice(8,10)}/${it.data.slice(5,7)}</div><div class="ev-bar" style="background:${tp.c}"></div><div class="ev-main"><div class="et"><span style="font-size:13px">${tp.e}</span> ${it.nota||tp.l}</div><div class="es"><span class="int-tipo" style="color:${tp.c}">${tp.l}</span></div></div><button class="icon-mini-btn" data-rmint="${i}">${svg('x',14)}</button></div>`;}).join(''):`<p style="font-size:12.5px;color:var(--text-4)">Nenhuma interação registrada. Use "Registrar" pra começar a timeline.</p>`}
         </div>
       </div>`;
     root.querySelector('[data-back]').onclick=()=>{viewing=null;render();};
@@ -2600,10 +2613,12 @@ const Contatos=(()=>{
     root.querySelector('[data-editf]').onclick=()=>form(c.id);
     root.querySelector('[data-delf]').onclick=()=>Modal.confirm('Excluir contato?',`"${c.nome}" será removido.`,()=>{DB.contatos=DB.contatos.filter(x=>x.id!==c.id);viewing=null;Toast.show('Contato excluído');render();});
     root.querySelector('[data-freq]').onchange=e=>{c.manterContato=e.target.value?+e.target.value:null;renderFicha(c);};
-    root.querySelector('[data-falei]').onclick=()=>{c.ultimoContato=offset(0);(c.interacoes=c.interacoes||[]).push({data:offset(0),nota:'Conversaram'});Toast.show('Registrado! 👍');renderFicha(c);};
+    root.querySelector('[data-falei]').onclick=()=>Modal.open('Como foi o contato?',`<div class="fg"><label>Canal</label><div style="display:flex;gap:8px;flex-wrap:wrap">${tipoRadios('fi-tipo')}</div></div><div class="fg" style="margin-top:var(--s-3)"><label>Nota (opcional)</label><input class="field" id="fi-nota" placeholder="Sobre o que conversaram?"></div>`,(b)=>{const tipo=(b.querySelector('input[name=fi-tipo]:checked')||{}).value||'whatsapp';const nota=b.querySelector('#fi-nota').value.trim()||INT_TIPOS[tipo].l;c.ultimoContato=offset(0);(c.interacoes=c.interacoes||[]).push({data:offset(0),tipo,nota});Toast.show('Registrado! 👍');renderFicha(c);},'Registrar');
+    root.querySelector('[data-addprox]').onclick=()=>Modal.open(c.proximaAcao?'Editar próxima ação':'Nova próxima ação',`<div class="fg"><label>O que fazer</label><input class="field" id="pa-nota" value="${c.proximaAcao?c.proximaAcao.nota.replace(/"/g,'&quot;'):''}" placeholder="Ex: Enviar proposta, ligar para confirmar…"></div><div class="fg"><label>Data</label><input class="field" id="pa-data" type="date" value="${c.proximaAcao?c.proximaAcao.data:offset(7)}"></div>`,(b)=>{const nota=b.querySelector('#pa-nota').value.trim(),data=b.querySelector('#pa-data').value;if(!nota){Toast.show('Descreva a ação','err');return false;}c.proximaAcao={nota,data};Toast.show('Próxima ação salva');renderFicha(c);},'Salvar');
+    if(root.querySelector('[data-rmprox]'))root.querySelector('[data-rmprox]').onclick=()=>{c.proximaAcao=null;renderFicha(c);};
     root.querySelector('[data-adddata]').onclick=()=>Modal.open('Nova data importante',`<div class="fg"><label>Descrição</label><input class="field" id="dl" placeholder="Ex: Casamento, formatura"></div><div class="fg"><label>Data</label><input class="field" id="ddt" type="date" value="${offset(0)}"></div>`,(b)=>{const label=b.querySelector('#dl').value.trim(),data=b.querySelector('#ddt').value;if(!label||!data){Toast.show('Preencha descrição e data','err');return false;}(c.datas=c.datas||[]).push({label,data});Toast.show('Data adicionada');renderFicha(c);},'Adicionar');
     root.querySelectorAll('[data-rmdata]').forEach(b=>b.onclick=()=>{const d=datas[+b.dataset.rmdata];c.datas=c.datas.filter(x=>x!==d);renderFicha(c);});
-    root.querySelector('[data-addint]').onclick=()=>Modal.open('Registrar interação',`<div class="fg"><label>Data</label><input class="field" id="idt" type="date" value="${offset(0)}"></div><div class="fg"><label>Nota</label><input class="field" id="int" placeholder="Sobre o que conversaram?"></div>`,(b)=>{const data=b.querySelector('#idt').value,nota=b.querySelector('#int').value.trim();if(!data){Toast.show('Informe a data','err');return false;}(c.interacoes=c.interacoes||[]).push({data,nota});if(!c.ultimoContato||data>c.ultimoContato)c.ultimoContato=data;Toast.show('Interação registrada');renderFicha(c);},'Registrar');
+    root.querySelector('[data-addint]').onclick=()=>Modal.open('Registrar interação',`<div class="fg"><label>Canal</label><div style="display:flex;gap:8px;flex-wrap:wrap">${tipoRadios('it-tipo')}</div></div><div class="fg" style="margin-top:var(--s-3)"><label>Data</label><input class="field" id="idt" type="date" value="${offset(0)}"></div><div class="fg"><label>Nota</label><input class="field" id="int" placeholder="Sobre o que conversaram?"></div>`,(b)=>{const tipo=(b.querySelector('input[name=it-tipo]:checked')||{}).value||'whatsapp';const data=b.querySelector('#idt').value,nota=b.querySelector('#int').value.trim();if(!data){Toast.show('Informe a data','err');return false;}(c.interacoes=c.interacoes||[]).push({data,tipo,nota});if(!c.ultimoContato||data>c.ultimoContato)c.ultimoContato=data;Toast.show('Interação registrada');renderFicha(c);},'Registrar');
     root.querySelectorAll('[data-rmint]').forEach(b=>b.onclick=()=>{const it=ints[+b.dataset.rmint];c.interacoes=c.interacoes.filter(x=>x!==it);renderFicha(c);});
   }
   function form(id){
