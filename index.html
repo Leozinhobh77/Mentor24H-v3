@@ -651,10 +651,8 @@ select.field{cursor:pointer}
   #side-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:65;opacity:0;visibility:hidden;transition:opacity .25s var(--ease),visibility .25s}
   body.drawer-open #side-backdrop{opacity:1;visibility:visible}
   .topbar{padding:var(--s-3) var(--s-5);flex-wrap:wrap;gap:var(--s-3);row-gap:var(--s-3)}
-  .top-actions{flex-wrap:wrap;width:100%;gap:var(--s-2)}
+  .top-actions{gap:var(--s-2)}
   .greet{flex:1;min-width:140px}
-  .btn-add span{display:none}
-  .btn-add{padding:9px 12px}
   .content{padding:var(--s-4);padding-bottom:96px}
   .search{display:none}
   .greet h1{font-size:18px}
@@ -768,7 +766,6 @@ select.field{cursor:pointer}
         <div class="search">{i:search}<span>Buscar…</span><span class="kbd">⌘K</span></div>
         <button class="icon-btn" id="theme-btn" title="Tema">{i:moon}</button>
         <button class="icon-btn" title="Notificações">{i:bell}</button>
-        <button class="btn-add">{i:plus}<span>Adicionar</span></button>
       </div>
     </header>
 
