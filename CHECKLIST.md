@@ -30,7 +30,7 @@
 - [x] **Etapa 10 — Produtos + Estoque** (cadastro, margem, alertas, movimentações, precificação simplificada) ✅
 - [x] **Etapa 11 — Vendas** (PDV com carrinho, item avulso, desconto, pagamento, recibo WhatsApp, histórico com "a prazo" e receber) ✅
 - [x] **Etapa 12 — Clientes + Fornecedores + Precificação** (CRM/caderneta sobre contatos+vendas, RFM por regra, fiado com receber total/parcial, limite de crédito + alerta no PDV, win-back/aniversário, cobrança WhatsApp; fornecedores com "quanto devo" e lista de reposição; aba de precificação markup×margem com embalagem/frete/taxa) ✅
-- [ ] **Etapa 13 — Relatórios do negócio** (vendas por período, mais vendidos, receita x lucro x custo)
+- [x] **Etapa 13 — Relatórios do negócio** (período selector 5 opções; KPIs: receita/nVendas/ticket/lucro/margem; gráfico receita×custo×lucro; top 8 vendidos com badges ABC; pagamentos breakdown; lucro por categoria; ABC classification visual) ✅
 
 ## Inteligência & Plataforma
 - [ ] **Etapa 14 — Mentor** (assistente por leitura de dados: insights e alertas por regra, sem IA)
@@ -47,4 +47,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 12 ✅ — 2026-05-30. Próxima: Etapa 13 (Relatórios do negócio). Semente pronta: `Clientes.insightsClientes()` para o Mentor (Etapa 14).*
+*Atualizado a cada etapa. Última: Etapa 13 ✅ — 2026-05-30. Próxima: Etapa 14 (Mentor). Semente pronta: `RelatoriosNeg` + `Clientes.insightsClientes()` para insights automáticos.*
