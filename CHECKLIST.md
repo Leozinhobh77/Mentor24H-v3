@@ -29,7 +29,7 @@
 ## Negócio
 - [x] **Etapa 10 — Produtos + Estoque** (cadastro, margem, alertas, movimentações, precificação simplificada) ✅
 - [x] **Etapa 11 — Vendas** (PDV com carrinho, item avulso, desconto, pagamento, recibo WhatsApp, histórico com "a prazo" e receber) ✅
-- [ ] **Etapa 12 — Clientes + Fornecedores + Precificação**
+- [x] **Etapa 12 — Clientes + Fornecedores + Precificação** (CRM/caderneta sobre contatos+vendas, RFM por regra, fiado com receber total/parcial, limite de crédito + alerta no PDV, win-back/aniversário, cobrança WhatsApp; fornecedores com "quanto devo" e lista de reposição; aba de precificação markup×margem com embalagem/frete/taxa) ✅
 - [ ] **Etapa 13 — Relatórios do negócio** (vendas por período, mais vendidos, receita x lucro x custo)
 
 ## Inteligência & Plataforma
@@ -47,4 +47,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 11 ✅ — 2026-05-27. Próxima: Etapa 12 (Clientes + Fornecedores).*
+*Atualizado a cada etapa. Última: Etapa 12 ✅ — 2026-05-30. Próxima: Etapa 13 (Relatórios do negócio). Semente pronta: `Clientes.insightsClientes()` para o Mentor (Etapa 14).*
