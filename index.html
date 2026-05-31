@@ -299,7 +299,9 @@ svg{display:block}
 .chip.primary{background:var(--brand);color:#fff}
 .chip.primary:hover{background:var(--brand-hover)}
 
-/* Mentor — feed de insights (Etapa 14A) */
+/* Mentor — feed de insights (Etapa 14A) + voz/tom (14B) */
+.mtr-tom{display:inline-flex;margin-bottom:var(--s-4);flex-wrap:wrap}
+.mtr-tom button{min-height:40px}
 .mtr-resumo{margin-bottom:var(--s-5)}
 .mtr-resumo h2{font-size:20px;font-weight:800;letter-spacing:-.02em}
 .mtr-resumo p{font-size:13px;color:var(--text-3);font-weight:600;margin-top:3px}
@@ -4186,28 +4188,181 @@ const Mentor=(()=>{
   function mk(id,modulo,contexto,sev,dados,titulo,acao){
     return {id,modulo,contexto,severidade:sev,icone:SEV[sev].ic,titulo,texto:fraseDe(id,dados),acao};}
 
-  // ── CAMADA DE FRASE ISOLADA (a 14B substitui por tons/variações) ──
-  function fraseDe(id,d){
-    switch(id){
-      case 'fin-vencida':   return d.n===1?`${d.nome} venceu e está em aberto (${fmt(d.total)}).`:`Você tem ${d.n} contas vencidas somando ${fmt(d.total)}.`;
-      case 'fin-avencer':   return `${d.n} ${d.n===1?'conta vence':'contas vencem'} em até 3 dias (${fmt(d.total)}). Mais próxima: ${d.nome}, ${venceTxt(d.venc).toLowerCase()}.`;
-      case 'fin-saldoneg':  return `Suas saídas do mês superam as entradas em ${fmt(-d.saldo)}.`;
-      case 'fin-meta':      return `A meta "${d.nome}" está atrás do ritmo: ${d.pct}% concluída, ${d.dias} dias restantes.`;
-      case 'neg-fiado':     return d.um?`${d.nome} tem ${fmt(d.total)} em aberto a receber.`:`${fmt(d.total)} a receber de ${d.n} ${d.n===1?'cliente':'clientes'} no fiado.`;
-      case 'neg-estoque':   return `${d.n} ${d.n===1?'produto está':'produtos estão'} com estoque baixo: ${d.nomes}.`;
-      case 'neg-parado':    return `${d.n} ${d.n===1?'produto sem venda':'produtos sem vendas'} no período — vale revisar ou promover${d.nomes?` (${d.nomes})`:''}.`;
-      case 'neg-campeao':   return `Seu campeão de lucro é ${d.nome} (${fmt(d.lucro)} no período).`;
-      case 'neg-margem':    return `${d.n} ${d.n===1?'produto tem':'produtos têm'} margem abaixo de 20%: ${d.nomes}.`;
-      case 'sau-dose':      return `Você tem ${d.n} ${d.n===1?'dose de hoje sem registro':'doses de hoje sem registro'} de tomada.`;
-      case 'sau-remedio':   return `${d.n} ${d.n===1?'remédio está acabando':'remédios estão acabando'}: ${d.nomes}.`;
-      case 'sau-adesao':    return `Sua adesão aos remédios na semana está em ${d.pct}%.`;
-      case 'sau-metrica':   return `Seu último registro de ${d.nome} está fora da faixa de referência (${d.valor}).`;
-      case 'sau-humor':     return `Seus últimos registros de humor estão mais baixos. Se quiser, registre como você está hoje.`;
-      case 'prod-tarefa':   return `${d.n} ${d.n===1?'tarefa está atrasada':'tarefas estão atrasadas'}${d.nome?`: ${d.nome}`:''}.`;
-      case 'prod-habito':   return `${d.nome} ainda não foi registrado hoje${d.outros?` (e mais ${d.outros})`:''} — não perca a sequência.`;
-      case 'prod-agenda':   return [d.nEv?`${d.nEv} ${d.nEv===1?'compromisso hoje':'compromissos hoje'}`:'',d.aniv?`aniversário de ${d.aniv} ${d.anivDias===0?'hoje':'em '+d.anivDias+'d'}`:''].filter(Boolean).join(' · ')+'.';
-      default: return '';
+  // ══ A VOZ DO MENTOR (14B) — 3 tons · frase modular · anti-repetição · trava de empatia ══
+  let tom='serio';                              // 'serio' | 'descontraido' | 'motivador' (memória da sessão)
+  // ids sensíveis (saúde inteira + severidade crítica): aberturas/fechos sempre CALMOS, nunca zoeira/cobrança
+  const SENS=new Set(['fin-vencida','prod-tarefa','sau-dose','sau-remedio','sau-adesao','sau-metrica','sau-humor']);
+  const ultima={};
+  function pick(arr,key){
+    if(!arr||!arr.length)return '';
+    if(arr.length===1){ultima[key]=arr[0];return arr[0];}
+    let i,n=0;do{i=Math.floor(Math.random()*arr.length);}while(arr[i]===ultima[key]&&++n<8);
+    ultima[key]=arr[i];return arr[i];
+  }
+  // Aberturas e fechos por tom (compartilhados). 'calmo' = usado nos ids sensíveis em qualquer tom.
+  const AB={
+    serio:['Atenção.','Lembrete.','Para sua atenção.','Fique de olho.','Importante.'],
+    descontraido:['Ó só 👀','Psiu!','Olha aqui 👇','Dá uma olhada.','Rapidinho.'],
+    motivador:['Partiu resolver! 💪','Bora lá!','Você consegue.','Foco 🎯','Simbora!'],
+    calmo:['Com atenção.','Vale priorizar.','Um lembrete.','Quando puder.','Importante.']
+  };
+  const FE={
+    serio:['','Vale revisar.','Confere quando puder.','Recomendo dar atenção.'],
+    descontraido:['','😉','Bora? 👍','Tranquilo de resolver.','É rapidinho.'],
+    motivador:['','Você dá conta! 🙌','Simbora!','Rumo ao verde! 🚀','Um passo de cada vez.'],
+    calmo:['','No seu tempo. 🤍','Tô aqui se precisar.','Sem correria.','Cuida disso com carinho.']
+  };
+  // sau-humor: pool dedicado, acolhedor, SEM conselho — mesmo espírito nos 3 tons (varia só a leveza)
+  const HUMOR=[
+    'Notei que seus últimos registros de humor vieram mais baixos. Se quiser, registra como você tá hoje. 🤍',
+    'Pelos registros, os últimos dias pesaram um pouco. Tô por aqui — anota como você se sente hoje quando quiser.',
+    'Seus humores recentes andaram mais para baixo. Sem cobrança: registrar como está hoje pode ajudar a enxergar melhor.',
+    'Percebi uma sequência de dias mais difíceis. Cuida de você 🤍 Se quiser, marca o humor de hoje.'
+  ];
+  // Núcleos factuais por id × tom (slots reais via fmt/venceTxt). 2 variações por tom.
+  const NUC={
+    'fin-vencida':{
+      serio:[d=>d.n===1?`a conta ${d.nome} venceu e segue em aberto (${fmt(d.total)})`:`${d.n} contas já venceram, somando ${fmt(d.total)}`,
+             d=>d.n===1?`${d.nome} passou do vencimento e continua pendente (${fmt(d.total)})`:`há ${d.n} contas vencidas em aberto (${fmt(d.total)})`],
+      descontraido:[d=>d.n===1?`a ${d.nome} acabou passando do prazo (${fmt(d.total)})`:`${d.n} contas venceram aí (${fmt(d.total)})`,
+             d=>d.n===1?`ficou uma conta vencida esperando: ${d.nome} (${fmt(d.total)})`:`tem ${d.n} contas vencidas no aguardo (${fmt(d.total)})`],
+      motivador:[d=>d.n===1?`dá pra quitar a ${d.nome} e tirar esse peso (${fmt(d.total)})`:`resolver essas ${d.n} contas vencidas vai aliviar (${fmt(d.total)})`,
+             d=>d.n===1?`um passo: a ${d.nome} (${fmt(d.total)}) já sai da frente`:`${d.n} contas de ${fmt(d.total)} prontas pra sair da lista`]
+    },
+    'fin-avencer':{
+      serio:[d=>`${d.n===1?'uma conta vence':d.n+' contas vencem'} em até 3 dias (${fmt(d.total)}); a mais próxima é ${d.nome}, ${venceTxt(d.venc).toLowerCase()}`,
+             d=>`${fmt(d.total)} em contas chegando no prazo — ${d.nome} ${venceTxt(d.venc).toLowerCase()}`],
+      descontraido:[d=>`${d.n===1?'uma conta tá quase vencendo':d.n+' contas batendo na porta'} (${fmt(d.total)}) — ${d.nome} ${venceTxt(d.venc).toLowerCase()}`,
+             d=>`se prepara: ${fmt(d.total)} vencendo logo, começando pela ${d.nome} (${venceTxt(d.venc).toLowerCase()})`],
+      motivador:[d=>`adianta ${d.n===1?'essa conta':'essas '+d.n+' contas'} (${fmt(d.total)}) e fica livre — ${d.nome} ${venceTxt(d.venc).toLowerCase()}`,
+             d=>`organiza ${fmt(d.total)} agora e dorme tranquilo; ${d.nome} ${venceTxt(d.venc).toLowerCase()}`]
+    },
+    'fin-saldoneg':{
+      serio:[d=>`suas saídas do mês superam as entradas em ${fmt(-d.saldo)}`,
+             d=>`o saldo do mês está negativo em ${fmt(-d.saldo)}`],
+      descontraido:[d=>`o mês tá no vermelho em ${fmt(-d.saldo)}`,
+             d=>`gastou mais do que entrou: ${fmt(-d.saldo)} no negativo`],
+      motivador:[d=>`dá pra virar esse jogo: faltam ${fmt(-d.saldo)} pra equilibrar o mês`,
+             d=>`${fmt(-d.saldo)} pra zerar — um corte aqui e ali e você chega lá`]
+    },
+    'fin-meta':{
+      serio:[d=>`a meta "${d.nome}" está atrás do ritmo: ${d.pct}% concluída, ${d.dias} dias restantes`,
+             d=>`"${d.nome}" precisa de um empurrão — ${d.pct}% em ${d.dias} dias`],
+      descontraido:[d=>`a meta "${d.nome}" tá meio devagar: ${d.pct}% feito, ${d.dias} dias no relógio`,
+             d=>`"${d.nome}" pedindo ritmo — só ${d.pct}% com ${d.dias} dias`],
+      motivador:[d=>`bora acelerar "${d.nome}"! ${d.pct}% feito, ${d.dias} dias pra brilhar`,
+             d=>`"${d.nome}" a ${d.pct}% — dá tempo de cravar em ${d.dias} dias 🎯`]
+    },
+    'neg-fiado':{
+      serio:[d=>d.um?`${d.nome} tem ${fmt(d.total)} em aberto a receber`:`${fmt(d.total)} a receber de ${d.n} ${d.n===1?'cliente':'clientes'} no fiado`,
+             d=>d.um?`há ${fmt(d.total)} pendentes com ${d.nome}`:`o fiado soma ${fmt(d.total)} de ${d.n} clientes`],
+      descontraido:[d=>d.um?`${d.nome} ainda tá devendo ${fmt(d.total)}`:`${fmt(d.total)} pra entrar de ${d.n} clientes no fiado`,
+             d=>d.um?`rolê do fiado: ${d.nome} com ${fmt(d.total)} em aberto`:`tem ${fmt(d.total)} no fiado esperando (${d.n} clientes)`],
+      motivador:[d=>d.um?`um toque no ${d.nome} e ${fmt(d.total)} entram no caixa`:`${fmt(d.total)} prontos pra virar caixa — é só cobrar`,
+             d=>d.um?`recebe esse ${fmt(d.total)} do ${d.nome} e fortalece o caixa`:`${fmt(d.total)} de ${d.n} clientes esperando seu empurrãozinho`]
+    },
+    'neg-estoque':{
+      serio:[d=>`${d.n===1?'um produto está':d.n+' produtos estão'} com estoque baixo: ${d.nomes}`,
+             d=>`estoque baixo em ${d.n} ${d.n===1?'item':'itens'} (${d.nomes})`],
+      descontraido:[d=>`tá acabando: ${d.nomes}`,
+             d=>`${d.nomes} quase no fim do estoque 📦`],
+      motivador:[d=>`repõe ${d.nomes} e não perde venda nenhuma`,
+             d=>`bora reabastecer ${d.nomes} antes que falte 🚀`]
+    },
+    'neg-parado':{
+      serio:[d=>`${d.n} ${d.n===1?'produto está parado':'produtos estão parados'} sem vendas no período${d.nomes?` (${d.nomes})`:''}`,
+             d=>`${d.n} ${d.n===1?'item':'itens'} sem giro — vale revisar ou promover${d.nomes?`: ${d.nomes}`:''}`],
+      descontraido:[d=>`${d.n} ${d.n===1?'produto encostado':'produtos encostados'} sem vender${d.nomes?` (${d.nomes})`:''}`,
+             d=>`uns ${d.n} itens criando teia de aranha${d.nomes?`: ${d.nomes}`:''} 🕸️`],
+      motivador:[d=>`que tal uma promo pra girar esses ${d.n}?${d.nomes?` ${d.nomes}`:''}`,
+             d=>`${d.n} produtos esperando uma chance de brilhar${d.nomes?`: ${d.nomes}`:''}`]
+    },
+    'neg-campeao':{
+      serio:[d=>`seu campeão de lucro é ${d.nome} (${fmt(d.lucro)} no período)`,
+             d=>`${d.nome} lidera o lucro com ${fmt(d.lucro)}`],
+      descontraido:[d=>`o queridinho é ${d.nome}, ${fmt(d.lucro)} de lucro 🏆`,
+             d=>`${d.nome} tá voando: ${fmt(d.lucro)} no bolso`],
+      motivador:[d=>`${d.nome} é seu campeão (${fmt(d.lucro)}) — investe nele e cresça mais!`,
+             d=>`aposta no ${d.nome}: ${fmt(d.lucro)} mostram que é ouro 🚀`]
+    },
+    'neg-margem':{
+      serio:[d=>`${d.n===1?'um produto tem':d.n+' produtos têm'} margem abaixo de 20%: ${d.nomes}`,
+             d=>`margem apertada (abaixo de 20%) em ${d.nomes}`],
+      descontraido:[d=>`a margem de ${d.nomes} tá magrinha (menos de 20%)`,
+             d=>`${d.nomes} rendendo pouquinho — margem abaixo de 20%`],
+      motivador:[d=>`ajusta o preço de ${d.nomes} e ganha mais em cada venda`,
+             d=>`um reajuste em ${d.nomes} e a margem decola 🚀`]
+    },
+    'sau-dose':{
+      serio:[d=>`você tem ${d.n} ${d.n===1?'dose de hoje sem registro de tomada':'doses de hoje sem registro de tomada'}`,
+             d=>`${d.n} ${d.n===1?'dose programada para hoje ainda não foi marcada':'doses programadas para hoje ainda não foram marcadas'}`],
+      descontraido:[d=>`faltou marcar ${d.n} ${d.n===1?'dose de hoje':'doses de hoje'}`,
+             d=>`${d.n} ${d.n===1?'dose de hoje segue':'doses de hoje seguem'} sem registro`],
+      motivador:[d=>`cuidar de você vem primeiro: ${d.n} ${d.n===1?'dose de hoje':'doses de hoje'} esperando o registro`,
+             d=>`sua saúde em dia — ${d.n} ${d.n===1?'dose':'doses'} de hoje pra confirmar`]
+    },
+    'sau-remedio':{
+      serio:[d=>`${d.n===1?'um remédio está acabando':d.n+' remédios estão acabando'}: ${d.nomes}`,
+             d=>`estoque baixo de ${d.nomes}`],
+      descontraido:[d=>`tá no finalzinho: ${d.nomes}`,
+             d=>`${d.nomes} quase no fim`],
+      motivador:[d=>`vale repor ${d.nomes} pra não ficar sem`,
+             d=>`garante já ${d.nomes} e siga firme no tratamento`]
+    },
+    'sau-adesao':{
+      serio:[d=>`sua adesão aos remédios na semana está em ${d.pct}%`,
+             d=>`na última semana, ${d.pct}% das doses foram registradas`],
+      descontraido:[d=>`a semana fechou em ${d.pct}% de adesão`,
+             d=>`${d.pct}% das doses marcadas essa semana`],
+      motivador:[d=>`dá pra subir esses ${d.pct}% — cada dose conta`,
+             d=>`${d.pct}% essa semana; bora chegar mais perto do 100%`]
+    },
+    'sau-metrica':{
+      serio:[d=>`seu último registro de ${d.nome} está fora da faixa de referência (${d.valor})`,
+             d=>`${d.nome} aparece fora do esperado no último registro (${d.valor})`],
+      descontraido:[d=>`o último ${d.nome} veio fora da faixa (${d.valor})`,
+             d=>`${d.nome} deu uma saída da faixa (${d.valor})`],
+      motivador:[d=>`fica de olho no ${d.nome} (${d.valor}) — acompanhar de perto ajuda`,
+             d=>`vale monitorar ${d.nome} (${d.valor}); você no controle`]
+    },
+    'prod-tarefa':{
+      serio:[d=>d.n===1?`a tarefa "${d.nome}" está atrasada`:`${d.n} tarefas estão atrasadas`,
+             d=>d.n===1?`"${d.nome}" passou do prazo`:`há ${d.n} tarefas passadas do prazo`],
+      descontraido:[d=>d.n===1?`a "${d.nome}" ficou pra trás`:`${d.n} tarefas atrasadinhas`,
+             d=>d.n===1?`"${d.nome}" tá te esperando`:`${d.n} tarefas no aguardo, já passaram do prazo`],
+      motivador:[d=>d.n===1?`bora fechar a "${d.nome}" e sentir o alívio`:`${d.n} tarefas atrasadas — começa por uma e desencalha`,
+             d=>d.n===1?`um gás na "${d.nome}" e ela sai da lista`:`derruba essas ${d.n} tarefas, uma de cada vez`]
+    },
+    'prod-habito':{
+      serio:[d=>`${d.nome} ainda não foi registrado hoje${d.outros?` (e mais ${d.outros})`:''}`,
+             d=>`falta marcar ${d.nome} hoje${d.outros?` e outros ${d.outros}`:''}`],
+      descontraido:[d=>`${d.nome} tá te esperando hoje${d.outros?` (+${d.outros})`:''}`,
+             d=>`hoje ainda sem ${d.nome}${d.outros?` e mais ${d.outros}`:''}`],
+      motivador:[d=>`não perde a sequência de ${d.nome}${d.outros?` (+${d.outros})`:''} — você tá indo bem!`,
+             d=>`mantém a chama de ${d.nome} acesa hoje${d.outros?` e +${d.outros}`:''} 🔥`]
+    },
+    'prod-agenda':{
+      serio:[d=>[d.nEv?`${d.nEv} ${d.nEv===1?'compromisso hoje':'compromissos hoje'}`:'',d.aniv?`aniversário de ${d.aniv} ${d.anivDias===0?'hoje':'em '+d.anivDias+'d'}`:''].filter(Boolean).join('; '),
+             d=>[d.aniv?`${d.aniv} faz aniversário ${d.anivDias===0?'hoje':'em '+d.anivDias+' dias'}`:'',d.nEv?`${d.nEv} ${d.nEv===1?'compromisso':'compromissos'} na agenda de hoje`:''].filter(Boolean).join('; ')],
+      descontraido:[d=>[d.nEv?`${d.nEv} ${d.nEv===1?'parada hoje':'paradas hoje'}`:'',d.aniv?`aniversário de ${d.aniv} ${d.anivDias===0?'é hoje 🎉':'em '+d.anivDias+'d 🎂'}`:''].filter(Boolean).join(' · '),
+             d=>[d.aniv?`bolo à vista: ${d.aniv} ${d.anivDias===0?'hoje 🎂':'em '+d.anivDias+'d'}`:'',d.nEv?`${d.nEv} ${d.nEv===1?'compromisso':'compromissos'} hoje`:''].filter(Boolean).join(' · ')],
+      motivador:[d=>[d.nEv?`${d.nEv} ${d.nEv===1?'compromisso':'compromissos'} pra arrasar hoje`:'',d.aniv?`e o aniversário de ${d.aniv} ${d.anivDias===0?'hoje':'em '+d.anivDias+'d'} pra lembrar`:''].filter(Boolean).join(' '),
+             d=>[d.aniv?`capricha no carinho com ${d.aniv} (${d.anivDias===0?'hoje':d.anivDias+'d'})`:'',d.nEv?`e manda ver nos ${d.nEv} compromissos de hoje`:''].filter(Boolean).join(' ')]
     }
+  };
+
+  // ── Montador + anti-repetição + trava de empatia (mesma assinatura da 14A) ──
+  function fraseDe(id,d){
+    if(id==='sau-humor')return pick(HUMOR,'sau-humor');        // muito delicado: sem abertura/fecho, sem conselho
+    const blk=NUC[id];
+    if(!blk)return '';
+    const tomNuc=blk[tom]?tom:'serio';
+    const poolKey=SENS.has(id)?'calmo':tom;                    // sensível → abertura/fecho calmos em qualquer tom
+    const ab=pick(AB[poolKey]||AB.serio,`${id}|${poolKey}|ab`);
+    const nuc=pick(blk[tomNuc],`${id}|${tomNuc}|nuc`)(d);
+    const fe=pick(FE[poolKey]||FE.serio,`${id}|${poolKey}|fe`);
+    const core=nuc?(nuc.charAt(0).toUpperCase()+nuc.slice(1)).replace(/[.!?…]+$/,'')+'.':'';
+    return [ab,core,fe].filter(Boolean).join(' ').replace(/\s+/g,' ').trim();
   }
 
   // ── MOTOR DE REGRAS (funções puras DB → insight | null) ──
@@ -4317,16 +4472,32 @@ const Mentor=(()=>{
     const all=filtraModo(rodarRegras());
     const nCrit=all.filter(i=>i.severidade==='critico').length;
     const nAtt=all.filter(i=>i.severidade==='atencao').length;
+    const critSaude=all.some(i=>i.id==='sau-dose');           // trava: crítico de saúde → saudação/resumo calmos
     const vis=all.slice(0,CAP),resto=all.length-vis.length;
     const hr=new Date().getHours(),ola=hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite';
+    const tCab=critSaude?'serio':tom;
+    const emoji={serio:'👋',descontraido:'😎',motivador:'💪'}[tCab];
+    const av=all.length===1?'aviso':'avisos';
+    const det=`${nCrit?`, ${nCrit} ${nCrit===1?'crítico':'críticos'}`:''}${nAtt?` e ${nAtt} pedindo atenção`:''}`;
     const resumo=all.length
-      ?`Você tem ${all.length} ${all.length===1?'aviso':'avisos'}${nCrit?`, ${nCrit} ${nCrit===1?'crítico':'críticos'}`:''}${nAtt?` e ${nAtt} ${nAtt===1?'pedindo':'pedindo'} atenção`:''}.`
-      :'Nenhum alerta agora — está tudo em ordem.';
+      ?({serio:`Você tem ${all.length} ${av}${det}.`,
+         descontraido:`Bora ver o dia? ${all.length} ${av}${det}.`,
+         motivador:`Vamo nessa! ${all.length} ${av}${det}${critSaude?'':' — dá pra organizar'}.`}[tCab])
+      :({serio:'Nenhum alerta agora — está tudo em ordem.',
+         descontraido:'Tá tudo tranquilo por aqui 😌',
+         motivador:'Tudo em ordem! Segue brilhando ✨'}[tom]);
+    const toggle=`<div class="mtr-tom seg">
+      <button data-tom="serio" class="${tom==='serio'?'on':''}">🤝 Sério</button>
+      <button data-tom="descontraido" class="${tom==='descontraido'?'on':''}">😎 Descontraído</button>
+      <button data-tom="motivador" class="${tom==='motivador'?'on':''}">💪 Motivador</button>
+    </div>`;
     root.innerHTML=`
-      <div class="mtr-resumo"><h2>${ola}, Léo 👋</h2><p>${resumo}</p></div>
+      ${toggle}
+      <div class="mtr-resumo"><h2>${ola}, Léo ${emoji}</h2><p>${resumo}</p></div>
       ${all.length
         ?`<div class="mtr-feed">${vis.map(cardHTML).join('')}</div>${resto>0?`<div class="mtr-more">+${resto} ${resto===1?'aviso de menor prioridade':'avisos de menor prioridade'}</div>`:''}`
         :`<div class="empty" style="padding:var(--s-6) 0"><div class="eico">${svg('spark',24)}</div><h4>Tudo em ordem por aqui ✨</h4><p>Quando algo precisar da sua atenção, aparece aqui.</p></div>`}`;
+    root.querySelectorAll('[data-tom]').forEach(b=>b.onclick=()=>{tom=b.dataset.tom;render();});
     root.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>navigate(b.dataset.go));
     root.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{dispensados.add(b.dataset.x);render();});
     updateMentorBadge();
