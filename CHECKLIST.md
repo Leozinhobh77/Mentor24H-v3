@@ -33,7 +33,9 @@
 - [x] **Etapa 13 — Relatórios do negócio** (período selector 5 opções; KPIs: receita/nVendas/ticket/lucro/margem; gráfico receita×custo×lucro; top 8 vendidos com badges ABC; pagamentos breakdown; lucro por categoria; ABC classification visual) ✅
 
 ## Inteligência & Plataforma
-- [ ] **Etapa 14 — Mentor** (assistente por leitura de dados: insights e alertas por regra, sem IA)
+- [~] **Etapa 14 — Mentor** (assistente por leitura de dados: insights e alertas por regra, sem IA)
+  - [x] **14A — Motor de regras + feed** ✅ (17 gatilhos / 4 domínios, resumo do dia, filtro por modo, cap top-8, ação 1-clique, badge de críticos, dispensar; frases neutras isoladas em `fraseDe()`)
+  - [ ] **14B — Camada de personalidade** (3 tons + frase modular + anti-repetição + toggle, substituindo `fraseDe()`)
 - [ ] **Etapa 15 — Plataforma** (command palette ⌘K, notificações, quick-add global, modos refinados)
 - [ ] **Etapa 16 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
 - [ ] **Etapa 17 — Supabase** (substituir mock por banco real, sync online-only)
@@ -47,4 +49,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 13 ✅ — 2026-05-30. Próxima: Etapa 14 (Mentor). Semente pronta: `RelatoriosNeg` + `Clientes.insightsClientes()` para insights automáticos.*
+*Atualizado a cada etapa. Última: Etapa 14A ✅ — 2026-05-31 (motor de regras + feed do Mentor, sem IA). Próxima: Etapa 14B (camada de tons/personalidade — trocar só a função `fraseDe()`).*
