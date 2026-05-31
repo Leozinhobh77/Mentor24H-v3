@@ -36,6 +36,7 @@
 - [x] **Etapa 14 — Mentor** ✅ (assistente por leitura de dados: insights e alertas por regra, sem IA)
   - [x] **14A — Motor de regras + feed** ✅ (17 gatilhos / 4 domínios, resumo do dia, filtro por modo, cap top-8, ação 1-clique, badge de críticos, dispensar; frases neutras isoladas em `fraseDe()`)
   - [x] **14B — A Voz do Mentor** ✅ (3 tons 🤝/😎/💪, frase modular ab×núcleo×fecho, anti-repetição, toggle no topo, slots contextuais, **trava de empatia** nos ids sensíveis/saúde — substituiu `fraseDe()`)
+  - [x] **14C — Briefing no dashboard** ✅ (os 3 cards `.card.ai` "Mentor · seu dia" agora consomem o motor real via `Mentor.briefing(ctx)`: spotlight + contagem + resto, por contexto/modo, herdando tom e empatia; removido o mock de IA conversacional da Fase 0)
 - [ ] **Etapa 15 — Plataforma** (command palette ⌘K, notificações, quick-add global, modos refinados)
 - [ ] **Etapa 16 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
 - [ ] **Etapa 17 — Supabase** (substituir mock por banco real, sync online-only)
@@ -49,4 +50,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 14 (A+B) ✅ — 2026-05-31 (Mentor completo: motor de regras + feed + voz com 3 tons, sem IA). Próxima: Etapa 15 (Plataforma — ⌘K, notificações, quick-add global).*
+*Atualizado a cada etapa. Última: Etapa 14 (A+B+C) ✅ — 2026-05-31 (Mentor completo: motor + feed + voz 3 tons + briefing no dashboard, sem IA). Próxima: Etapa 15 (Plataforma — ⌘K, notificações, quick-add global).*

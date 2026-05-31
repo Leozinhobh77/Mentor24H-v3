@@ -319,6 +319,31 @@ svg{display:block}
 .mtr-x{font-size:10.5px;font-weight:600;color:var(--text-3);opacity:.65;transition:.18s var(--ease)}
 .mtr-x:hover{opacity:1;color:var(--text-1)}
 .mtr-more{text-align:center;font-size:12px;color:var(--text-3);font-weight:600;padding:8px}
+/* Briefing "Mentor · seu dia" no dashboard (Etapa 14 conectada) */
+.card.ai .brf-spot{display:flex;align-items:flex-start;gap:11px;padding:12px 13px;margin-top:var(--s-3);background:var(--surface-1);border:1px solid var(--border);border-left:3px solid var(--c);border-radius:var(--r-md)}
+.brf-ico{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex-shrink:0;background:var(--cs);color:var(--c)}
+.brf-ico svg{width:17px;height:17px;stroke-width:2}
+.brf-main{flex:1;min-width:0}
+.brf-t{font-size:13px;font-weight:700;color:var(--text-1)}
+.brf-s{font-size:12px;color:var(--text-2);line-height:1.5;margin-top:2px}
+.brf-btn{align-self:center;font-size:11.5px;font-weight:700;padding:7px 12px;border-radius:var(--r-md);background:var(--c);color:#fff;white-space:nowrap;flex-shrink:0;transition:.18s var(--ease)}
+.brf-btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.brf-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:var(--s-3)}
+.brf-chip{font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:var(--r-full);background:var(--surface-2);color:var(--text-2);transition:.18s var(--ease)}
+.brf-chip:hover{background:var(--surface-3);color:var(--text-1)}
+.brf-resto{display:flex;flex-direction:column;gap:6px;margin-top:var(--s-3)}
+.brf-r{display:flex;align-items:center;gap:9px;font-size:12px}
+.brf-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.brf-rt{flex:1;color:var(--text-2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brf-mini{font-size:11.5px;font-weight:700;color:var(--brand-text);white-space:nowrap;flex-shrink:0}
+.brf-mini:hover{text-decoration:underline}
+.brf-foot{margin-top:var(--s-4);font-size:12px;font-weight:700;color:var(--brand-text)}
+.brf-foot:hover{text-decoration:underline}
+.brf-empty{display:flex;align-items:center;gap:11px;margin-top:var(--s-3);color:var(--text-2)}
+.brf-empty svg{color:var(--brand-text);flex-shrink:0}
+.brf-empty b{display:block;font-size:13px;color:var(--text-1)}
+.brf-empty span{font-size:12px;color:var(--text-3)}
+@media(max-width:560px){.card.ai .brf-spot{flex-wrap:wrap}.brf-btn{margin-top:6px;margin-left:43px}}
 @media(max-width:560px){
   .mtr-card{flex-wrap:wrap}
   .mtr-side{flex-direction:row;align-items:center;width:100%;justify-content:space-between;margin-top:4px;margin-left:46px}
@@ -1014,16 +1039,8 @@ select.field{cursor:pointer}
             </div>
           </div>
 
-          <!-- Mentor -->
-          <div class="card ai col-12">
-            <span class="ai-badge">{i:spark} Mentor</span>
-            <p>Seu mês está <b>positivo</b>: você economizou <b>60% das entradas</b>. No ritmo atual, a <b>Reserva de emergência</b> fecha em <b>~9 semanas</b> — 3 antes do prazo. Quer que eu mova os R$ 800 livres pra acelerar?</p>
-            <div class="ai-cta">
-              <button class="chip primary">Sim, mover R$ 800</button>
-              <button class="chip">Ver detalhes</button>
-              <button class="chip">Agora não</button>
-            </div>
-          </div>
+          <!-- Mentor · seu dia (briefing real — Etapa 14) -->
+          <div class="card ai col-12" id="mtr-dash-pessoal"></div>
 
         </div>
       </section>
@@ -1067,14 +1084,8 @@ select.field{cursor:pointer}
             <div class="goal"><div class="goal-top"><span class="goal-name"><span class="gd" style="background:var(--warning)"></span>Bolo no pote</span><span class="goal-val mono">24 un.</span></div><div class="bar"><i style="width:38%;background:var(--warning)"></i></div></div>
           </div>
 
-          <div class="card ai col-12">
-            <span class="ai-badge">{i:spark} Mentor</span>
-            <p>O <b>Brigadeiro gourmet</b> é 41% das suas vendas, mas seu estoque acaba em <b>~2 dias</b>. Com a margem atual de <b>R$ 3,80/un.</b>, repor 200 un. agora rende <b>+R$ 760</b> de lucro potencial. Gero a lista de compra pro fornecedor?</p>
-            <div class="ai-cta">
-              <button class="chip primary">Gerar lista de compra</button>
-              <button class="chip">Ver margem</button>
-            </div>
-          </div>
+          <!-- Mentor · seu dia (briefing real — Etapa 14) -->
+          <div class="card ai col-12" id="mtr-dash-negocio"></div>
 
         </div>
       </section>
@@ -1144,14 +1155,8 @@ select.field{cursor:pointer}
             </div>
           </div>
 
-          <div class="card ai col-12">
-            <span class="ai-badge">{i:spark} Mentor</span>
-            <p>Visão geral: vida <b>no azul</b> (economia de 60% no mês) e negócio <b>crescendo</b> (+8 vendas hoje). Atenção: <b>Embalagem 500ml</b> acaba amanhã e pode travar entregas. Quer que eu adicione "comprar embalagens" às tarefas de hoje?</p>
-            <div class="ai-cta">
-              <button class="chip primary">Adicionar tarefa</button>
-              <button class="chip">Ver estoque</button>
-            </div>
-          </div>
+          <!-- Mentor · seu dia (briefing real — Etapa 14) -->
+          <div class="card ai col-12" id="mtr-dash-hibrido"></div>
 
         </div>
       </section>
@@ -1328,6 +1333,7 @@ document.querySelectorAll('.mode-switch button').forEach(b=>{
     document.querySelectorAll('.mode-switch button').forEach(x=>x.classList.toggle('on',x===b));
     document.querySelectorAll('.mode-pane').forEach(p=>p.classList.toggle('show',p.dataset.pane===mode));
     document.querySelectorAll('[data-ctx]').forEach(g=>g.style.display=(mode==='hibrido'||g.dataset.ctx===mode)?'':'none');
+    pintaBriefingDash();
   });
 });
 
@@ -1341,6 +1347,7 @@ document.querySelectorAll('.mode-switch button').forEach(b=>{
     document.querySelectorAll('.mode-switch button').forEach(x=>x.classList.toggle('on',x.dataset.mode===mode));
     document.querySelectorAll('.mode-pane').forEach(p=>p.classList.toggle('show',p.dataset.pane===mode));
     document.querySelectorAll('[data-ctx]').forEach(g=>g.style.display=(mode==='hibrido'||g.dataset.ctx===mode)?'':'none');
+    if(typeof pintaBriefingDash==='function')pintaBriefingDash();
   }
 
   function setBnActive(index){
@@ -1385,6 +1392,7 @@ function navigate(page){
     const hr=new Date().getHours();
     h.textContent=`${hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite'}, Léo`;
     if(sp) sp.style.display='';
+    pintaBriefingDash();
   } else {
     h.textContent=TITLES[page]||page;
     if(sp) sp.style.display='none';
@@ -4447,13 +4455,20 @@ const Mentor=(()=>{
       .filter(i=>!dispensados.has(i.id))
       .sort((a,b)=>SEV[a.severidade].o-SEV[b.severidade].o);
   }
-  function filtraModo(list){
-    const m=document.documentElement.getAttribute('data-mode')||'pessoal';
+  function filtraModo(list,modoOverride){
+    const m=modoOverride||document.documentElement.getAttribute('data-mode')||'pessoal';
     if(m==='negocio')return list.filter(i=>i.contexto!=='pessoal');
     if(m==='pessoal')return list.filter(i=>i.contexto!=='negocio');
     return list;
   }
   function contarCriticos(){return rodarRegras().filter(i=>i.severidade==='critico').length;}
+  // Briefing do dashboard: insights do contexto pedido, no tom atual (herda fraseDe + empatia)
+  function briefing(modo,limite=3){
+    const all=filtraModo(rodarRegras(),modo);
+    const contagem={critico:0,atencao:0,oportunidade:0,info:0};
+    all.forEach(i=>contagem[i.severidade]++);
+    return {spotlight:all[0]||null,contagem,resto:all.slice(1,limite),total:all.length};
+  }
 
   // ── RENDER (feed Quiet Premium) ──
   function cardHTML(i){
@@ -4502,8 +4517,48 @@ const Mentor=(()=>{
     root.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{dispensados.add(b.dataset.x);render();});
     updateMentorBadge();
   }
-  return {render,contarCriticos};
+  return {render,contarCriticos,briefing};
 })();
+
+/* ═══ Briefing "Mentor · seu dia" no dashboard (consome Mentor.briefing — Etapa 14) ═══ */
+const SEVD={
+  critico:{cor:'expense',e:'🔴',l:'crítico',lp:'críticos'},
+  atencao:{cor:'warning',e:'🟡',l:'atenção',lp:'atenção'},
+  oportunidade:{cor:'income',e:'🟢',l:'oportunidade',lp:'oportunidades'},
+  info:{cor:'info',e:'ℹ️',l:'info',lp:'infos'}
+};
+function briefingHTML(b){
+  const head=`<span class="ai-badge">${svg('spark',13)} Mentor · seu dia</span>`;
+  if(!b.total)return `${head}<div class="brf-empty">${svg('spark',22)}<div><b>Tudo em ordem por aqui ✨</b><span>Nenhum alerta agora.</span></div></div>`;
+  const sp=b.spotlight,s=SEVD[sp.severidade];
+  const spotAct=sp.acao.href
+    ?`<a class="brf-btn" href="${sp.acao.href}" target="_blank" rel="noopener">${sp.acao.label}</a>`
+    :`<button class="brf-btn" data-go="${sp.acao.navTo}">${sp.acao.label}</button>`;
+  const spot=`<div class="brf-spot" style="--c:var(--${s.cor});--cs:var(--${s.cor}-soft)">
+    <div class="brf-ico">${svg(sp.icone,18)}</div>
+    <div class="brf-main"><div class="brf-t">${sp.titulo}</div><div class="brf-s">${sp.texto}</div></div>
+    ${spotAct}
+  </div>`;
+  const chips=['critico','atencao','oportunidade','info'].filter(k=>b.contagem[k]).map(k=>{
+    const sv=SEVD[k];return `<button class="brf-chip" data-go="mentor">${sv.e} ${b.contagem[k]} ${b.contagem[k]===1?sv.l:sv.lp}</button>`;
+  }).join('');
+  const resto=b.resto.length?`<div class="brf-resto">${b.resto.map(i=>{
+    const sv=SEVD[i.severidade];
+    const a=i.acao.href
+      ?`<a class="brf-mini" href="${i.acao.href}" target="_blank" rel="noopener">${i.acao.label} →</a>`
+      :`<button class="brf-mini" data-go="${i.acao.navTo}">${i.acao.label} →</button>`;
+    return `<div class="brf-r"><span class="brf-dot" style="background:var(--${sv.cor})"></span><span class="brf-rt">${i.titulo}</span>${a}</div>`;
+  }).join('')}</div>`:'';
+  const foot=`<button class="brf-foot" data-go="mentor">Ver tudo no Mentor (${b.total}) →</button>`;
+  return `${head}${spot}${chips?`<div class="brf-chips">${chips}</div>`:''}${resto}${foot}`;
+}
+function pintaBriefingDash(){
+  [['pessoal','mtr-dash-pessoal'],['negocio','mtr-dash-negocio'],['hibrido','mtr-dash-hibrido']].forEach(([ctx,id])=>{
+    const card=document.getElementById(id);if(!card)return;
+    card.innerHTML=briefingHTML(Mentor.briefing(ctx,3));
+    card.querySelectorAll('[data-go]').forEach(x=>x.onclick=()=>navigate(x.dataset.go));
+  });
+}
 
 Toast.init();
 Contas.render();
@@ -4521,6 +4576,7 @@ Produtos.render();
 Estoque.render();
 Vendas.render();
 updateMentorBadge();
+pintaBriefingDash();
 const _topAdd=document.querySelector('.btn-add');
 if(_topAdd)_topAdd.addEventListener('click',()=>{const fin=document.querySelector('.page[data-page="financas"]');if(fin&&fin.classList.contains('show'))Contas.form();});
 </script>
