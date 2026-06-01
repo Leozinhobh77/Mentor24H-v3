@@ -52,7 +52,17 @@
   - [x] **Mentor — regras novas de Estudos** — prova chegando + pouco estudo · sem estudar há N dias · bateu a meta da semana 🎉
   - [x] **Dados**: matérias + sessões (em memória → Supabase na Etapa 20)
   - *Fora do escopo (no Backlog): flashcards/SRS, ranking social*
-- [ ] **Etapa 17 — Leitura / Livros** 🔧 *a definir com Léo* (marcar livros — página/onde parou, lidos)
+- [ ] **Etapa 17 — Leitura / Livros** (modo Pessoal — estante, progresso, hábito de leitura, stats e Mentor)
+  - [ ] **Estante**: Quero ler · Lendo · Lido · Abandonei
+  - [ ] **Livro**: título, autor, capa (cor+inicial, sem internet), total de páginas, gênero
+  - [ ] **Progresso**: marcar página atual ("parei na 180") → barra + %
+  - [ ] **Registrar leitura**: por páginas e/ou tempo (timer, igual Estudos) → alimenta streak
+  - [ ] **Nota (meia-estrela) + resenha curta** ao terminar
+  - [ ] **Meta anual** ("ler N livros no ano") com progresso
+  - [ ] **Stats reaproveitando componentes**: donut (gênero), barras (páginas/7 dias), heatmap de consistência, streak 🔥
+  - [ ] **Mentor — regras novas de Leitura**: livro parado há N dias · faltam X livros pra meta do ano · N dias sem ler
+  - [ ] **Dados**: livros + sessões de leitura (em memória → Supabase na Etapa 20)
+  - *Fora do escopo (no Backlog): fóruns/clubes de leitura, resenhas públicas, recomendações sociais*
 - [ ] **Etapa 18 — Séries** 🔧 *a definir com Léo* (marcar onde parou — temporada/episódio, assistindo/concluído)
 
 ## Graduação para produto
@@ -63,6 +73,7 @@
 ## 💡 Backlog / Futuro (ideias parqueadas — não esquecer)
 - [ ] **Flashcards + revisão espaçada (SRS)** — cartões pergunta→resposta com reagendamento em intervalos crescentes (1d/3d/7d/15d…), estilo Anki. Liga-se a **Estudos (Etapa 16)**. Dá pra fazer local/vanilla; vira etapa própria quando o Léo quiser.
 - [ ] **Ranking social de estudos** — comparar horas/consistência com outros usuários (estilo YPT). ⛔ Depende de multiusuário → só **pós-Supabase (Etapa 20)**.
+- [ ] **Comunidade de leitura** — fóruns/clubes de leitura, resenhas públicas, recomendações sociais (estilo Fable/PageBound/Goodreads social). ⛔ Multiusuário → **pós-Supabase (Etapa 20)**.
 
 ---
 
