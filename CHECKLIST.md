@@ -42,7 +42,16 @@
   - [x] **15B — Plataforma completa** ✅ (Central de Notificações: sino com badge de não-lidas + shake em críticos, painel agrupado por severidade, marcar lida/todas; Quick-add global botão +: 6 entidades → form direto; Modos refinados: cross-fade, atalhos Alt+1/2/3, persiste na sessão; Housekeeping: `.chip`/`.ai-cta` removidos do CSS; `Mentor.feed()` exposto)
   - [x] **Hotfix 01/06** ✅ (CSS `.cmdk-back[hidden]{display:none}` — overlay não bloqueia cliques quando hidden)
 ## Aprendizado & Lazer (Pessoal)
-- [ ] **Etapa 16 — Estudos** 🔧 *a definir com Léo* (acompanhar o que está estudando — cursos/matérias + progresso)
+- [ ] **Etapa 16 — Estudos** (modo Pessoal — acompanhar estudos com timer, metas, stats e Mentor)
+  - [ ] **Matérias/cursos** — cadastro com nome, cor, meta de horas/semana e prova/D-Day opcional
+  - [ ] **Cronômetro / Pomodoro** — escolhe a matéria, dá play, e ao parar registra a sessão
+  - [ ] **Registro manual** — lançar tempo estudado sem usar o timer ("estudei 1h de Mat")
+  - [ ] **Meta semanal por matéria** (barra de progresso) + **KPIs no topo** (hoje / semana / streak / próxima prova)
+  - [ ] **Stats reaproveitando componentes** — donut (horas por matéria), barras (últimos 7 dias), heatmap de consistência (igual Hábitos), streak 🔥 + medalha do dia (discreta)
+  - [ ] **Histórico de sessões** — o que estudou, quando e por quanto tempo
+  - [ ] **Mentor — regras novas de Estudos** — prova chegando + pouco estudo · sem estudar há N dias · bateu a meta da semana 🎉
+  - [ ] **Dados**: matérias + sessões (em memória → Supabase na Etapa 20)
+  - *Fora do escopo (no Backlog): flashcards/SRS, ranking social*
 - [ ] **Etapa 17 — Leitura / Livros** 🔧 *a definir com Léo* (marcar livros — página/onde parou, lidos)
 - [ ] **Etapa 18 — Séries** 🔧 *a definir com Léo* (marcar onde parou — temporada/episódio, assistindo/concluído)
 
@@ -51,11 +60,15 @@
 - [ ] **Etapa 20 — Supabase** (substituir mock por banco real, sync online-only)
 - [ ] **Etapa 21 — PWA + polish** (manifest, instalável, estados de rede, revisão final)
 
+## 💡 Backlog / Futuro (ideias parqueadas — não esquecer)
+- [ ] **Flashcards + revisão espaçada (SRS)** — cartões pergunta→resposta com reagendamento em intervalos crescentes (1d/3d/7d/15d…), estilo Anki. Liga-se a **Estudos (Etapa 16)**. Dá pra fazer local/vanilla; vira etapa própria quando o Léo quiser.
+- [ ] **Ranking social de estudos** — comparar horas/consistência com outros usuários (estilo YPT). ⛔ Depende de multiusuário → só **pós-Supabase (Etapa 20)**.
+
 ---
 
 ## Nota de Arquitetura
 
-> **Single-file por enquanto (decisão 2026-05-27):** continuar com `index.html` único até fechar todas as etapas do protótipo. Quando chegar na Etapa 17 (Supabase), **avisar Léo para separar em projeto real** com estrutura adequada (HTML + CSS + JS separados ou framework). O protótipo vira guia de referência de UX e dados.
+> **Single-file por enquanto (decisão 2026-05-27):** continuar com `index.html` único até fechar todas as etapas do protótipo. Quando chegar na Etapa 20 (Supabase), **avisar Léo para separar em projeto real** com estrutura adequada (HTML + CSS + JS separados ou framework). O protótipo vira guia de referência de UX e dados.
 
 ---
 
