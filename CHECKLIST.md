@@ -63,7 +63,16 @@
   - [x] **Mentor — regras novas de Leitura**: livro parado há N dias · faltam X livros pra meta do ano · N dias sem ler
   - [x] **Dados**: livros + sessões de leitura (em memória → Supabase na Etapa 20)
   - *Fora do escopo (no Backlog): fóruns/clubes de leitura, resenhas públicas, recomendações sociais*
-- [ ] **Etapa 18 — Séries** 🔧 *a definir com Léo* (marcar onde parou — temporada/episódio, assistindo/concluído)
+- [ ] **Etapa 18 — Séries** (modo Pessoal — listas, progresso por episódio, stats e Mentor)
+  - [ ] **Listas**: Quero assistir · Assistindo · Concluído · Abandonei (abas/filtro)
+  - [ ] **Série**: título, capa (cor+inicial), gênero, plataforma (onde assiste), nº de episódios
+  - [ ] **Progresso por episódio**: "parei na T2E5" → marcar ep visto, barra (vistos/total), próximo ep em destaque
+  - [ ] **Registrar maratona**: marcar X episódios vistos hoje → alimenta streak
+  - [ ] **Nota (meia-estrela) + resenha** ao concluir
+  - [ ] **Stats reaproveitando componentes**: donut (gênero), barras (eps/7 dias), heatmap, streak 🔥
+  - [ ] **Mentor — regras novas de Séries**: série parada há N dias · X séries em "quero assistir" · N dias sem assistir
+  - [ ] **Dados**: séries + sessões (eps vistos por dia) (em memória → Supabase na Etapa 20)
+  - *Fora do escopo (no Backlog): auto-scrobble/integração streaming, calendário de estreias, comunidade/resenhas públicas*
 
 ## Graduação para produto
 - [ ] **Etapa 19 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
@@ -74,6 +83,8 @@
 - [ ] **Flashcards + revisão espaçada (SRS)** — cartões pergunta→resposta com reagendamento em intervalos crescentes (1d/3d/7d/15d…), estilo Anki. Liga-se a **Estudos (Etapa 16)**. Dá pra fazer local/vanilla; vira etapa própria quando o Léo quiser.
 - [ ] **Ranking social de estudos** — comparar horas/consistência com outros usuários (estilo YPT). ⛔ Depende de multiusuário → só **pós-Supabase (Etapa 20)**.
 - [ ] **Comunidade de leitura** — fóruns/clubes de leitura, resenhas públicas, recomendações sociais (estilo Fable/PageBound/Goodreads social). ⛔ Multiusuário → **pós-Supabase (Etapa 20)**.
+- [ ] **Séries — auto-scrobble + calendário de estreias** — logar automático do streaming (estilo Trakt/Simkl) e datas de novos episódios (via API tipo TMDB). ⛔ Precisa APIs externas/online → **pós-Supabase (Etapa 20)**.
+- [ ] **Comunidade de séries** — resenhas públicas / recomendações sociais (estilo Serializd/TV Time). ⛔ Multiusuário → **pós-Supabase (Etapa 20)**.
 
 ---
 
