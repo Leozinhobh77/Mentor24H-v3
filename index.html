@@ -381,6 +381,7 @@ svg{display:block}
 .search{cursor:pointer}
 .cmdk-back{position:fixed;inset:0;z-index:300;display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);opacity:0;transition:opacity .15s var(--ease)}
 .cmdk-back.show{opacity:1}
+.cmdk-back[hidden]{display:none}
 .cmdk{width:min(640px,92vw);background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:0 24px 70px rgba(0,0,0,.42);overflow:hidden;transform:scale(.97) translateY(-6px);transition:transform .15s var(--ease)}
 .cmdk-back.show .cmdk{transform:none}
 .cmdk-in{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
