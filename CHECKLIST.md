@@ -41,9 +41,15 @@
   - [x] **15A — Command Palette ⌘K** ✅ (Search & Act sem IA: ⌘K/Ctrl+K + clique na busca; índice IR PARA + AÇÕES criar; busca fuzzy nos DBs com contexto rico; act inline — Marcar paga/Editar/WhatsApp/Ver no estoque; estado vazio recentes+sugeridos por modo; calculadora inline segura; navegação 100% teclado ↑↓/↵/⇥/esc)
   - [x] **15B — Plataforma completa** ✅ (Central de Notificações: sino com badge de não-lidas + shake em críticos, painel agrupado por severidade, marcar lida/todas; Quick-add global botão +: 6 entidades → form direto; Modos refinados: cross-fade, atalhos Alt+1/2/3, persiste na sessão; Housekeeping: `.chip`/`.ai-cta` removidos do CSS; `Mentor.feed()` exposto)
   - [x] **Hotfix 01/06** ✅ (CSS `.cmdk-back[hidden]{display:none}` — overlay não bloqueia cliques quando hidden)
-- [ ] **Etapa 16 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
-- [ ] **Etapa 17 — Supabase** (substituir mock por banco real, sync online-only)
-- [ ] **Etapa 18 — PWA + polish** (manifest, instalável, estados de rede, revisão final)
+## Aprendizado & Lazer (Pessoal)
+- [ ] **Etapa 16 — Estudos** 🔧 *a definir com Léo* (acompanhar o que está estudando — cursos/matérias + progresso)
+- [ ] **Etapa 17 — Leitura / Livros** 🔧 *a definir com Léo* (marcar livros — página/onde parou, lidos)
+- [ ] **Etapa 18 — Séries** 🔧 *a definir com Léo* (marcar onde parou — temporada/episódio, assistindo/concluído)
+
+## Graduação para produto
+- [ ] **Etapa 19 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
+- [ ] **Etapa 20 — Supabase** (substituir mock por banco real, sync online-only)
+- [ ] **Etapa 21 — PWA + polish** (manifest, instalável, estados de rede, revisão final)
 
 ---
 
@@ -53,4 +59,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 15 (A+B) ✅ — 2026-05-31 (Plataforma completa: ⌘K + notificações + quick-add + modos refinados). Próxima: Etapa 16 (Auth + Perfil/Config).*
+*Atualizado a cada etapa. Última: Etapa 15 (A+B) ✅ — 2026-05-31 (Plataforma completa: ⌘K + notificações + quick-add + modos refinados). Próxima: Etapa 16 (Estudos) — 🔧 a definir com Léo.*
