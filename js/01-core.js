@@ -153,7 +153,7 @@ document.querySelectorAll('.mood-pick').forEach(p=>p.querySelectorAll('.mood').f
 })));
 
 /* ─── ROUTER (navegação SPA) ─── */
-const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',mentor:'Mentor',perfil:'Perfil'};
+const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',mentor:'Mentor',perfil:'Perfil'};
 function navigate(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===page));
   document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
@@ -179,6 +179,7 @@ function navigate(page){
   if(page==='metricas') Metricas.render();
   if(page==='contatos') Contatos.render();
   if(page==='estudos') Estudos.render();
+  if(page==='leitura') Leitura.render();
   if(page==='produtos') Produtos.render();
   if(page==='estoque') Estoque.render();
   if(page==='vendas') Vendas.render();
@@ -331,6 +332,16 @@ const DB={
     {id:nid(),nome:'Inglês',    cor:'#27B6A3',metaSemanal:2,prova:offset(20)},
   ],
   sessoesEstudo:[], // {id, materiaId, data:'YYYY-MM-DD', minutos} — seed abaixo
+  livros:[   // estante: 'quero' | 'lendo' | 'lido' | 'abandonei'
+    {id:nid(),titulo:'O Hobbit',autor:'J.R.R. Tolkien',genero:'Fantasia',paginas:310,paginaAtual:180,estante:'lendo',nota:null,resenha:'',cor:'#2D7FF9'},
+    {id:nid(),titulo:'Sapiens',autor:'Yuval N. Harari',genero:'História',paginas:464,paginaAtual:90,estante:'lendo',nota:null,resenha:'',cor:'#C8860B'},
+    {id:nid(),titulo:'O Senhor dos Anéis',autor:'J.R.R. Tolkien',genero:'Fantasia',paginas:1200,paginaAtual:1200,estante:'lido',nota:5,resenha:'Épico do começo ao fim.',cor:'#1F9D55'},
+    {id:nid(),titulo:'A Revolução dos Bichos',autor:'George Orwell',genero:'Ficção',paginas:152,paginaAtual:152,estante:'lido',nota:4.5,resenha:'Curto e afiado.',cor:'#DB4A4A'},
+    {id:nid(),titulo:'Hábitos Atômicos',autor:'James Clear',genero:'Não-ficção',paginas:320,paginaAtual:0,estante:'quero',nota:null,resenha:'',cor:'#27B6A3'},
+    {id:nid(),titulo:'Duna',autor:'Frank Herbert',genero:'Ficção Científica',paginas:680,paginaAtual:120,estante:'abandonei',nota:null,resenha:'',cor:'#7B6CFF'},
+  ],
+  sessoesLeitura:[], // {id, livroId, data:'YYYY-MM-DD', paginas, minutos} — seed abaixo
+  metaLeitura:12,    // meta de livros no ano
   contatos:[
     {id:nid(),nome:'Maria Souza',telefone:'31988881111',email:'maria@email.com',tags:['Cliente'],contexto:'negocio',aniversario:'1992-05-29',favorito:true,comoConheci:'Indicação',anotacoes:'Compra brigadeiros toda semana',ultimoContato:offset(-3),manterContato:15,proximaAcao:{data:offset(5),nota:'Confirmar pedido para festa'},interacoes:[{data:offset(-3),tipo:'whatsapp',nota:'Pedido de 6 brigadeiros para o fim de semana'},{data:offset(-18),tipo:'presencial',nota:'Entregou encomenda pessoalmente'},{data:offset(-35),tipo:'whatsapp',nota:'Pediu cardápio atualizado'}],datas:[]},
     {id:nid(),nome:'João Pedro',telefone:'31977772222',email:'',tags:['Cliente'],contexto:'negocio',aniversario:'1988-06-02',favorito:false,comoConheci:'Instagram',anotacoes:'',ultimoContato:offset(-1),manterContato:30,proximaAcao:null,interacoes:[{data:offset(-1),tipo:'whatsapp',nota:'Pediu orçamento para 50 unidades'},{data:offset(-15),tipo:'ligacao',nota:'Ligou para saber prazo de entrega'}],datas:[]},
@@ -409,6 +420,20 @@ const DB={
     {id:nid(),materiaId:ing,data:offset(-2),minutos:60},
     {id:nid(),materiaId:his,data:offset(-4),minutos:45},
     {id:nid(),materiaId:his,data:offset(-6),minutos:40},
+  ];
+})();
+
+// Seed sessões de leitura (referenciam os IDs reais dos livros)
+(function(){
+  const lv=DB.livros; if(lv.length<2)return;
+  const hob=lv[0].id, sap=lv[1].id;
+  DB.sessoesLeitura=[
+    {id:nid(),livroId:hob,data:offset(0), paginas:25,minutos:40},
+    {id:nid(),livroId:hob,data:offset(-1),paginas:30,minutos:45},
+    {id:nid(),livroId:hob,data:offset(-2),paginas:15,minutos:20},
+    {id:nid(),livroId:hob,data:offset(-3),paginas:20,minutos:30},
+    {id:nid(),livroId:sap,data:offset(-5),paginas:18,minutos:30},
+    {id:nid(),livroId:sap,data:offset(-6),paginas:22,minutos:35},
   ];
 })();
 

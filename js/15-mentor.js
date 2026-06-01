@@ -200,6 +200,31 @@ const Mentor=(()=>{
              d=>`${d.materia} no alvo essa semana: ${d.horas}h ✅`],
       motivador:[d=>`isso! bateu a meta de ${d.materia} (${d.horas}h) — segue nesse ritmo! 🚀`,
              d=>`meta de ${d.materia} conquistada (${d.horas}h)! orgulho 🙌`]
+    },
+    // ── LEITURA (Etapa 17) ──
+    'leit-parado':{
+      serio:[d=>`você está há ${d.dias} dias sem avançar em "${d.titulo}"`,
+             d=>`"${d.titulo}" está parado há ${d.dias} dias`],
+      descontraido:[d=>`"${d.titulo}" tá te esperando há ${d.dias}d 👀`,
+             d=>`faz ${d.dias}d que "${d.titulo}" não vira uma página`],
+      motivador:[d=>`que tal retomar "${d.titulo}"? ${d.dias}d parado, dá pra voltar! 📖`,
+             d=>`um capítulo de "${d.titulo}" hoje (${d.dias}d parado) já reanima a leitura`]
+    },
+    'leit-meta':{
+      serio:[d=>`faltam ${d.faltam} ${d.faltam===1?'livro':'livros'} para sua meta de ${d.meta} em ${d.ano}`,
+             d=>`sua meta de ${d.meta} livros em ${d.ano} ainda pede ${d.faltam}`],
+      descontraido:[d=>`faltam ${d.faltam} ${d.faltam===1?'livrinho':'livros'} pra meta de ${d.ano} 📚`,
+             d=>`${d.faltam} ${d.faltam===1?'livro':'livros'} e você fecha a meta de ${d.ano}`],
+      motivador:[d=>`só mais ${d.faltam} ${d.faltam===1?'livro':'livros'} pra bater a meta de ${d.ano} — bora! 🚀`,
+             d=>`a meta de ${d.meta} livros tá logo ali: faltam ${d.faltam} 💪`]
+    },
+    'leit-semler':{
+      serio:[d=>`você não registra leitura há ${d.dias} dias`,
+             d=>`já são ${d.dias} dias sem nenhuma sessão de leitura`],
+      descontraido:[d=>`faz ${d.dias}d que você não lê 👀`,
+             d=>`${d.dias}d sem virar uma página, hein 📖`],
+      motivador:[d=>`que tal 10 minutinhos de leitura hoje? ${d.dias}d sem ler`,
+             d=>`bora reativar o hábito — ${d.dias}d sem leitura, um pouco já conta 💪`]
     }
   };
 
@@ -311,6 +336,20 @@ const Mentor=(()=>{
         if(semMin>=m.metaSemanal*60)bat={materia:m.nome,horas:+(semMin/60).toFixed(1)};});
       if(!bat)return null;
       return mk('est-meta','Estudos','pessoal','oportunidade',bat,'Meta batida 🎉',{label:'Ver estudos',navTo:'estudos'});},
+    // LEITURA (Etapa 17)
+    ()=>{let pior=null;
+      DB.livros.filter(l=>l.estante==='lendo').forEach(l=>{
+        const ss=DB.sessoesLeitura.filter(s=>s.livroId===l.id);if(!ss.length)return;
+        const dias=-Math.max(...ss.map(s=>diasAte(s.data)));
+        if(dias>=4&&(!pior||dias>pior.dias))pior={titulo:l.titulo,dias};});
+      if(!pior)return null;
+      return mk('leit-parado','Leitura','pessoal','atencao',pior,'Leitura parada',{label:'Continuar',navTo:'leitura'});},
+    ()=>{const meta=DB.metaLeitura||0;if(meta<=0)return null;
+      const lidos=DB.livros.filter(l=>l.estante==='lido').length;const faltam=meta-lidos;if(faltam<=0)return null;
+      return mk('leit-meta','Leitura','pessoal','info',{faltam,meta,ano:new Date().getFullYear()},'Meta de leitura',{label:'Ver leitura',navTo:'leitura'});},
+    ()=>{if(!DB.livros.some(l=>l.estante==='lendo')||!DB.sessoesLeitura.length)return null;
+      const ult=-Math.max(...DB.sessoesLeitura.map(s=>diasAte(s.data)));if(ult<7)return null;
+      return mk('leit-semler','Leitura','pessoal','info',{dias:ult},'Sem leitura',{label:'Ler agora',navTo:'leitura'});},
   ];
 
   function rodarRegras(){

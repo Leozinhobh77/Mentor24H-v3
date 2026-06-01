@@ -52,16 +52,16 @@
   - [x] **Mentor — regras novas de Estudos** — prova chegando + pouco estudo · sem estudar há N dias · bateu a meta da semana 🎉
   - [x] **Dados**: matérias + sessões (em memória → Supabase na Etapa 20)
   - *Fora do escopo (no Backlog): flashcards/SRS, ranking social*
-- [ ] **Etapa 17 — Leitura / Livros** (modo Pessoal — estante, progresso, hábito de leitura, stats e Mentor)
-  - [ ] **Estante**: Quero ler · Lendo · Lido · Abandonei
-  - [ ] **Livro**: título, autor, capa (cor+inicial, sem internet), total de páginas, gênero
-  - [ ] **Progresso**: marcar página atual ("parei na 180") → barra + %
-  - [ ] **Registrar leitura**: por páginas e/ou tempo (timer, igual Estudos) → alimenta streak
-  - [ ] **Nota (meia-estrela) + resenha curta** ao terminar
-  - [ ] **Meta anual** ("ler N livros no ano") com progresso
-  - [ ] **Stats reaproveitando componentes**: donut (gênero), barras (páginas/7 dias), heatmap de consistência, streak 🔥
-  - [ ] **Mentor — regras novas de Leitura**: livro parado há N dias · faltam X livros pra meta do ano · N dias sem ler
-  - [ ] **Dados**: livros + sessões de leitura (em memória → Supabase na Etapa 20)
+- [x] **Etapa 17 — Leitura / Livros** ✅ (modo Pessoal — estante, progresso, hábito de leitura, stats e Mentor) — 2026-06-01
+  - [x] **Estante**: Quero ler · Lendo · Lido · Abandonei (abas/filtro)
+  - [x] **Livro**: título, autor, capa (cor+inicial, sem internet), total de páginas, gênero
+  - [x] **Progresso**: marcar página atual ("parei na 180") → barra + %
+  - [x] **Registrar leitura**: por páginas e/ou tempo (timer Pomodoro/Livre, igual Estudos) → alimenta streak
+  - [x] **Nota (meia-estrela) + resenha curta** ao terminar
+  - [x] **Meta anual** ("ler N livros no ano") com progresso
+  - [x] **Stats reaproveitando componentes**: donut (gênero), barras (páginas/7 dias), heatmap de consistência, streak 🔥
+  - [x] **Mentor — regras novas de Leitura**: livro parado há N dias · faltam X livros pra meta do ano · N dias sem ler
+  - [x] **Dados**: livros + sessões de leitura (em memória → Supabase na Etapa 20)
   - *Fora do escopo (no Backlog): fóruns/clubes de leitura, resenhas públicas, recomendações sociais*
 - [ ] **Etapa 18 — Séries** 🔧 *a definir com Léo* (marcar onde parou — temporada/episódio, assistindo/concluído)
 
@@ -83,4 +83,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 16 (Estudos) ✅ — 2026-06-01 (Estudos no modo Pessoal: matérias, timer Pomodoro/Livre, registro, metas, donut/barras/heatmap/streak, histórico, 3 regras do Mentor). Próxima: 🔧 a definir com Léo.*
+*Atualizado a cada etapa. Última: Etapa 17 (Leitura) ✅ — 2026-06-01 (Leitura no modo Pessoal: estante 4 prateleiras, progresso por página, timer, registro páginas/tempo, nota meia-estrela+resenha, meta anual, donut gênero/barras/heatmap/streak, 3 regras do Mentor). Próxima: Etapa 18 (Séries) — 🔧 a definir com Léo.*
