@@ -184,16 +184,30 @@ function navigate(page){
   if(page==='clientes') Clientes.render();
   if(page==='relatorios') RelatoriosNeg.render();
   if(page==='mentor') Mentor.render();
-  document.body.classList.remove('drawer-open');
+  closeDrawer();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('[data-nav]').forEach(el=>el.addEventListener('click',()=>navigate(el.dataset.nav)));
 
 /* ─── DRAWER (menu lateral no mobile) ─── */
+/* Trava o fundo via position:fixed (overflow:hidden no body não segura o scroll do <html>
+   no mobile). Salva e restaura o scrollY ao abrir/fechar. */
+let _drawerScrollY=0;
+function openDrawer(){
+  _drawerScrollY=window.scrollY;
+  document.body.classList.add('drawer-open');
+  document.body.style.top=`-${_drawerScrollY}px`;
+}
+function closeDrawer(){
+  if(!document.body.classList.contains('drawer-open'))return;
+  document.body.classList.remove('drawer-open');
+  document.body.style.top='';
+  window.scrollTo(0,_drawerScrollY);
+}
 (function(){
   const mb=document.getElementById('menu-btn'),bd=document.getElementById('side-backdrop');
-  if(mb)mb.addEventListener('click',()=>document.body.classList.toggle('drawer-open'));
-  if(bd)bd.addEventListener('click',()=>document.body.classList.remove('drawer-open'));
+  if(mb)mb.addEventListener('click',()=>document.body.classList.contains('drawer-open')?closeDrawer():openDrawer());
+  if(bd)bd.addEventListener('click',closeDrawer);
 })();
 
 /* ═══════════════════════════════════════════════

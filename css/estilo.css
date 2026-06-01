@@ -130,7 +130,7 @@ svg{display:block}
 
 .side-foot{margin-top:auto;border-top:1px solid var(--border);padding-top:var(--s-3);flex-shrink:0}
 .brand{flex-shrink:0}
-.side-scroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:var(--s-2);margin:0 calc(var(--s-3) * -1);padding:0 var(--s-3)}
+.side-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:var(--s-2);margin:0 calc(var(--s-3) * -1);padding:0 var(--s-3)}
 .side-scroll::-webkit-scrollbar{width:6px}
 .side-scroll::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
 .side-scroll::-webkit-scrollbar-track{background:transparent}
@@ -754,8 +754,9 @@ select.field{cursor:pointer}
 }
 @media(max-width:860px){
   #menu-btn{display:grid}
-  #sidebar{display:flex;position:fixed;top:0;left:0;height:100dvh;width:280px;z-index:70;transform:translateX(-100%);transition:transform .28s var(--ease);box-shadow:var(--shadow-lg)}
+  #sidebar{display:flex;position:fixed;top:0;left:0;height:100dvh;width:280px;z-index:70;transform:translateX(-100%);transition:transform .28s var(--ease);box-shadow:var(--shadow-lg);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
   body.drawer-open #sidebar{transform:none}
+  body.drawer-open{overflow:hidden;position:fixed;width:100%;left:0;right:0}
   #side-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:65;opacity:0;visibility:hidden;transition:opacity .25s var(--ease),visibility .25s}
   body.drawer-open #side-backdrop{opacity:1;visibility:visible}
   .topbar{padding:var(--s-3) var(--s-5);flex-wrap:nowrap;gap:var(--s-3)}
