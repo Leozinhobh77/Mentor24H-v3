@@ -39,7 +39,7 @@
   - [x] **14C — Briefing no dashboard** ✅ (os 3 cards `.card.ai` "Mentor · seu dia" agora consomem o motor real via `Mentor.briefing(ctx)`: spotlight + contagem + resto, por contexto/modo, herdando tom e empatia; removido o mock de IA conversacional da Fase 0)
 - [~] **Etapa 15 — Plataforma** (command palette ⌘K, notificações, quick-add global, modos refinados)
   - [x] **15A — Command Palette ⌘K** ✅ (Search & Act sem IA: ⌘K/Ctrl+K + clique na busca; índice IR PARA + AÇÕES criar; busca fuzzy nos DBs com contexto rico; act inline — Marcar paga/Editar/WhatsApp/Ver no estoque; estado vazio recentes+sugeridos por modo; calculadora inline segura; navegação 100% teclado ↑↓/↵/⇥/esc)
-  - [ ] **15B — Sino + quick-add + modos + housekeeping** (notificações, quick-add global do topo, refino de modos)
+  - [x] **15B — Plataforma completa** ✅ (Central de Notificações: sino com badge de não-lidas + shake em críticos, painel agrupado por severidade, marcar lida/todas; Quick-add global botão +: 6 entidades → form direto; Modos refinados: cross-fade, atalhos Alt+1/2/3, persiste na sessão; Housekeeping: `.chip`/`.ai-cta` removidos do CSS; `Mentor.feed()` exposto)
 - [ ] **Etapa 16 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
 - [ ] **Etapa 17 — Supabase** (substituir mock por banco real, sync online-only)
 - [ ] **Etapa 18 — PWA + polish** (manifest, instalável, estados de rede, revisão final)
@@ -52,4 +52,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 15A ✅ — 2026-05-31 (Command Palette ⌘K, Search & Act sem IA). Próxima: Etapa 15B (sino/notificações + quick-add global + refino de modos).*
+*Atualizado a cada etapa. Última: Etapa 15 (A+B) ✅ — 2026-05-31 (Plataforma completa: ⌘K + notificações + quick-add + modos refinados). Próxima: Etapa 16 (Auth + Perfil/Config).*
