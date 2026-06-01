@@ -75,7 +75,18 @@
   - *Fora do escopo (no Backlog): auto-scrobble/integração streaming, calendário de estreias, comunidade/resenhas públicas*
 
 ## Corpo & Movimento (Pessoal)
-- [ ] **Etapa 19 — Esportes / Treinos** 🔧 *refinando com Léo* (controle geral p/ qualquer modalidade: academia, corrida, luta, dança, etc — frequência, controle de treinos, medições corporais)
+- [ ] **Etapa 19 — Treinos** (modo Pessoal — controle universal de treino/esporte: planos, frequência, evolução e Mentor)
+  - [ ] **Planos de treino (A/B/C…)**: criar/editar, lista de exercícios por plano (séries/reps/carga); serve p/ qualquer modalidade
+  - [ ] **Agenda semanal**: atribuir planos aos dias (seg/qui=A, ter/sex=B…), flexível; "treino de hoje" em destaque
+  - [ ] **Executar plano do dia**: marcar exercícios/séries feitos → registra a sessão (registro rápido)
+  - [ ] **Registrar treino avulso**: modalidade (musculação/corrida/luta/dança/outro) com campos adaptáveis (carga/reps · distância/tempo/ritmo · duração/intensidade/notas)
+  - [ ] **Frequência**: dias da semana + presença → calendário/heatmap + streak + meta semanal
+  - [ ] **Medições corporais**: peso, % gordura, circunferências (braço/peito/cintura/quadril/perna) com tendência (30d/3m/ano)
+  - [ ] **Motor de evolução & comparação**: linha no tempo; comparar períodos (mês×mês, 30d×30d, trimestre); delta colorido (🟢 sobe / 🔴 cai); detecção de platô; PRs/recordes
+  - [ ] **Stats**: donut (modalidade), barras (treinos/semana), linha (evolução), heatmap (presença), streak; seletor de período (reusa Relatórios negócio)
+  - [ ] **Mentor — regras novas de Treinos**: plano de hoje · faltou no treino · meta semanal · PR batido · evolução de peso/medida · platô (volume travado) · N dias sem treinar
+  - [ ] **Dados**: planos + sessões + medições (com data; demo espalhada por meses) — em memória → Supabase na Etapa 22
+  - *Fora do escopo (no Backlog): fotos de progresso, GPS/mapa de corrida, smartwatch/Strava, desafios sociais*
 - [ ] **Etapa 20 — (2ª ideia pessoal)** 🔧 *Léo vai detalhar*
 
 ## Graduação para produto
@@ -89,6 +100,7 @@
 - [ ] **Comunidade de leitura** — fóruns/clubes de leitura, resenhas públicas, recomendações sociais (estilo Fable/PageBound/Goodreads social). ⛔ Multiusuário → **pós-Supabase (Etapa 22)**.
 - [ ] **Séries — auto-scrobble + calendário de estreias** — logar automático do streaming (estilo Trakt/Simkl) e datas de novos episódios (via API tipo TMDB). ⛔ Precisa APIs externas/online → **pós-Supabase (Etapa 22)**.
 - [ ] **Comunidade de séries** — resenhas públicas / recomendações sociais (estilo Serializd/TV Time). ⛔ Multiusuário → **pós-Supabase (Etapa 22)**.
+- [ ] **Treinos — extras** — fotos de progresso, GPS/mapa de corrida, integração smartwatch/Strava, desafios sociais. ⛔ Precisa armazenamento real/API/multiusuário → **pós-Supabase (Etapa 22)**.
 
 ---
 
@@ -98,4 +110,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 18 (Séries) ✅ — 2026-06-01 (Séries no modo Pessoal: 4 listas, progresso por episódio + próximo ep, marcar/maratona, nota meia-estrela+resenha, donut gênero/barras eps/heatmap/streak, 3 regras do Mentor, ícone tv). Próxima: Etapa 19 (Esportes / Treinos) — 🔧 refinando com Léo.*
+*Atualizado a cada etapa. Última: Etapa 18 (Séries) ✅ — 2026-06-01 (Séries no modo Pessoal: 4 listas, progresso por episódio + próximo ep, marcar/maratona, nota meia-estrela+resenha, donut gênero/barras eps/heatmap/streak, 3 regras do Mentor, ícone tv). Próxima: Etapa 19 (Treinos) — escopo fechado, gerando Prompt.*
