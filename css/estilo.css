@@ -808,6 +808,10 @@ select.field{cursor:pointer}
   .rn-acts .btn{flex:1}
 }
 
+/* ── ETAPA 18: SÉRIES (reusa o visual de Leitura/Estudos) ── */
+#series-root .card{margin-top:var(--s-4)}
+#series-root .study-stats .card{margin-top:0}
+
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:1100px){
   .col-8,.col-7{grid-column:span 12}

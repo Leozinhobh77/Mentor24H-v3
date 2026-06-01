@@ -44,6 +44,7 @@ const ICONS={
   chat:'<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/>',
   menu:'<path d="M3 12h18M3 6h18M3 18h18"/>',
   book:'<path d="M12 7v14"/><path d="M3 5.5C3 4.7 3.7 4 4.5 4H10a2 2 0 0 1 2 2 2 2 0 0 1 2-2h5.5c.8 0 1.5.7 1.5 1.5v12c0 .8-.7 1.5-1.5 1.5H14a2 2 0 0 0-2 2 2 2 0 0 0-2-2H4.5A1.5 1.5 0 0 1 3 17.5z"/>',
+  tv:'<rect x="2" y="7" width="20" height="13" rx="2"/><path d="m7 3 5 4 5-4"/>',
   activity:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
   star:'<path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6.1 21.3l1.2-6.6L2.5 9.5l6.6-.9z"/>',
   mail:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3 7.5 9 6 9-6"/>',
@@ -153,7 +154,7 @@ document.querySelectorAll('.mood-pick').forEach(p=>p.querySelectorAll('.mood').f
 })));
 
 /* ─── ROUTER (navegação SPA) ─── */
-const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',mentor:'Mentor',perfil:'Perfil'};
+const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',mentor:'Mentor',perfil:'Perfil'};
 function navigate(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===page));
   document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
@@ -180,6 +181,7 @@ function navigate(page){
   if(page==='contatos') Contatos.render();
   if(page==='estudos') Estudos.render();
   if(page==='leitura') Leitura.render();
+  if(page==='series') Series.render();
   if(page==='produtos') Produtos.render();
   if(page==='estoque') Estoque.render();
   if(page==='vendas') Vendas.render();
@@ -342,6 +344,17 @@ const DB={
   ],
   sessoesLeitura:[], // {id, livroId, data:'YYYY-MM-DD', paginas, minutos} — seed abaixo
   metaLeitura:12,    // meta de livros no ano
+  series:[   // lista: 'quero' | 'assistindo' | 'concluido' | 'abandonei'
+    {id:nid(),titulo:'Dark',genero:'Ficção',plataforma:'Netflix',epsTotal:26,epsVistos:13,tempAtual:2,epAtual:5,lista:'assistindo',nota:null,resenha:'',cor:'#2D7FF9'},
+    {id:nid(),titulo:'Stranger Things',genero:'Ficção',plataforma:'Netflix',epsTotal:42,epsVistos:20,tempAtual:3,epAtual:2,lista:'assistindo',nota:null,resenha:'',cor:'#27B6A3'},
+    {id:nid(),titulo:'Severance',genero:'Ficção Científica',plataforma:'Apple TV+',epsTotal:18,epsVistos:0,tempAtual:1,epAtual:0,lista:'quero',nota:null,resenha:'',cor:'#7B6CFF'},
+    {id:nid(),titulo:'Fallout',genero:'Ação',plataforma:'Prime Video',epsTotal:8,epsVistos:0,tempAtual:1,epAtual:0,lista:'quero',nota:null,resenha:'',cor:'#C8860B'},
+    {id:nid(),titulo:'Arcane',genero:'Animação',plataforma:'Netflix',epsTotal:18,epsVistos:0,tempAtual:1,epAtual:0,lista:'quero',nota:null,resenha:'',cor:'#E0568C'},
+    {id:nid(),titulo:'Breaking Bad',genero:'Drama',plataforma:'Netflix',epsTotal:62,epsVistos:62,tempAtual:5,epAtual:16,lista:'concluido',nota:5,resenha:'Obra-prima do começo ao fim.',cor:'#1F9D55'},
+    {id:nid(),titulo:'The Office',genero:'Comédia',plataforma:'Prime Video',epsTotal:201,epsVistos:201,tempAtual:9,epAtual:23,lista:'concluido',nota:4.5,resenha:'Pra rir sempre.',cor:'#168A7C'},
+    {id:nid(),titulo:'The Witcher',genero:'Fantasia',plataforma:'Netflix',epsTotal:24,epsVistos:8,tempAtual:1,epAtual:8,lista:'abandonei',nota:null,resenha:'',cor:'#DB4A4A'},
+  ],
+  sessoesSeries:[], // {id, serieId, data:'YYYY-MM-DD', eps} — seed abaixo
   contatos:[
     {id:nid(),nome:'Maria Souza',telefone:'31988881111',email:'maria@email.com',tags:['Cliente'],contexto:'negocio',aniversario:'1992-05-29',favorito:true,comoConheci:'Indicação',anotacoes:'Compra brigadeiros toda semana',ultimoContato:offset(-3),manterContato:15,proximaAcao:{data:offset(5),nota:'Confirmar pedido para festa'},interacoes:[{data:offset(-3),tipo:'whatsapp',nota:'Pedido de 6 brigadeiros para o fim de semana'},{data:offset(-18),tipo:'presencial',nota:'Entregou encomenda pessoalmente'},{data:offset(-35),tipo:'whatsapp',nota:'Pediu cardápio atualizado'}],datas:[]},
     {id:nid(),nome:'João Pedro',telefone:'31977772222',email:'',tags:['Cliente'],contexto:'negocio',aniversario:'1988-06-02',favorito:false,comoConheci:'Instagram',anotacoes:'',ultimoContato:offset(-1),manterContato:30,proximaAcao:null,interacoes:[{data:offset(-1),tipo:'whatsapp',nota:'Pediu orçamento para 50 unidades'},{data:offset(-15),tipo:'ligacao',nota:'Ligou para saber prazo de entrega'}],datas:[]},
@@ -434,6 +447,20 @@ const DB={
     {id:nid(),livroId:hob,data:offset(-3),paginas:20,minutos:30},
     {id:nid(),livroId:sap,data:offset(-5),paginas:18,minutos:30},
     {id:nid(),livroId:sap,data:offset(-6),paginas:22,minutos:35},
+  ];
+})();
+
+// Seed sessões de séries (referenciam os IDs reais das séries)
+(function(){
+  const sr=DB.series; if(sr.length<2)return;
+  const dark=sr[0].id, stra=sr[1].id;
+  DB.sessoesSeries=[
+    {id:nid(),serieId:dark,data:offset(0), eps:2},
+    {id:nid(),serieId:dark,data:offset(-1),eps:3},
+    {id:nid(),serieId:dark,data:offset(-2),eps:1},
+    {id:nid(),serieId:dark,data:offset(-3),eps:2},
+    {id:nid(),serieId:stra,data:offset(-6),eps:3},
+    {id:nid(),serieId:stra,data:offset(-7),eps:2},
   ];
 })();
 

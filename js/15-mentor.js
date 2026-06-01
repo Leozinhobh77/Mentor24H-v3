@@ -225,6 +225,31 @@ const Mentor=(()=>{
              d=>`${d.dias}d sem virar uma página, hein 📖`],
       motivador:[d=>`que tal 10 minutinhos de leitura hoje? ${d.dias}d sem ler`,
              d=>`bora reativar o hábito — ${d.dias}d sem leitura, um pouco já conta 💪`]
+    },
+    // ── SÉRIES (Etapa 18) ──
+    'ser-parada':{
+      serio:[d=>`você parou "${d.titulo}" na T${d.temp}E${d.ep} há ${d.dias} dias`,
+             d=>`"${d.titulo}" está parada na T${d.temp}E${d.ep} há ${d.dias} dias`],
+      descontraido:[d=>`"${d.titulo}" travou na T${d.temp}E${d.ep} faz ${d.dias}d 👀`,
+             d=>`faz ${d.dias}d que "${d.titulo}" tá pausada (T${d.temp}E${d.ep})`],
+      motivador:[d=>`que tal voltar pra "${d.titulo}"? Parou na T${d.temp}E${d.ep}, ${d.dias}d atrás 📺`,
+             d=>`um episódio de "${d.titulo}" hoje (parada há ${d.dias}d) já reanima a maratona`]
+    },
+    'ser-fila':{
+      serio:[d=>`você tem ${d.n} séries na lista "quero assistir"`,
+             d=>`há ${d.n} séries esperando na sua fila`],
+      descontraido:[d=>`${d.n} séries esperando na fila 🍿`,
+             d=>`sua fila tem ${d.n} séries pra começar`],
+      motivador:[d=>`${d.n} séries na fila — escolhe uma e começa hoje! 🍿`,
+             d=>`que tal estrear uma das ${d.n} da fila? 🎬`]
+    },
+    'ser-semver':{
+      serio:[d=>`você não assiste nada da lista há ${d.dias} dias`,
+             d=>`já são ${d.dias} dias sem registrar episódios`],
+      descontraido:[d=>`faz ${d.dias}d que você não assiste nada 👀`,
+             d=>`${d.dias}d sem um episódio sequer, hein 📺`],
+      motivador:[d=>`que tal um episódio hoje? ${d.dias}d sem assistir`,
+             d=>`bora voltar pra lista — ${d.dias}d parado, um ep já conta 💪`]
     }
   };
 
@@ -350,6 +375,19 @@ const Mentor=(()=>{
     ()=>{if(!DB.livros.some(l=>l.estante==='lendo')||!DB.sessoesLeitura.length)return null;
       const ult=-Math.max(...DB.sessoesLeitura.map(s=>diasAte(s.data)));if(ult<7)return null;
       return mk('leit-semler','Leitura','pessoal','info',{dias:ult},'Sem leitura',{label:'Ler agora',navTo:'leitura'});},
+    // SÉRIES (Etapa 18)
+    ()=>{let pior=null;
+      DB.series.filter(s=>s.lista==='assistindo').forEach(s=>{
+        const ss=DB.sessoesSeries.filter(x=>x.serieId===s.id);if(!ss.length)return;
+        const dias=-Math.max(...ss.map(x=>diasAte(x.data)));
+        if(dias>=5&&(!pior||dias>pior.dias))pior={titulo:s.titulo,temp:s.tempAtual||1,ep:s.epAtual||0,dias};});
+      if(!pior)return null;
+      return mk('ser-parada','Séries','pessoal','atencao',pior,'Série parada',{label:'Continuar',navTo:'series'});},
+    ()=>{const n=DB.series.filter(s=>s.lista==='quero').length;if(n<3)return null;
+      return mk('ser-fila','Séries','pessoal','info',{n},'Fila de séries',{label:'Ver séries',navTo:'series'});},
+    ()=>{if(!DB.series.some(s=>s.lista==='assistindo')||!DB.sessoesSeries.length)return null;
+      const ult=-Math.max(...DB.sessoesSeries.map(s=>diasAte(s.data)));if(ult<7)return null;
+      return mk('ser-semver','Séries','pessoal','info',{dias:ult},'Sem assistir',{label:'Assistir',navTo:'series'});},
   ];
 
   function rodarRegras(){

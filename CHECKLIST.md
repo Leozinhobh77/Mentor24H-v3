@@ -63,15 +63,15 @@
   - [x] **Mentor — regras novas de Leitura**: livro parado há N dias · faltam X livros pra meta do ano · N dias sem ler
   - [x] **Dados**: livros + sessões de leitura (em memória → Supabase na Etapa 20)
   - *Fora do escopo (no Backlog): fóruns/clubes de leitura, resenhas públicas, recomendações sociais*
-- [ ] **Etapa 18 — Séries** (modo Pessoal — listas, progresso por episódio, stats e Mentor)
-  - [ ] **Listas**: Quero assistir · Assistindo · Concluído · Abandonei (abas/filtro)
-  - [ ] **Série**: título, capa (cor+inicial), gênero, plataforma (onde assiste), nº de episódios
-  - [ ] **Progresso por episódio**: "parei na T2E5" → marcar ep visto, barra (vistos/total), próximo ep em destaque
-  - [ ] **Registrar maratona**: marcar X episódios vistos hoje → alimenta streak
-  - [ ] **Nota (meia-estrela) + resenha** ao concluir
-  - [ ] **Stats reaproveitando componentes**: donut (gênero), barras (eps/7 dias), heatmap, streak 🔥
-  - [ ] **Mentor — regras novas de Séries**: série parada há N dias · X séries em "quero assistir" · N dias sem assistir
-  - [ ] **Dados**: séries + sessões (eps vistos por dia) (em memória → Supabase na Etapa 20)
+- [x] **Etapa 18 — Séries** ✅ (modo Pessoal — listas, progresso por episódio, stats e Mentor) — 2026-06-01
+  - [x] **Listas**: Quero assistir · Assistindo · Concluído · Abandonei (abas/filtro)
+  - [x] **Série**: título, capa (cor+inicial), gênero, plataforma (onde assiste), nº de episódios
+  - [x] **Progresso por episódio**: "parei na T2E5" → marcar ep visto, barra (vistos/total), próximo ep em destaque
+  - [x] **Registrar maratona**: marcar X episódios vistos hoje → alimenta streak
+  - [x] **Nota (meia-estrela) + resenha** ao concluir
+  - [x] **Stats reaproveitando componentes**: donut (gênero), barras (eps/7 dias), heatmap, streak 🔥
+  - [x] **Mentor — regras novas de Séries**: série parada há N dias · X séries em "quero assistir" · N dias sem assistir
+  - [x] **Dados**: séries + sessões (eps vistos por dia) (em memória → Supabase na Etapa 20)
   - *Fora do escopo (no Backlog): auto-scrobble/integração streaming, calendário de estreias, comunidade/resenhas públicas*
 
 ## Graduação para produto
@@ -94,4 +94,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 17 (Leitura) ✅ — 2026-06-01 (Leitura no modo Pessoal: estante 4 prateleiras, progresso por página, timer, registro páginas/tempo, nota meia-estrela+resenha, meta anual, donut gênero/barras/heatmap/streak, 3 regras do Mentor). Próxima: Etapa 18 (Séries) — 🔧 a definir com Léo.*
+*Atualizado a cada etapa. Última: Etapa 18 (Séries) ✅ — 2026-06-01 (Séries no modo Pessoal: 4 listas, progresso por episódio + próximo ep, marcar/maratona, nota meia-estrela+resenha, donut gênero/barras eps/heatmap/streak, 3 regras do Mentor, ícone tv). Próxima: Etapa 19 (Auth + Perfil) — 🔧 a definir com Léo.*
