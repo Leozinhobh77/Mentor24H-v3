@@ -75,14 +75,14 @@
 
 /* ─── RESET ─── */
 *{margin:0;padding:0;box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
 body{
   font-family:var(--font);
   background:var(--bg);
   color:var(--text-1);
   line-height:1.5;
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+  overflow-x:clip;max-width:100%;
   transition:background .4s var(--ease), color .4s var(--ease);
 }
 *{min-width:0}
@@ -358,7 +358,7 @@ svg{display:block}
 /* Cross-fade de modos */
 .mode-pane{transition:opacity .15s var(--ease)}
 .mode-pane:not(.show){opacity:0}
-@media(max-width:560px){.notif-panel{width:calc(100vw - 24px);right:-8px}.qa-menu{min-width:190px;left:auto;right:0}}
+@media(max-width:560px){.notif-panel{width:calc(100vw - 24px);right:0}.qa-menu{min-width:190px;left:auto;right:0;max-width:calc(100vw - 24px)}}
 /* Command Palette ⌘K (Etapa 15A) */
 .search{cursor:pointer}
 .cmdk-back{position:fixed;inset:0;z-index:300;display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);opacity:0;transition:opacity .15s var(--ease)}
