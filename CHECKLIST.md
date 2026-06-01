@@ -37,7 +37,9 @@
   - [x] **14A — Motor de regras + feed** ✅ (17 gatilhos / 4 domínios, resumo do dia, filtro por modo, cap top-8, ação 1-clique, badge de críticos, dispensar; frases neutras isoladas em `fraseDe()`)
   - [x] **14B — A Voz do Mentor** ✅ (3 tons 🤝/😎/💪, frase modular ab×núcleo×fecho, anti-repetição, toggle no topo, slots contextuais, **trava de empatia** nos ids sensíveis/saúde — substituiu `fraseDe()`)
   - [x] **14C — Briefing no dashboard** ✅ (os 3 cards `.card.ai` "Mentor · seu dia" agora consomem o motor real via `Mentor.briefing(ctx)`: spotlight + contagem + resto, por contexto/modo, herdando tom e empatia; removido o mock de IA conversacional da Fase 0)
-- [ ] **Etapa 15 — Plataforma** (command palette ⌘K, notificações, quick-add global, modos refinados)
+- [~] **Etapa 15 — Plataforma** (command palette ⌘K, notificações, quick-add global, modos refinados)
+  - [x] **15A — Command Palette ⌘K** ✅ (Search & Act sem IA: ⌘K/Ctrl+K + clique na busca; índice IR PARA + AÇÕES criar; busca fuzzy nos DBs com contexto rico; act inline — Marcar paga/Editar/WhatsApp/Ver no estoque; estado vazio recentes+sugeridos por modo; calculadora inline segura; navegação 100% teclado ↑↓/↵/⇥/esc)
+  - [ ] **15B — Sino + quick-add + modos + housekeeping** (notificações, quick-add global do topo, refino de modos)
 - [ ] **Etapa 16 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
 - [ ] **Etapa 17 — Supabase** (substituir mock por banco real, sync online-only)
 - [ ] **Etapa 18 — PWA + polish** (manifest, instalável, estados de rede, revisão final)
@@ -50,4 +52,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 14 (A+B+C) ✅ — 2026-05-31 (Mentor completo: motor + feed + voz 3 tons + briefing no dashboard, sem IA). Próxima: Etapa 15 (Plataforma — ⌘K, notificações, quick-add global).*
+*Atualizado a cada etapa. Última: Etapa 15A ✅ — 2026-05-31 (Command Palette ⌘K, Search & Act sem IA). Próxima: Etapa 15B (sino/notificações + quick-add global + refino de modos).*
