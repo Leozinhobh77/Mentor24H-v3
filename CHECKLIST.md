@@ -74,24 +74,28 @@
   - [x] **Dados**: séries + sessões (eps vistos por dia) (em memória → Supabase na Etapa 20)
   - *Fora do escopo (no Backlog): auto-scrobble/integração streaming, calendário de estreias, comunidade/resenhas públicas*
 
+## Corpo & Movimento (Pessoal)
+- [ ] **Etapa 19 — Esportes / Treinos** 🔧 *refinando com Léo* (controle geral p/ qualquer modalidade: academia, corrida, luta, dança, etc — frequência, controle de treinos, medições corporais)
+- [ ] **Etapa 20 — (2ª ideia pessoal)** 🔧 *Léo vai detalhar*
+
 ## Graduação para produto
-- [ ] **Etapa 19 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
-- [ ] **Etapa 20 — Supabase** (substituir mock por banco real, sync online-only)
-- [ ] **Etapa 21 — PWA + polish** (manifest, instalável, estados de rede, revisão final)
+- [ ] **Etapa 21 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
+- [ ] **Etapa 22 — Supabase** (substituir mock por banco real, sync online-only)
+- [ ] **Etapa 23 — PWA + polish** (manifest, instalável, estados de rede, revisão final)
 
 ## 💡 Backlog / Futuro (ideias parqueadas — não esquecer)
 - [ ] **Flashcards + revisão espaçada (SRS)** — cartões pergunta→resposta com reagendamento em intervalos crescentes (1d/3d/7d/15d…), estilo Anki. Liga-se a **Estudos (Etapa 16)**. Dá pra fazer local/vanilla; vira etapa própria quando o Léo quiser.
-- [ ] **Ranking social de estudos** — comparar horas/consistência com outros usuários (estilo YPT). ⛔ Depende de multiusuário → só **pós-Supabase (Etapa 20)**.
-- [ ] **Comunidade de leitura** — fóruns/clubes de leitura, resenhas públicas, recomendações sociais (estilo Fable/PageBound/Goodreads social). ⛔ Multiusuário → **pós-Supabase (Etapa 20)**.
-- [ ] **Séries — auto-scrobble + calendário de estreias** — logar automático do streaming (estilo Trakt/Simkl) e datas de novos episódios (via API tipo TMDB). ⛔ Precisa APIs externas/online → **pós-Supabase (Etapa 20)**.
-- [ ] **Comunidade de séries** — resenhas públicas / recomendações sociais (estilo Serializd/TV Time). ⛔ Multiusuário → **pós-Supabase (Etapa 20)**.
+- [ ] **Ranking social de estudos** — comparar horas/consistência com outros usuários (estilo YPT). ⛔ Depende de multiusuário → só **pós-Supabase (Etapa 22)**.
+- [ ] **Comunidade de leitura** — fóruns/clubes de leitura, resenhas públicas, recomendações sociais (estilo Fable/PageBound/Goodreads social). ⛔ Multiusuário → **pós-Supabase (Etapa 22)**.
+- [ ] **Séries — auto-scrobble + calendário de estreias** — logar automático do streaming (estilo Trakt/Simkl) e datas de novos episódios (via API tipo TMDB). ⛔ Precisa APIs externas/online → **pós-Supabase (Etapa 22)**.
+- [ ] **Comunidade de séries** — resenhas públicas / recomendações sociais (estilo Serializd/TV Time). ⛔ Multiusuário → **pós-Supabase (Etapa 22)**.
 
 ---
 
 ## Nota de Arquitetura
 
-> **Single-file por enquanto (decisão 2026-05-27):** continuar com `index.html` único até fechar todas as etapas do protótipo. Quando chegar na Etapa 20 (Supabase), **avisar Léo para separar em projeto real** com estrutura adequada (HTML + CSS + JS separados ou framework). O protótipo vira guia de referência de UX e dados.
+> **Single-file por enquanto (decisão 2026-05-27):** continuar com `index.html` único até fechar todas as etapas do protótipo. Quando chegar na Etapa 22 (Supabase), **avisar Léo para separar em projeto real** com estrutura adequada (HTML + CSS + JS separados ou framework). O protótipo vira guia de referência de UX e dados.
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 18 (Séries) ✅ — 2026-06-01 (Séries no modo Pessoal: 4 listas, progresso por episódio + próximo ep, marcar/maratona, nota meia-estrela+resenha, donut gênero/barras eps/heatmap/streak, 3 regras do Mentor, ícone tv). Próxima: Etapa 19 (Auth + Perfil) — 🔧 a definir com Léo.*
+*Atualizado a cada etapa. Última: Etapa 18 (Séries) ✅ — 2026-06-01 (Séries no modo Pessoal: 4 listas, progresso por episódio + próximo ep, marcar/maratona, nota meia-estrela+resenha, donut gênero/barras eps/heatmap/streak, 3 regras do Mentor, ícone tv). Próxima: Etapa 19 (Esportes / Treinos) — 🔧 refinando com Léo.*
