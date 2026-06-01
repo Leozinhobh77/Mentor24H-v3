@@ -175,6 +175,31 @@ const Mentor=(()=>{
              d=>[d.aniv?`bolo à vista: ${d.aniv} ${d.anivDias===0?'hoje 🎂':'em '+d.anivDias+'d'}`:'',d.nEv?`${d.nEv} ${d.nEv===1?'compromisso':'compromissos'} hoje`:''].filter(Boolean).join(' · ')],
       motivador:[d=>[d.nEv?`${d.nEv} ${d.nEv===1?'compromisso':'compromissos'} pra arrasar hoje`:'',d.aniv?`e o aniversário de ${d.aniv} ${d.anivDias===0?'hoje':'em '+d.anivDias+'d'} pra lembrar`:''].filter(Boolean).join(' '),
              d=>[d.aniv?`capricha no carinho com ${d.aniv} (${d.anivDias===0?'hoje':d.anivDias+'d'})`:'',d.nEv?`e manda ver nos ${d.nEv} compromissos de hoje`:''].filter(Boolean).join(' ')]
+    },
+    // ── ESTUDOS (Etapa 16) ──
+    'est-prova':{
+      serio:[d=>`faltam ${d.dias}d para a prova de ${d.materia} e você estudou só ${d.horas}h essa semana`,
+             d=>`a prova de ${d.materia} é em ${d.dias}d e a semana soma ${d.horas}h de estudo`],
+      descontraido:[d=>`prova de ${d.materia} em ${d.dias}d e só ${d.horas}h essa semana 👀`,
+             d=>`${d.dias}d pra prova de ${d.materia}; tá em ${d.horas}h na semana`],
+      motivador:[d=>`${d.dias}d pra prova de ${d.materia} — bora passar das ${d.horas}h dessa semana! 💪`,
+             d=>`dá pra chegar firme na prova de ${d.materia} (${d.dias}d): foco nessas horas 🎯`]
+    },
+    'est-parado':{
+      serio:[d=>`você não estuda ${d.materia} há ${d.dias} dias`,
+             d=>`${d.materia} está há ${d.dias} dias sem nenhuma sessão`],
+      descontraido:[d=>`${d.materia} tá esquecida há ${d.dias}d 👀`,
+             d=>`faz ${d.dias}d que ${d.materia} não vê você`],
+      motivador:[d=>`que tal retomar ${d.materia} hoje? ${d.dias}d sem estudar, dá pra voltar! 💪`,
+             d=>`bora desencalhar ${d.materia} (${d.dias}d parada) — um pouco já conta`]
+    },
+    'est-meta':{
+      serio:[d=>`você bateu a meta semanal de ${d.materia} (${d.horas}h)`,
+             d=>`meta de estudo de ${d.materia} atingida nesta semana: ${d.horas}h`],
+      descontraido:[d=>`mandou bem! meta de ${d.materia} batida (${d.horas}h) 🎉`,
+             d=>`${d.materia} no alvo essa semana: ${d.horas}h ✅`],
+      motivador:[d=>`isso! bateu a meta de ${d.materia} (${d.horas}h) — segue nesse ritmo! 🚀`,
+             d=>`meta de ${d.materia} conquistada (${d.horas}h)! orgulho 🙌`]
     }
   };
 
@@ -267,6 +292,25 @@ const Mentor=(()=>{
       if(!ev&&!aniv)return null;
       return mk('prod-agenda','Produtividade','pessoal','info',{nEv:ev,aniv,anivDias},
         'Sua agenda',{label:aniv&&!ev?'Ver contatos':'Ver agenda',navTo:aniv&&!ev?'contatos':'agenda'});},
+    // ESTUDOS (Etapa 16)
+    ()=>{let alvo=null;
+      DB.estudos.forEach(m=>{if(!m.prova)return;const dd=diasAte(m.prova);if(dd<0||dd>7)return;
+        const semMin=DB.sessoesEstudo.filter(s=>s.materiaId===m.id&&diasAte(s.data)>=-6&&diasAte(s.data)<=0).reduce((a,s)=>a+s.minutos,0);
+        if(semMin<(m.metaSemanal||0)*60&&(!alvo||dd<alvo.dias))alvo={materia:m.nome,dias:dd,horas:+(semMin/60).toFixed(1)};});
+      if(!alvo)return null;
+      return mk('est-prova','Estudos','pessoal','atencao',alvo,'Prova chegando',{label:'Estudar',navTo:'estudos'});},
+    ()=>{let pior=null;
+      DB.estudos.forEach(m=>{const ss=DB.sessoesEstudo.filter(s=>s.materiaId===m.id);if(!ss.length)return;
+        const dias=-Math.max(...ss.map(s=>diasAte(s.data)));
+        if(dias>=3&&(!pior||dias>pior.dias))pior={materia:m.nome,dias};});
+      if(!pior)return null;
+      return mk('est-parado','Estudos','pessoal','info',pior,'Estudo parado',{label:'Estudar agora',navTo:'estudos'});},
+    ()=>{let bat=null;
+      DB.estudos.forEach(m=>{if(!m.metaSemanal||bat)return;
+        const semMin=DB.sessoesEstudo.filter(s=>s.materiaId===m.id&&diasAte(s.data)>=-6&&diasAte(s.data)<=0).reduce((a,s)=>a+s.minutos,0);
+        if(semMin>=m.metaSemanal*60)bat={materia:m.nome,horas:+(semMin/60).toFixed(1)};});
+      if(!bat)return null;
+      return mk('est-meta','Estudos','pessoal','oportunidade',bat,'Meta batida 🎉',{label:'Ver estudos',navTo:'estudos'});},
   ];
 
   function rodarRegras(){

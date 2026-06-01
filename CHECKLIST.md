@@ -42,15 +42,15 @@
   - [x] **15B — Plataforma completa** ✅ (Central de Notificações: sino com badge de não-lidas + shake em críticos, painel agrupado por severidade, marcar lida/todas; Quick-add global botão +: 6 entidades → form direto; Modos refinados: cross-fade, atalhos Alt+1/2/3, persiste na sessão; Housekeeping: `.chip`/`.ai-cta` removidos do CSS; `Mentor.feed()` exposto)
   - [x] **Hotfix 01/06** ✅ (CSS `.cmdk-back[hidden]{display:none}` — overlay não bloqueia cliques quando hidden)
 ## Aprendizado & Lazer (Pessoal)
-- [ ] **Etapa 16 — Estudos** (modo Pessoal — acompanhar estudos com timer, metas, stats e Mentor)
-  - [ ] **Matérias/cursos** — cadastro com nome, cor, meta de horas/semana e prova/D-Day opcional
-  - [ ] **Cronômetro / Pomodoro** — escolhe a matéria, dá play, e ao parar registra a sessão
-  - [ ] **Registro manual** — lançar tempo estudado sem usar o timer ("estudei 1h de Mat")
-  - [ ] **Meta semanal por matéria** (barra de progresso) + **KPIs no topo** (hoje / semana / streak / próxima prova)
-  - [ ] **Stats reaproveitando componentes** — donut (horas por matéria), barras (últimos 7 dias), heatmap de consistência (igual Hábitos), streak 🔥 + medalha do dia (discreta)
-  - [ ] **Histórico de sessões** — o que estudou, quando e por quanto tempo
-  - [ ] **Mentor — regras novas de Estudos** — prova chegando + pouco estudo · sem estudar há N dias · bateu a meta da semana 🎉
-  - [ ] **Dados**: matérias + sessões (em memória → Supabase na Etapa 20)
+- [x] **Etapa 16 — Estudos** ✅ (modo Pessoal — acompanhar estudos com timer, metas, stats e Mentor) — 2026-06-01
+  - [x] **Matérias/cursos** — cadastro com nome, cor, meta de horas/semana e prova/D-Day opcional
+  - [x] **Cronômetro / Pomodoro** — escolhe a matéria, dá play, e ao parar registra a sessão (Pomodoro 25/5 + Livre)
+  - [x] **Registro manual** — lançar tempo estudado sem usar o timer ("estudei 1h de Mat")
+  - [x] **Meta semanal por matéria** (barra de progresso) + **KPIs no topo** (hoje / semana / streak / próxima prova)
+  - [x] **Stats reaproveitando componentes** — donut (horas por matéria), barras (últimos 7 dias), heatmap de consistência (igual Hábitos), streak 🔥
+  - [x] **Histórico de sessões** — o que estudou, quando e por quanto tempo
+  - [x] **Mentor — regras novas de Estudos** — prova chegando + pouco estudo · sem estudar há N dias · bateu a meta da semana 🎉
+  - [x] **Dados**: matérias + sessões (em memória → Supabase na Etapa 20)
   - *Fora do escopo (no Backlog): flashcards/SRS, ranking social*
 - [ ] **Etapa 17 — Leitura / Livros** 🔧 *a definir com Léo* (marcar livros — página/onde parou, lidos)
 - [ ] **Etapa 18 — Séries** 🔧 *a definir com Léo* (marcar onde parou — temporada/episódio, assistindo/concluído)
@@ -72,4 +72,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 15 (A+B) ✅ — 2026-05-31 (Plataforma completa: ⌘K + notificações + quick-add + modos refinados). Próxima: Etapa 16 (Estudos) — 🔧 a definir com Léo.*
+*Atualizado a cada etapa. Última: Etapa 16 (Estudos) ✅ — 2026-06-01 (Estudos no modo Pessoal: matérias, timer Pomodoro/Livre, registro, metas, donut/barras/heatmap/streak, histórico, 3 regras do Mentor). Próxima: 🔧 a definir com Léo.*
