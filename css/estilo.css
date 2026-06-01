@@ -758,9 +758,11 @@ select.field{cursor:pointer}
   body.drawer-open #sidebar{transform:none}
   #side-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:65;opacity:0;visibility:hidden;transition:opacity .25s var(--ease),visibility .25s}
   body.drawer-open #side-backdrop{opacity:1;visibility:visible}
-  .topbar{padding:var(--s-3) var(--s-5);flex-wrap:wrap;gap:var(--s-3);row-gap:var(--s-3)}
+  .topbar{padding:var(--s-3) var(--s-5);flex-wrap:nowrap;gap:var(--s-3)}
   .top-actions{gap:var(--s-2)}
-  .greet{flex:1;min-width:140px}
+  .greet{flex:1;min-width:0}
+  .greet h1,.greet p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .btn-add span{display:none}
   .content{padding:var(--s-4);padding-bottom:96px}
   .search{display:none}
   .greet h1{font-size:18px}
