@@ -250,6 +250,32 @@ const Mentor=(()=>{
              d=>`${d.dias}d sem um episódio sequer, hein 📺`],
       motivador:[d=>`que tal um episódio hoje? ${d.dias}d sem assistir`,
              d=>`bora voltar pra lista — ${d.dias}d parado, um ep já conta 💪`]
+    },
+    // ── TREINOS (Etapa 19) ──
+    'tre-hoje':{
+      serio:[d=>`hoje é dia do ${d.plano} no seu plano`,d=>`seu plano marca ${d.plano} para hoje`],
+      descontraido:[d=>`bora? hoje é dia do ${d.plano} 💪`,d=>`${d.plano} te espera hoje 🏋️`],
+      motivador:[d=>`hoje é dia do ${d.plano} — não deixa pra depois! 💪`,d=>`partiu ${d.plano}? seu eu do futuro agradece 🔥`]
+    },
+    'tre-meta':{
+      serio:[d=>`você fez ${d.feitos} de ${d.meta} treinos planejados nesta semana`,d=>`${d.feitos}/${d.meta} treinos da semana até agora`],
+      descontraido:[d=>`${d.feitos}/${d.meta} treinos essa semana — falta pouco 👟`,d=>`tá em ${d.feitos} de ${d.meta} na semana`],
+      motivador:[d=>`faltam ${d.meta-d.feitos} pra fechar a semana (${d.feitos}/${d.meta}) — bora! 💪`,d=>`${d.feitos}/${d.meta}: mais um e a meta tá garantida 🎯`]
+    },
+    'tre-pr':{
+      serio:[d=>`novo recorde de carga no ${d.exercicio}: ${d.carga}kg`,d=>`${d.exercicio} atingiu ${d.carga}kg — seu maior registro`],
+      descontraido:[d=>`PR no ${d.exercicio}: ${d.carga}kg! 🎉`,d=>`mandou ${d.carga}kg no ${d.exercicio} 💥`],
+      motivador:[d=>`isso! PR de ${d.carga}kg no ${d.exercicio} — tá voando! 🚀`,d=>`${d.carga}kg no ${d.exercicio}, novo recorde! orgulho 🙌`]
+    },
+    'tre-plato':{
+      serio:[d=>`seu volume de treino está estável há cerca de 3 semanas`,d=>`o volume não sobe há ~3 semanas`],
+      descontraido:[d=>`volume empacou faz umas 3 semanas 🧱`,d=>`3 semanas no mesmo volume, hein`],
+      motivador:[d=>`bora furar o platô! varie carga ou exercícios 🧱→🚀`,d=>`hora de mudar o estímulo — 3 semanas no mesmo volume`]
+    },
+    'tre-sumido':{
+      serio:[d=>`você não treina há ${d.dias} dias`,d=>`já são ${d.dias} dias sem treino`],
+      descontraido:[d=>`faz ${d.dias}d que você não treina 👀`,d=>`${d.dias}d longe do treino, bora voltar?`],
+      motivador:[d=>`que tal voltar hoje? ${d.dias}d parado, um treino leve já conta 💪`,d=>`retoma o ritmo — ${d.dias}d sem treinar, você consegue 🔥`]
     }
   };
 
@@ -388,6 +414,25 @@ const Mentor=(()=>{
     ()=>{if(!DB.series.some(s=>s.lista==='assistindo')||!DB.sessoesSeries.length)return null;
       const ult=-Math.max(...DB.sessoesSeries.map(s=>diasAte(s.data)));if(ult<7)return null;
       return mk('ser-semver','Séries','pessoal','info',{dias:ult},'Sem assistir',{label:'Assistir',navTo:'series'});},
+    // TREINOS (Etapa 19)
+    ()=>{const DOWK=['dom','seg','ter','qua','qui','sex','sab'];const k=DOWK[HOJE.getDay()];const pid=DB.treinoAgenda&&DB.treinoAgenda[k];
+      if(!pid||DB.treinoSessoes.some(s=>s.data===offset(0)))return null;
+      const pl=DB.treinoPlanos.find(p=>p.id===pid);if(!pl)return null;
+      return mk('tre-hoje','Treinos','pessoal','info',{plano:pl.nome},'Treino de hoje',{label:'Treinar',navTo:'treinos'});},
+    ()=>{const meta=(DB.treinoConfig&&DB.treinoConfig.metaSemanal)||0;if(!meta)return null;
+      const feitos=DB.treinoSessoes.filter(s=>diasAte(s.data)>=-6&&diasAte(s.data)<=0).length;const dow=HOJE.getDay();
+      if(feitos>=meta||!(dow===0||dow>=3))return null;
+      return mk('tre-meta','Treinos','pessoal','atencao',{feitos,meta},'Meta da semana',{label:'Treinar',navTo:'treinos'});},
+    ()=>{const pr={};DB.treinoSessoes.filter(s=>s.modalidade==='musculacao').forEach(s=>{(s.exercicios||[]).forEach(e=>{(e.series||[]).forEach(se=>{if(se.carga&&(!pr[e.nome]||se.carga>pr[e.nome].carga))pr[e.nome]={carga:se.carga,data:s.data};});});});
+      let best=null;Object.entries(pr).forEach(([nome,v])=>{if(-diasAte(v.data)<=10&&(!best||v.carga>best.carga))best={exercicio:nome,carga:v.carga};});
+      if(!best)return null;
+      return mk('tre-pr','Treinos','pessoal','oportunidade',best,'Novo recorde 🎉',{label:'Ver treinos',navTo:'treinos'});},
+    ()=>{const vw=[];for(let w=3;w>=0;w--){const ini=offset(-(w*7+6)),fim=offset(-(w*7));vw.push(DB.treinoSessoes.filter(s=>s.data>=ini&&s.data<=fim).reduce((a,s)=>a+(s.volume||0),0));}
+      if(vw.length<4||vw[0]===0||!(vw[3]<=vw[0]*1.03&&vw[2]<=vw[0]*1.03))return null;
+      return mk('tre-plato','Treinos','pessoal','atencao',{},'Volume estagnado',{label:'Variar treino',navTo:'treinos'});},
+    ()=>{if(!DB.treinoSessoes.length)return null;const dias=-Math.max(...DB.treinoSessoes.map(s=>diasAte(s.data)));
+      if(dias<5)return null;
+      return mk('tre-sumido','Treinos','pessoal','atencao',{dias},'Sem treinar',{label:'Treinar',navTo:'treinos'});},
   ];
 
   function rodarRegras(){

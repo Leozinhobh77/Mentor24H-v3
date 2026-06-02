@@ -45,6 +45,7 @@ const ICONS={
   menu:'<path d="M3 12h18M3 6h18M3 18h18"/>',
   book:'<path d="M12 7v14"/><path d="M3 5.5C3 4.7 3.7 4 4.5 4H10a2 2 0 0 1 2 2 2 2 0 0 1 2-2h5.5c.8 0 1.5.7 1.5 1.5v12c0 .8-.7 1.5-1.5 1.5H14a2 2 0 0 0-2 2 2 2 0 0 0-2-2H4.5A1.5 1.5 0 0 1 3 17.5z"/>',
   tv:'<rect x="2" y="7" width="20" height="13" rx="2"/><path d="m7 3 5 4 5-4"/>',
+  dumbbell:'<path d="M6 7v10M18 7v10M3 9.5v5M21 9.5v5"/><path d="M6 12h12"/>',
   activity:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
   star:'<path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6.1 21.3l1.2-6.6L2.5 9.5l6.6-.9z"/>',
   mail:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3 7.5 9 6 9-6"/>',
@@ -154,7 +155,7 @@ document.querySelectorAll('.mood-pick').forEach(p=>p.querySelectorAll('.mood').f
 })));
 
 /* ─── ROUTER (navegação SPA) ─── */
-const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',mentor:'Mentor',perfil:'Perfil'};
+const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',mentor:'Mentor',perfil:'Perfil'};
 function navigate(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===page));
   document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
@@ -182,6 +183,7 @@ function navigate(page){
   if(page==='estudos') Estudos.render();
   if(page==='leitura') Leitura.render();
   if(page==='series') Series.render();
+  if(page==='treinos') Treinos.render();
   if(page==='produtos') Produtos.render();
   if(page==='estoque') Estoque.render();
   if(page==='vendas') Vendas.render();
@@ -355,6 +357,15 @@ const DB={
     {id:nid(),titulo:'The Witcher',genero:'Fantasia',plataforma:'Netflix',epsTotal:24,epsVistos:8,tempAtual:1,epAtual:8,lista:'abandonei',nota:null,resenha:'',cor:'#DB4A4A'},
   ],
   sessoesSeries:[], // {id, serieId, data:'YYYY-MM-DD', eps} — seed abaixo
+  treinoPlanos:[
+    {id:nid(),nome:'Plano A',modalidade:'musculacao',cor:'#2D7FF9',exercicios:[{nome:'Supino reto',series:4,reps:10,carga:60},{nome:'Supino inclinado',series:3,reps:10,carga:24},{nome:'Crucifixo',series:3,reps:12,carga:14},{nome:'Tríceps corda',series:3,reps:12,carga:27}]},
+    {id:nid(),nome:'Plano B',modalidade:'musculacao',cor:'#1F9D55',exercicios:[{nome:'Puxada frontal',series:4,reps:10,carga:60},{nome:'Remada curvada',series:3,reps:10,carga:40},{nome:'Rosca direta',series:3,reps:12,carga:16},{nome:'Rosca martelo',series:3,reps:12,carga:14}]},
+    {id:nid(),nome:'Plano C',modalidade:'corrida',cor:'#27B6A3',exercicios:[]},
+  ],
+  treinoAgenda:{seg:null,ter:null,qua:null,qui:null,sex:null,sab:null,dom:null}, // preenchido no seed
+  treinoSessoes:[],   // {id,data,planoId,modalidade,exercicios:[{nome,series:[{reps,carga}]}],volume} — seed abaixo
+  treinoMedicoes:[],  // {id,data,peso,gordura,medidas:{...}}
+  treinoConfig:{metaSemanal:4},
   contatos:[
     {id:nid(),nome:'Maria Souza',telefone:'31988881111',email:'maria@email.com',tags:['Cliente'],contexto:'negocio',aniversario:'1992-05-29',favorito:true,comoConheci:'Indicação',anotacoes:'Compra brigadeiros toda semana',ultimoContato:offset(-3),manterContato:15,proximaAcao:{data:offset(5),nota:'Confirmar pedido para festa'},interacoes:[{data:offset(-3),tipo:'whatsapp',nota:'Pedido de 6 brigadeiros para o fim de semana'},{data:offset(-18),tipo:'presencial',nota:'Entregou encomenda pessoalmente'},{data:offset(-35),tipo:'whatsapp',nota:'Pediu cardápio atualizado'}],datas:[]},
     {id:nid(),nome:'João Pedro',telefone:'31977772222',email:'',tags:['Cliente'],contexto:'negocio',aniversario:'1988-06-02',favorito:false,comoConheci:'Instagram',anotacoes:'',ultimoContato:offset(-1),manterContato:30,proximaAcao:null,interacoes:[{data:offset(-1),tipo:'whatsapp',nota:'Pediu orçamento para 50 unidades'},{data:offset(-15),tipo:'ligacao',nota:'Ligou para saber prazo de entrega'}],datas:[]},
@@ -462,6 +473,31 @@ const DB={
     {id:nid(),serieId:stra,data:offset(-6),eps:3},
     {id:nid(),serieId:stra,data:offset(-7),eps:2},
   ];
+})();
+
+// Seed treinos (sessões e medições datadas por ~3 meses: tendência de evolução + platô recente)
+(function(){
+  const P=DB.treinoPlanos; if(P.length<3)return;
+  const A=P[0].id, B=P[1].id, C=P[2].id;
+  DB.treinoAgenda={seg:A,ter:B,qua:C,qui:A,sex:B,sab:C,dom:null};
+  const S=[];
+  for(let w=13;w>=0;w--){
+    const prog=Math.min(13-w,10);            // ganho cresce e estabiliza (platô nas últimas ~3 semanas)
+    const cSup=50+prog*1.5, cPux=48+prog*1.2;
+    const volA=Math.round(8200+prog*170), volB=Math.round(8000+prog*160);
+    let dA,dB,dC;
+    if(w===0){dA=-1;dC=-2;dB=-3;}            // semana atual: 3 dias consecutivos (streak), hoje livre
+    else{dA=-(w*7+1);dB=-(w*7+3);dC=-(w*7+5);}
+    const supC=(w===0)?cSup+2.5:cSup;        // PR recente no supino
+    S.push({id:nid(),data:offset(dA),planoId:A,modalidade:'musculacao',exercicios:[{nome:'Supino reto',series:[{reps:10,carga:supC},{reps:9,carga:supC},{reps:8,carga:supC}]},{nome:'Tríceps corda',series:[{reps:12,carga:25},{reps:12,carga:25},{reps:10,carga:27}]}],volume:(w===0)?volA+40:volA});
+    S.push({id:nid(),data:offset(dB),planoId:B,modalidade:'musculacao',exercicios:[{nome:'Puxada frontal',series:[{reps:10,carga:cPux},{reps:9,carga:cPux},{reps:8,carga:cPux}]},{nome:'Rosca direta',series:[{reps:12,carga:14},{reps:12,carga:14},{reps:10,carga:16}]}],volume:volB});
+    const dist=+(4+prog*0.25).toFixed(1);
+    S.push({id:nid(),data:offset(dC),planoId:C,modalidade:'corrida',exercicios:[],distancia:dist,tempo:Math.round(dist*6),volume:Math.round(dist*100)});
+  }
+  DB.treinoSessoes=S;
+  const M=[];
+  for(let i=4;i>=0;i--){const e=4-i;M.push({id:nid(),data:offset(-(i*28)),peso:+(84-e*0.9).toFixed(1),gordura:+(20-e*0.7).toFixed(1),medidas:{peito:+(104+e*0.3).toFixed(1),braco:+(36+e*0.4).toFixed(1),cintura:+(90-e*1.1).toFixed(1),quadril:+(100-e*0.3).toFixed(1),perna:+(58+e*0.3).toFixed(1)}});}
+  DB.treinoMedicoes=M;
 })();
 
 // Seed vendas mock
