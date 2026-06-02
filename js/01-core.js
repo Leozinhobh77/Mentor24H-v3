@@ -104,6 +104,21 @@ themeBtn.addEventListener('click',()=>{
   themeBtn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${dark?ICONS.sun:ICONS.moon}</svg>`;
 });
 
+/* ─── PERFIL DINÂMICO (chip da sidebar muda conforme o modo) — Etapa 21 ─── */
+function renderPerfil(mode){
+  const el=document.getElementById('user-chip'); if(!el)return;
+  const u=DB.usuario, n=DB.negocio;
+  if(mode==='hibrido'){   // dois modos ativos: 2 logos + 2 nomes + plano
+    el.innerHTML=`<div class="uc-avatars" title="Pessoal + Negócio ativos"><span class="avatar uc-a1">${u.logo}</span><span class="avatar uc-a2">${n.logo}</span></div>`
+      +`<div class="uc-tx"><div class="nm">${u.nome}</div><div class="pl"><span class="uc-emp">${n.nome}</span> · Plano ${u.plano}</div></div>`;
+    return;
+  }
+  let logo,nm,pl;
+  if(mode==='negocio'){logo=n.logo; nm=n.nome; pl='Plano '+n.plano;}
+  else {logo=u.logo; nm=u.nome; pl='Plano '+u.plano;}
+  el.innerHTML=`<div class="avatar">${logo}</div><div class="uc-tx"><div class="nm">${nm}</div><div class="pl">${pl}</div></div>`;
+}
+
 /* ─── MODO PESSOAL / NEGÓCIO (desktop — mode-switch na topbar) ─── */
 document.querySelectorAll('.mode-switch button').forEach(b=>{
   b.addEventListener('click',()=>{
@@ -112,6 +127,7 @@ document.querySelectorAll('.mode-switch button').forEach(b=>{
     document.querySelectorAll('.mode-switch button').forEach(x=>x.classList.toggle('on',x===b));
     document.querySelectorAll('.mode-pane').forEach(p=>p.classList.toggle('show',p.dataset.pane===mode));
     document.querySelectorAll('[data-ctx]').forEach(g=>g.style.display=(mode==='hibrido'||g.dataset.ctx===mode)?'':'none');
+    renderPerfil(mode);
     pintaBriefingDash();
   });
 });
@@ -126,6 +142,7 @@ document.querySelectorAll('.mode-switch button').forEach(b=>{
     document.querySelectorAll('.mode-switch button').forEach(x=>x.classList.toggle('on',x.dataset.mode===mode));
     document.querySelectorAll('.mode-pane').forEach(p=>p.classList.toggle('show',p.dataset.pane===mode));
     document.querySelectorAll('[data-ctx]').forEach(g=>g.style.display=(mode==='hibrido'||g.dataset.ctx===mode)?'':'none');
+    renderPerfil(mode);
     if(typeof pintaBriefingDash==='function')pintaBriefingDash();
   }
 
@@ -432,6 +449,9 @@ const DB={
     {id:nid(),nome:'Arte Digital (convite/logo)',emoji:'🎨',categoria:'Personalizados',preco:80.0,custo:0,estoque:999,estoqueMin:0,ativo:true,fixado:false},
   ],
   movimentacoes:[],
+  // Fichas demo (edição definitiva = Perfil/Etapa 27; usadas no cabeçalho dos documentos na Etapa 23)
+  usuario:{ nome:'Léo Silva', plano:'Pró', logo:'L' },               // logo = monograma (inicial)
+  negocio:{ nome:'Pizza e Cia BH', segmento:'Salgados', whatsapp:'31999990000', plano:'Pró', logo:'🍕' },
   salvos:[   // {id,titulo,url,rede,categoria,criador,tags:[],nota,favorito,status:'ver'|'visto',data}
     {id:nid(),titulo:'Bolo de cenoura fofinho',url:'https://www.youtube.com/watch?v=abc123',rede:'youtube',categoria:'Receitas',criador:'Cozinha da Tia',tags:['bolo','doce'],nota:'cobertura de brigadeiro',favorito:true,status:'visto',data:offset(-1)},
     {id:nid(),titulo:'Macarrão de 10 minutos',url:'https://www.tiktok.com/@chefrapido/video/789',rede:'tiktok',categoria:'Receitas',criador:'@chefrapido',tags:['rápido','almoço'],nota:'',favorito:false,status:'ver',data:offset(-2)},
@@ -569,4 +589,7 @@ const DB={
     {id:nid(),tipo:'pagar',descricao:'Compra de insumos (chocolate)',valor:380,cat:'alimentacao',metodo:'Pix',venc:offset(12),status:'pendente',fornecedorId:doc.id},
   );
 })();
+
+// Perfil inicial reflete o modo atual (DB já definido aqui — sem TDZ) — Etapa 21
+renderPerfil(document.documentElement.getAttribute('data-mode')||'pessoal');
 

@@ -136,8 +136,16 @@ svg{display:block}
 .side-scroll::-webkit-scrollbar-track{background:transparent}
 .user-chip{display:flex;align-items:center;gap:10px;padding:8px var(--s-3);border-radius:var(--r-md);transition:.18s var(--ease)}
 .user-chip:hover{background:var(--surface-2)}
-.avatar{width:32px;height:32px;border-radius:var(--r-full);background:linear-gradient(135deg,var(--brand),var(--info));display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0}
-.user-chip .nm{font-size:13px;font-weight:600;line-height:1.2}
+.avatar{width:32px;height:32px;border-radius:var(--r-full);background:linear-gradient(135deg,var(--brand),var(--info));display:grid;place-items:center;color:#fff;font-weight:700;font-size:15px;line-height:1;flex-shrink:0}
+.uc-tx{min-width:0}   /* permite ellipsis no nome (Etapa 21) */
+/* Híbrido: 2 logos sobrepostas (Pessoal + Negócio ativos) */
+.uc-avatars{position:relative;flex-shrink:0;width:46px;height:32px}
+.uc-avatars .avatar{position:absolute;top:0;width:28px;height:28px;font-size:13px;border:2px solid var(--surface-1);box-shadow:var(--shadow-sm)}
+.uc-avatars .uc-a1{left:0;z-index:2}
+.uc-avatars .uc-a2{left:17px;z-index:1;background:linear-gradient(135deg,var(--brand-hover),var(--warning))}
+.uc-emp{color:var(--brand-text);font-weight:600}
+.user-chip .nm{font-size:13px;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-chip .pl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .user-chip .pl{font-size:11px;color:var(--text-3)}
 
 /* ─── MAIN ─── */

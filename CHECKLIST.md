@@ -107,7 +107,7 @@
 
 ## Negócio — Expansão (modo Negócio · versátil p/ MEI, autônomos, prestadores)
 > Refinar **1 por 1** (pesquisa fina + proposta + ok) antes de cada Prompt. Tudo "produtos **ou** serviços".
-- [ ] **Etapa 21 — Identidade do Negócio** — nome da empresa alimenta o cabeçalho dos documentos + perfil por modo (Pessoal=Léo Silva · Negócio=**Pizza e Cia BH** · Híbrido=os dois). Config definitiva em Perfil (Etapa 27); por ora **demo "Pizza e Cia BH"**
+- [x] **Etapa 21 — Identidade do Negócio** ✅ — 2026-06-02 (executor-20260602-004): ficha demo `DB.usuario` (Léo Silva · Pró · 'L') + `DB.negocio` (Pizza e Cia BH · Salgados · whats · Pró · 🍕); `renderPerfil(mode)` deixa o chip da sidebar dinâmico (Pessoal=Léo Silva · Negócio=🍕 Pizza e Cia BH · Híbrido=os dois); avatar exibe inicial **e** emoji; smoke visual Playwright ✅ (3 modos + screenshots conferidos). Config definitiva em Perfil (Etapa 27)
 - [ ] **Etapa 22 — Produtos: capa elegante** — emoji (atual) · **fallback cor+inicial quando vazio** (nunca quadrado feio) · imagem real = Backlog. + **adicionar o cardápio do Léo aos produtos demo** (complementar, sem apagar os atuais — *pedir o cardápio na hora*)
 - [ ] **Etapa 23 — Documentos & Vitrine** — motor único: **visual Premium no app + envio formatado elegante pro WhatsApp**. 📐 Orçamento · 🧾 Recibo/Notinha · 📖 Catálogo/Cardápio (produtos **ou** serviços), com a marca da empresa no cabeçalho
 - [ ] **Etapa 24 — Encomendas/Pedidos** — agendar entrega, sinal, status (a fazer→produzindo→pronto→entregue); serve pedido **ou** ordem de serviço
@@ -139,4 +139,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 20 (Salvos) ✅ — 2026-06-02 (Salvos no modo Pessoal: bookmark universal de qualquer link, rede auto-detectada do domínio com cor/ícone oficial, categoria/criador/tags, ❤️ favorito, status pra-ver/já-vi, cards+detalhe com Abrir/copiar/editar/excluir, abas+chips+busca, "Me surpreender", 3 regras do Mentor, ícone bookmark). Próxima: Etapa 21 (Identidade do Negócio) — começando a Expansão do Negócio.*
+*Atualizado a cada etapa. Última: Etapa 21 (Identidade do Negócio) ✅ — 2026-06-02 (fichas demo usuario/negocio "Pizza e Cia BH 🍕", chip da sidebar dinâmico por modo via renderPerfil, avatar com inicial/emoji; smoke visual Playwright nos 3 modos). Próxima: Etapa 22 (Produtos: capa elegante).*
