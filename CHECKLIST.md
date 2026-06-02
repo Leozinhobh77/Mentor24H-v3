@@ -86,6 +86,7 @@
   - [x] **Stats**: donut (modalidade), heatmap (presença), streak, linha (evolução); seletor de período (reusa Relatórios negócio)
   - [x] **Mentor — regras novas de Treinos**: plano de hoje · meta semanal · PR batido · platô (volume travado) · N dias sem treinar (5 regras; aparecem no feed/abaixo do cap top-8 da 14A)
   - [x] **Dados**: planos + sessões + medições (com data; demo espalhada por ~3 meses) — em memória → Supabase na Etapa 22
+  - [x] **Modalidades editáveis** (add/remove + 3 tipos de registro força/distância/duração + variedade demo de esportes: natação, dança, yoga, crossfit, ciclismo…) ✅ — 2026-06-02 (ajuste; data-driven via DB.treinoModalidades, gerenciador com chips por tipo, guarda ao remover modalidade com sessões/planos)
   - *Fora do escopo (no Backlog): fotos de progresso, GPS/mapa de corrida, smartwatch/Strava, desafios sociais*
 - [ ] **Etapa 20 — (2ª ideia pessoal)** 🔧 *Léo vai detalhar*
 

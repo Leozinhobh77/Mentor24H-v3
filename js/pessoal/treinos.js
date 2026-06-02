@@ -7,7 +7,9 @@
 const Treinos=(()=>{
   const DOWK=['dom','seg','ter','qua','qui','sex','sab'];
   const DOWL={dom:'Dom',seg:'Seg',ter:'Ter',qua:'Qua',qui:'Qui',sex:'Sex',sab:'Sáb'};
-  const MOD={musculacao:{l:'Musculação',ic:'dumbbell'},corrida:{l:'Corrida',ic:'run'},luta:{l:'Luta',ic:'flame'},danca:{l:'Dança',ic:'activity'},outro:{l:'Outro',ic:'check'}};
+  const modOf=key=>DB.treinoModalidades.find(m=>m.key===key)||{key,label:key,cor:'#8A867C',ic:'check',tipo:'duracao'};
+  const tipoDe=key=>modOf(key).tipo;
+  const corMod=key=>modOf(key).cor;
   const MEDIDAS=[['peito','Peito'],['braco','Braço'],['cintura','Cintura'],['quadril','Quadril'],['perna','Perna']];
   const PERIODOS=[{k:'7d',l:'7 dias'},{k:'30d',l:'30 dias'},{k:'mes',l:'Mês'},{k:'3m',l:'3 meses'}];
   const fmtBR=iso=>{const [y,m,d]=iso.split('-');return `${d}/${m}/${y.slice(2)}`;};
@@ -38,7 +40,7 @@ const Treinos=(()=>{
   // ── PR: maior carga por exercício (musculação) + data ──
   function recordes(){
     const pr={};
-    DB.treinoSessoes.filter(s=>s.modalidade==='musculacao').forEach(s=>{
+    DB.treinoSessoes.filter(s=>tipoDe(s.modalidade)==='forca').forEach(s=>{
       (s.exercicios||[]).forEach(e=>{(e.series||[]).forEach(se=>{
         if(se.carga&&(!pr[e.nome]||se.carga>pr[e.nome].carga))pr[e.nome]={carga:se.carga,data:s.data};
       });});
@@ -83,17 +85,17 @@ const Treinos=(()=>{
         <div class="card-h"><h3>Treino de hoje · ${DOWL[hojeKey]}</h3>${feitoHoje?'<span class="chip-mini" style="background:var(--income-soft);color:var(--income)">✓ feito</span>':''}</div>
         <div class="tre-today">
           ${planoHoje?`${cover(planoHoje.nome.replace(/[^A-Za-z0-9]/g,'').slice(-1)||'•',planoHoje.cor)}
-            <div style="flex:1;min-width:0"><div class="rn-tit">${planoHoje.nome}</div><div class="rn-aut">${MOD[planoHoje.modalidade]?.l||planoHoje.modalidade}${planoHoje.exercicios?.length?' · '+planoHoje.exercicios.length+' exercícios':''}</div></div>`
+            <div style="flex:1;min-width:0"><div class="rn-tit">${planoHoje.nome}</div><div class="rn-aut">${modOf(planoHoje.modalidade).label}${planoHoje.exercicios?.length?' · '+planoHoje.exercicios.length+' exercícios':''}</div></div>`
             :`<div style="flex:1"><div class="rn-tit">Dia livre</div><div class="rn-aut">Sem plano na agenda de hoje</div></div>`}
         </div>
         <div class="rn-acts" style="margin-top:12px">
-          ${planoHoje&&planoHoje.modalidade==='musculacao'&&planoHoje.exercicios?.length?`<button class="btn btn-primary sm" data-exec="${planoHoje.id}">${svg('play',14)} Executar plano</button>`:''}
+          ${planoHoje&&tipoDe(planoHoje.modalidade)==='forca'&&planoHoje.exercicios?.length?`<button class="btn btn-primary sm" data-exec="${planoHoje.id}">${svg('play',14)} Executar plano</button>`:''}
           ${planoHoje?`<button class="btn btn-soft sm" data-feito="${planoHoje.id}">${svg('check',14)} Marcar feito</button>`:''}
           <button class="btn btn-soft sm" data-avulso>${svg('plus',14)} Treino avulso</button>
         </div>
       </div>
 
-      <div class="card"><div class="card-h"><h3>Planos</h3><button class="btn btn-primary sm" data-addplano>${svg('plus',14)} Novo plano</button></div>
+      <div class="card"><div class="card-h"><h3>Planos</h3><div style="display:flex;gap:8px"><button class="btn btn-soft sm" data-modalidades>${svg('activity',14)} Modalidades</button><button class="btn btn-primary sm" data-addplano>${svg('plus',14)} Novo plano</button></div></div>
         <div class="tre-planos">${DB.treinoPlanos.length?DB.treinoPlanos.map(planoRow).join(''):'<p style="font-size:13px;color:var(--text-3)">Crie um plano (A/B/C).</p>'}</div>
         <div class="card-h" style="margin-top:16px"><h3 style="font-size:13px">Agenda semanal</h3></div>
         <div class="tre-agenda">${DOWK.map(k=>{const pid=DB.treinoAgenda[k];const pl=pid?plano(pid):null;return `<button class="tre-day" data-day="${k}"><span class="td-l">${DOWL[k]}</span><span class="td-p" style="${pl?`background:${pl.cor}22;color:${pl.cor}`:''}">${pl?pl.nome.replace('Plano ',''):'—'}</span></button>`;}).join('')}</div>
@@ -121,6 +123,7 @@ const Treinos=(()=>{
     q('[data-avulso]').onclick=()=>avulso();
     q('[data-addplano]').onclick=()=>planoForm();
     q('[data-medicao]').onclick=()=>medicaoForm();
+    q('[data-modalidades]').onclick=()=>modalidadesForm();
     root.querySelectorAll('[data-per]').forEach(b=>b.onclick=()=>{periodo=b.dataset.per;render();});
     root.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>setDia(b.dataset.day));
     root.querySelectorAll('[data-editp]').forEach(b=>b.onclick=()=>planoForm(+b.dataset.editp));
@@ -129,17 +132,16 @@ const Treinos=(()=>{
   }
 
   function planoRow(p){
-    const ex=p.exercicios?.length?`${p.exercicios.length} exercícios`:(MOD[p.modalidade]?.l||'');
+    const ex=p.exercicios?.length?`${p.exercicios.length} exercícios`:(modOf(p.modalidade).label);
     return `<div class="tre-plano-row">${cover(p.nome.replace(/[^A-Za-z0-9]/g,'').slice(-1)||'•',p.cor)}
-      <div style="flex:1;min-width:0"><div class="rn-tit">${p.nome}</div><div class="rn-aut">${MOD[p.modalidade]?.l||p.modalidade} · ${ex}</div></div>
+      <div style="flex:1;min-width:0"><div class="rn-tit">${p.nome}</div><div class="rn-aut">${modOf(p.modalidade).label} · ${ex}</div></div>
       <button class="icon-mini-btn" data-editp="${p.id}">${svg('pencil',15)}</button>
       <button class="icon-mini-btn" data-delp="${p.id}">${svg('trash',15)}</button></div>`;
   }
   function heatHTML(){let h='';for(let i=48;i>=0;i--){const d=offset(-i);const n=sessDia(d).length;let bg='var(--surface-3)';if(n>=1)bg='var(--brand)';h+=`<span style="background:${bg}" title="${d}: ${n} treino(s)"></span>`;}return h;}
   function donutHTML(){
     const by={};DB.treinoSessoes.forEach(s=>{const m=s.modalidade||'outro';by[m]=(by[m]||0)+1;});
-    const cores={musculacao:'#2D7FF9',corrida:'#27B6A3',luta:'#DB4A4A',danca:'#E0568C',outro:'#8A867C'};
-    const items=Object.entries(by).map(([k,v])=>({value:v,cor:cores[k]||'#8A867C',nome:MOD[k]?.l||k})).filter(i=>i.value>0);
+    const items=Object.entries(by).map(([k,v])=>({value:v,cor:corMod(k),nome:modOf(k).label})).filter(i=>i.value>0);
     if(!items.length)return '<p style="font-size:13px;color:var(--text-3);padding:8px 0">Sem treinos ainda.</p>';
     const leg=items.map(i=>`<div class="lg-row"><span class="lg-dot" style="background:${i.cor}"></span>${i.nome}<b>${i.value}</b></div>`).join('');
     return `<div class="st-donut">${Charts.donut(items,150)}<div class="st-legend">${leg}</div></div>`;
@@ -192,20 +194,20 @@ const Treinos=(()=>{
   function histHTML(){
     const regs=[...DB.treinoSessoes].sort((a,b)=>a.data<b.data?1:(a.data>b.data?-1:b.id-a.id)).slice(0,12);
     if(!regs.length)return '<p style="font-size:13px;color:var(--text-3);padding:8px 0">Sem sessões.</p>';
-    const cores={musculacao:'#2D7FF9',corrida:'#27B6A3',luta:'#DB4A4A',danca:'#E0568C',outro:'#8A867C'};
-    return regs.map(s=>{const pl=s.planoId?plano(s.planoId):null;let resumo=MOD[s.modalidade]?.l||s.modalidade;
-      if(s.modalidade==='corrida'&&s.distancia)resumo+=` · ${s.distancia}km`;
-      else if(s.modalidade==='musculacao'&&s.volume)resumo+=` · vol ${Math.round(s.volume).toLocaleString('pt-BR')}`;
+    return regs.map(s=>{const pl=s.planoId?plano(s.planoId):null;const t=tipoDe(s.modalidade);let resumo=modOf(s.modalidade).label;
+      if(t==='distancia'&&s.distancia)resumo+=` · ${s.distancia}km`;
+      else if(t==='forca'&&s.volume)resumo+=` · vol ${Math.round(s.volume).toLocaleString('pt-BR')}`;
       else if(s.duracao)resumo+=` · ${s.duracao}min`;
-      return `<div class="hist-row"><span class="sc-dot" style="background:${cores[s.modalidade]||'var(--text-4)'}"></span><div class="hist-main"><div class="hist-nm">${pl?pl.nome:resumo.split(' · ')[0]}</div><div class="hist-dt">${fmtBR(s.data)} · ${resumo}</div></div><button class="icon-mini-btn" data-rms="${s.id}">${svg('trash',14)}</button></div>`;}).join('');
+      return `<div class="hist-row"><span class="sc-dot" style="background:${corMod(s.modalidade)}"></span><div class="hist-main"><div class="hist-nm">${pl?pl.nome:resumo.split(' · ')[0]}</div><div class="hist-dt">${fmtBR(s.data)} · ${resumo}</div></div><button class="icon-mini-btn" data-rms="${s.id}">${svg('trash',14)}</button></div>`;}).join('');
   }
 
   // ── ações ──
   function calcVol(exercicios){return (exercicios||[]).reduce((a,e)=>a+(e.series||[]).reduce((b,se)=>b+(se.reps||0)*(se.carga||0),0),0);}
   function marcarFeito(pid){
     const p=plano(pid);if(!p)return;
-    const vol=p.modalidade==='musculacao'?calcVol((p.exercicios||[]).map(e=>({series:Array(e.series||0).fill({reps:e.reps,carga:e.carga})}))):0;
-    DB.treinoSessoes.push({id:nid(),data:offset(0),planoId:p.id,modalidade:p.modalidade,exercicios:p.modalidade==='musculacao'?(p.exercicios||[]).map(e=>({nome:e.nome,series:Array(e.series||0).fill(0).map(()=>({reps:e.reps,carga:e.carga}))})):[],volume:vol});
+    const forca=tipoDe(p.modalidade)==='forca';
+    const vol=forca?calcVol((p.exercicios||[]).map(e=>({series:Array(e.series||0).fill({reps:e.reps,carga:e.carga})}))):0;
+    DB.treinoSessoes.push({id:nid(),data:offset(0),planoId:p.id,modalidade:p.modalidade,exercicios:forca?(p.exercicios||[]).map(e=>({nome:e.nome,series:Array(e.series||0).fill(0).map(()=>({reps:e.reps,carga:e.carga}))})):[],volume:vol});
     Toast.show('Treino marcado ✅ 💪');render();
   }
   function execPlano(pid){
@@ -218,27 +220,27 @@ const Treinos=(()=>{
         <span style="color:var(--text-4);font-size:11px">${e.series}×</span></div>`).join('')}`;
     Modal.open(`Executar · ${p.nome}`,body,(b)=>{
       const exercicios=p.exercicios.map((e,i)=>{const reps=parseInt(b.querySelector(`#ex-r-${i}`).value)||0,carga=parseFloat(b.querySelector(`#ex-c-${i}`).value)||0;return {nome:e.nome,series:Array(e.series||0).fill(0).map(()=>({reps,carga}))};});
-      DB.treinoSessoes.push({id:nid(),data:offset(0),planoId:p.id,modalidade:'musculacao',exercicios,volume:calcVol(exercicios)});
+      DB.treinoSessoes.push({id:nid(),data:offset(0),planoId:p.id,modalidade:p.modalidade,exercicios,volume:calcVol(exercicios)});
       Toast.show('Sessão registrada 💪');render();
     },'Salvar sessão');
   }
   function avulso(){
     const body=`
-      <div class="fg"><label>Modalidade</label><select class="field" id="av-mod">${Object.entries(MOD).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('')}</select></div>
+      <div class="fg"><label>Modalidade</label><select class="field" id="av-mod">${DB.treinoModalidades.map(m=>`<option value="${m.key}">${m.label}</option>`).join('')}</select></div>
       <div id="av-dyn"></div>
       <div class="fg"><label>Data</label><input class="field" id="av-data" type="date" value="${offset(0)}"></div>`;
     const back=Modal.open('Treino avulso',body,(b)=>{
-      const mod=b.querySelector('#av-mod').value, data=b.querySelector('#av-data').value||offset(0);
+      const mod=b.querySelector('#av-mod').value, data=b.querySelector('#av-data').value||offset(0), t=tipoDe(mod);
       const s={id:nid(),data,planoId:null,modalidade:mod,exercicios:[],volume:0};
-      if(mod==='corrida'){s.distancia=parseFloat(b.querySelector('#av-dist')?.value)||0;s.tempo=parseInt(b.querySelector('#av-tempo')?.value)||0;s.volume=Math.round(s.distancia*100);if(s.distancia<=0){Toast.show('Informe a distância','err');return false;}}
-      else if(mod==='musculacao'){s.volume=parseInt(b.querySelector('#av-vol')?.value)||0;}
+      if(t==='distancia'){s.distancia=parseFloat(b.querySelector('#av-dist')?.value)||0;s.tempo=parseInt(b.querySelector('#av-tempo')?.value)||0;s.volume=Math.round(s.distancia*100);if(s.distancia<=0){Toast.show('Informe a distância','err');return false;}}
+      else if(t==='forca'){s.volume=parseInt(b.querySelector('#av-vol')?.value)||0;}
       else{s.duracao=parseInt(b.querySelector('#av-dur')?.value)||0;s.intensidade=b.querySelector('#av-int')?.value||'media';s.volume=(s.duracao||0)*5;if(s.duracao<=0){Toast.show('Informe a duração','err');return false;}}
       DB.treinoSessoes.push(s);Toast.show('Treino registrado 💪');render();
     },'Registrar');
     const dyn=back.querySelector('#av-dyn');
-    const paint=m=>{
-      if(m==='corrida')dyn.innerHTML=`<div class="frow"><div class="fg"><label>Distância (km)</label><input class="field" id="av-dist" type="number" min="0" step="0.1" placeholder="5"></div><div class="fg"><label>Tempo (min)</label><input class="field" id="av-tempo" type="number" min="0" placeholder="30"></div></div>`;
-      else if(m==='musculacao')dyn.innerHTML=`<div class="fg"><label>Volume estimado (opcional)</label><input class="field" id="av-vol" type="number" min="0" placeholder="Ex: 9000"></div>`;
+    const paint=m=>{const t=tipoDe(m);
+      if(t==='distancia')dyn.innerHTML=`<div class="frow"><div class="fg"><label>Distância (km)</label><input class="field" id="av-dist" type="number" min="0" step="0.1" placeholder="5"></div><div class="fg"><label>Tempo (min)</label><input class="field" id="av-tempo" type="number" min="0" placeholder="30"></div></div>`;
+      else if(t==='forca')dyn.innerHTML=`<div class="fg"><label>Volume estimado (opcional)</label><input class="field" id="av-vol" type="number" min="0" placeholder="Ex: 9000"></div>`;
       else dyn.innerHTML=`<div class="frow"><div class="fg"><label>Duração (min)</label><input class="field" id="av-dur" type="number" min="0" placeholder="45"></div><div class="fg"><label>Intensidade</label><select class="field" id="av-int"><option value="leve">Leve</option><option value="media" selected>Média</option><option value="forte">Forte</option></select></div></div>`;
     };
     paint(back.querySelector('#av-mod').value);
@@ -263,23 +265,23 @@ const Treinos=(()=>{
       <button type="button" class="icon-mini-btn" data-rmex="${i}">${svg('trash',14)}</button></div>`;
     const body=`
       <div class="frow"><div class="fg"><label>Nome</label><input class="field" id="pl-nome" value="${p?p.nome.replace(/"/g,'&quot;'):''}" placeholder="Plano A"></div>
-      <div class="fg"><label>Modalidade</label><select class="field" id="pl-mod">${Object.entries(MOD).map(([k,v])=>`<option value="${k}"${k===curMod?' selected':''}>${v.l}</option>`).join('')}</select></div></div>
+      <div class="fg"><label>Modalidade</label><select class="field" id="pl-mod">${DB.treinoModalidades.map(m=>`<option value="${m.key}"${m.key===curMod?' selected':''}>${m.label}</option>`).join('')}</select></div></div>
       <div class="fg"><label>Cor</label><div class="swatches" id="pl-cores">${cores.map(c=>`<button type="button" class="sw${c===curCor?' on':''}" data-cor="${c}" style="background:${c}"></button>`).join('')}</div></div>
-      <div id="pl-exbox"><label style="font-size:11.5px;font-weight:700;color:var(--text-3)">Exercícios (musculação)</label><div id="pl-exs">${exs.map(exRow).join('')}</div>
+      <div id="pl-exbox"><label style="font-size:11.5px;font-weight:700;color:var(--text-3)">Exercícios (séries · reps · kg)</label><div id="pl-exs">${exs.map(exRow).join('')}</div>
         <button type="button" class="btn btn-soft sm" id="pl-addex" style="margin-top:8px">${svg('plus',14)} Exercício</button></div>`;
     const back=Modal.open(id?'Editar plano':'Novo plano',body,(b)=>{
       const nome=b.querySelector('#pl-nome').value.trim();
       const mod=b.querySelector('#pl-mod').value;
       const cor=(b.querySelector('#pl-cores .on')||{}).dataset?.cor||curCor;
       if(!nome){Toast.show('Informe o nome','err');return false;}
-      const exercicios=mod==='musculacao'?[...b.querySelectorAll('[data-exrow]')].map(row=>{const i=row.dataset.exrow;return {nome:b.querySelector(`#pe-n-${i}`).value.trim(),series:parseInt(b.querySelector(`#pe-s-${i}`).value)||3,reps:parseInt(b.querySelector(`#pe-r-${i}`).value)||10,carga:parseFloat(b.querySelector(`#pe-c-${i}`).value)||0};}).filter(e=>e.nome):[];
+      const exercicios=tipoDe(mod)==='forca'?[...b.querySelectorAll('[data-exrow]')].map(row=>{const i=row.dataset.exrow;return {nome:b.querySelector(`#pe-n-${i}`).value.trim(),series:parseInt(b.querySelector(`#pe-s-${i}`).value)||3,reps:parseInt(b.querySelector(`#pe-r-${i}`).value)||10,carga:parseFloat(b.querySelector(`#pe-c-${i}`).value)||0};}).filter(e=>e.nome):[];
       if(p){Object.assign(p,{nome,modalidade:mod,cor,exercicios});Toast.show('Plano atualizado');}
       else{DB.treinoPlanos.push({id:nid(),nome,modalidade:mod,cor,exercicios});Toast.show('Plano criado');}
       render();
     },id?'Salvar':'Criar');
     back.querySelectorAll('[data-cor]').forEach(x=>x.onclick=()=>back.querySelectorAll('[data-cor]').forEach(y=>y.classList.toggle('on',y===x)));
     const exsBox=back.querySelector('#pl-exs');
-    const toggleEx=()=>{back.querySelector('#pl-exbox').style.display=back.querySelector('#pl-mod').value==='musculacao'?'':'none';};
+    const toggleEx=()=>{back.querySelector('#pl-exbox').style.display=tipoDe(back.querySelector('#pl-mod').value)==='forca'?'':'none';};
     toggleEx();back.querySelector('#pl-mod').onchange=toggleEx;
     const bindRm=()=>back.querySelectorAll('[data-rmex]').forEach(btn=>btn.onclick=()=>{btn.closest('[data-exrow]').remove();});
     bindRm();
@@ -300,6 +302,45 @@ const Treinos=(()=>{
       DB.treinoMedicoes.push({id:nid(),data:b.querySelector('#me-data').value||offset(0),peso,gordura:parseFloat(b.querySelector('#me-gord').value)||null,medidas});
       Toast.show('Medição registrada 📏');render();
     },'Salvar');
+  }
+
+  function modalidadesForm(){
+    const TIPOS=[['forca','Força','séries · reps · carga'],['distancia','Distância','km + tempo'],['duracao','Duração','min + intensidade']];
+    const ICDEF={forca:'dumbbell',distancia:'run',duracao:'activity'};
+    const cores=['#2D7FF9','#6C5CE7','#0FB9B1','#E1740B','#27B6A3','#00A8E8','#1F9D55','#7FB069','#DB4A4A','#E0568C','#C8860B','#9B59B6','#8E6E53','#8A867C'];
+    const chips=()=>TIPOS.map(([t,tl,td])=>{
+      const list=DB.treinoModalidades.filter(m=>m.tipo===t);
+      return `<div class="tre-modgrp"><div class="tre-modgrp-h">${tl} <small>· ${td}</small></div><div class="tre-modchips">${list.map(m=>`<span class="tre-modchip" style="--c:${m.cor}">${svg(m.ic,13)}<span>${m.label}</span><button class="tmc-x" data-rmmod="${m.key}" title="Remover">${svg('x',12)}</button></span>`).join('')||'<span style="font-size:12px;color:var(--text-3)">—</span>'}</div></div>`;
+    }).join('');
+    const body=`<div id="mod-list">${chips()}</div>
+      <div class="tre-modadd">
+        <div class="card-h" style="margin:6px 0 2px"><h3 style="font-size:13px">Adicionar modalidade</h3></div>
+        <div class="frow"><div class="fg"><label>Nome</label><input class="field" id="nm-nome" placeholder="Ex: Surf"></div>
+          <div class="fg"><label>Tipo de registro</label><select class="field" id="nm-tipo">${TIPOS.map(([t,tl,td])=>`<option value="${t}">${tl} — ${td}</option>`).join('')}</select></div></div>
+        <div class="fg"><label>Cor</label><div class="swatches" id="nm-cores">${cores.map((c,i)=>`<button type="button" class="sw${i===0?' on':''}" data-cor="${c}" style="background:${c}"></button>`).join('')}</div></div>
+        <button type="button" class="btn btn-primary sm" id="nm-add">${svg('plus',14)} Adicionar modalidade</button>
+      </div>`;
+    const back=Modal.open('Modalidades de treino',body,()=>{render();},'Concluído');
+    const refresh=()=>{back.querySelector('#mod-list').innerHTML=chips();bindRm();};
+    const bindRm=()=>back.querySelectorAll('[data-rmmod]').forEach(btn=>btn.onclick=()=>{
+      const key=btn.dataset.rmmod;
+      if(DB.treinoSessoes.some(s=>s.modalidade===key)){Toast.show('Há treinos nessa modalidade — não dá pra remover','err');return;}
+      if(DB.treinoPlanos.some(p=>p.modalidade===key)){Toast.show('Há planos usando essa modalidade','err');return;}
+      DB.treinoModalidades=DB.treinoModalidades.filter(m=>m.key!==key);Toast.show('Modalidade removida');refresh();
+    });
+    bindRm();
+    back.querySelectorAll('#nm-cores [data-cor]').forEach(x=>x.onclick=()=>back.querySelectorAll('#nm-cores [data-cor]').forEach(y=>y.classList.toggle('on',y===x)));
+    back.querySelector('#nm-add').onclick=()=>{
+      const nome=back.querySelector('#nm-nome').value.trim();
+      if(!nome){Toast.show('Informe o nome','err');return;}
+      const tipo=back.querySelector('#nm-tipo').value;
+      const cor=(back.querySelector('#nm-cores .on')||{}).dataset?.cor||cores[0];
+      let key=nome.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]/g,'');
+      if(!key)key='mod';
+      if(DB.treinoModalidades.some(m=>m.key===key)){Toast.show('Já existe uma modalidade assim','err');return;}
+      DB.treinoModalidades.push({key,label:nome,cor,ic:ICDEF[tipo],tipo});
+      back.querySelector('#nm-nome').value='';Toast.show('Modalidade adicionada 🎉');refresh();
+    };
   }
 
   return {render};

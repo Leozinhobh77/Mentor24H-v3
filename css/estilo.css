@@ -847,6 +847,15 @@ select.field{cursor:pointer}
 .tre-exrow{display:flex;align-items:center;gap:7px;margin-bottom:7px}
 .tre-exrow .exn{flex:1;font-size:13px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tre-mini{width:62px;flex-shrink:0;text-align:center;padding:7px 6px}
+.tre-modgrp{margin-bottom:13px}
+.tre-modgrp-h{font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
+.tre-modgrp-h small{color:var(--text-3);font-weight:600;text-transform:none;letter-spacing:0}
+.tre-modchips{display:flex;flex-wrap:wrap;gap:7px}
+.tre-modchip{display:inline-flex;align-items:center;gap:6px;padding:6px 7px 6px 11px;border-radius:var(--r-full);font-size:12.5px;font-weight:600;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 32%,transparent)}
+.tre-modchip>svg{width:13px;height:13px;flex-shrink:0}
+.tmc-x{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;color:var(--c);opacity:.65;transition:.14s var(--ease)}
+.tmc-x:hover{opacity:1;background:color-mix(in srgb,var(--c) 22%,transparent)}
+.tre-modadd{border-top:1px solid var(--border);margin-top:8px;padding-top:4px}
 @media(max-width:560px){
   .tre-cmp{grid-template-columns:1fr 1fr}
   .tre-agenda{grid-template-columns:repeat(4,1fr)}

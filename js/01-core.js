@@ -366,6 +366,25 @@ const DB={
   treinoSessoes:[],   // {id,data,planoId,modalidade,exercicios:[{nome,series:[{reps,carga}]}],volume} — seed abaixo
   treinoMedicoes:[],  // {id,data,peso,gordura,medidas:{...}}
   treinoConfig:{metaSemanal:4},
+  treinoModalidades:[
+    // FORÇA — exercícios (séries/reps/carga)
+    {key:'musculacao', label:'Musculação', cor:'#2D7FF9', ic:'dumbbell', tipo:'forca'},
+    {key:'crossfit',   label:'Crossfit',   cor:'#6C5CE7', ic:'flame',    tipo:'forca'},
+    {key:'calistenia', label:'Calistenia', cor:'#0FB9B1', ic:'activity', tipo:'forca'},
+    {key:'funcional',  label:'Funcional',  cor:'#E1740B', ic:'zap',      tipo:'forca'},
+    // DISTÂNCIA/TEMPO — km + tempo
+    {key:'corrida',    label:'Corrida',    cor:'#27B6A3', ic:'run',      tipo:'distancia'},
+    {key:'natacao',    label:'Natação',    cor:'#00A8E8', ic:'drop',     tipo:'distancia'},
+    {key:'ciclismo',   label:'Ciclismo',   cor:'#1F9D55', ic:'zap',      tipo:'distancia'},
+    {key:'caminhada',  label:'Caminhada',  cor:'#7FB069', ic:'run',      tipo:'distancia'},
+    // DURAÇÃO/INTENSIDADE — min + intensidade + notas
+    {key:'luta',       label:'Luta / Artes marciais', cor:'#DB4A4A', ic:'flame',    tipo:'duracao'},
+    {key:'danca',      label:'Dança',      cor:'#E0568C', ic:'activity', tipo:'duracao'},
+    {key:'yoga',       label:'Yoga',       cor:'#C8860B', ic:'smile',    tipo:'duracao'},
+    {key:'pilates',    label:'Pilates',    cor:'#9B59B6', ic:'heart',    tipo:'duracao'},
+    {key:'escalada',   label:'Escalada',   cor:'#8E6E53', ic:'trendup',  tipo:'duracao'},
+    {key:'outro',      label:'Outro',      cor:'#8A867C', ic:'check',    tipo:'duracao'},
+  ],
   contatos:[
     {id:nid(),nome:'Maria Souza',telefone:'31988881111',email:'maria@email.com',tags:['Cliente'],contexto:'negocio',aniversario:'1992-05-29',favorito:true,comoConheci:'Indicação',anotacoes:'Compra brigadeiros toda semana',ultimoContato:offset(-3),manterContato:15,proximaAcao:{data:offset(5),nota:'Confirmar pedido para festa'},interacoes:[{data:offset(-3),tipo:'whatsapp',nota:'Pedido de 6 brigadeiros para o fim de semana'},{data:offset(-18),tipo:'presencial',nota:'Entregou encomenda pessoalmente'},{data:offset(-35),tipo:'whatsapp',nota:'Pediu cardápio atualizado'}],datas:[]},
     {id:nid(),nome:'João Pedro',telefone:'31977772222',email:'',tags:['Cliente'],contexto:'negocio',aniversario:'1988-06-02',favorito:false,comoConheci:'Instagram',anotacoes:'',ultimoContato:offset(-1),manterContato:30,proximaAcao:null,interacoes:[{data:offset(-1),tipo:'whatsapp',nota:'Pediu orçamento para 50 unidades'},{data:offset(-15),tipo:'ligacao',nota:'Ligou para saber prazo de entrega'}],datas:[]},
