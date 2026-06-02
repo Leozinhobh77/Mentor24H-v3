@@ -90,18 +90,20 @@
   - [x] **Medições: histórico + comparar datas + gráfico de evolução; "+ nova modalidade" visível nos seletores** ✅ — 2026-06-02 (ajuste; tendência rápida Δ anterior/30d, comparador A×B com delta colorido, Charts.line por medida, editar/excluir registro, fix do `.card-h` (botão alinhado), atalho "+" no avulso e no plano)
   - *Fora do escopo (no Backlog): fotos de progresso, GPS/mapa de corrida, smartwatch/Strava, desafios sociais*
 ## Conteúdo & Salvos (Pessoal)
-- [ ] **Etapa 20 — Salvos** (modo Pessoal — salvar qualquer link da internet, organizado por rede/categoria/criador) 🔧 *aguardando 1 detalhe do Léo antes do Prompt*
-  - [ ] **Salvar link**: cola a URL → abre direto depois (link clicável, `target=_blank`)
-  - [ ] **Rede automática**: detecta a rede pelo domínio (YouTube/Instagram/TikTok/Pinterest/X/Spotify/Site/Google) com ícone + cor oficial — offline
-  - [ ] **Campos**: título, nota, categoria (custom), criador/canal, tags
-  - [ ] **❤️ Favorito** (coração vermelho) + filtro "Favoritos" (fixados no topo)
-  - [ ] **🔖 Status "pra ver depois → já vi"** (read-it-later)
-  - [ ] **Navegação**: abas por rede · chips por categoria (com contador) · filtro por criador · busca (título/criador/nota/tag)
-  - [ ] **Cards visuais** (capa cor+ícone da rede + badge) → tela/detalhe com tudo + 🔗 link grande "Abrir" + copiar link
-  - [ ] **Toques especiais**: "colar e pronto" (rede auto) · "me surpreenda" (sorteia do "pra ver depois")
-  - [ ] **Mentor — regras de Salvos**: X salvos na semana · N em "pra ver depois" · categoria crescendo
-  - [ ] **Dados**: itens salvos (em memória → Supabase na Etapa 22)
+- [x] **Etapa 20 — Salvos** ✅ (modo Pessoal — salvar qualquer link da internet, organizado por rede/categoria/criador) — 2026-06-02 (executor-20260602-002)
+  - [x] **Salvar link**: cola a URL → abre direto depois (link clicável, `target=_blank` + `rel=noopener`)
+  - [x] **Rede automática**: detecta a rede pelo domínio (YouTube/Instagram/TikTok/Pinterest/X/Spotify/Site) com ícone + cor oficial — offline (`detectarRede` 10/10 testes)
+  - [x] **Campos**: título, nota, categoria (custom via datalist), criador/canal, tags
+  - [x] **❤️ Favorito** (coração vermelho `var(--expense)`) + filtro "Favoritos" (fixados no topo)
+  - [x] **🔖 Status "pra ver depois → já vi"** (read-it-later; toggle no detalhe)
+  - [x] **Navegação**: abas por rede · chips por categoria (com contador) · filtro por criador · busca (título/criador/nota/tag)
+  - [x] **Cards visuais** (capa cor+ícone da rede + badge) → detalhe com tudo + 🔗 link grande "Abrir" + copiar link + editar/excluir
+  - [x] **Toques especiais**: "colar e pronto" (rede auto no modal) · "me surpreender" (sorteia do "pra ver depois")
+  - [x] **Mentor — regras de Salvos**: X salvos na semana · N em "pra ver depois" · categoria crescendo (3 regras; seed dispara 2/3)
+  - [x] **Dados**: 10 itens salvos demo (em memória → Supabase na Etapa 22) — seed coerente (rede==detectarRede)
   - *Fora do escopo (no Backlog): puxar título/thumbnail automático, extensão "salvar do navegador", compartilhar coleções*
+  - [x] **Redesign Premium** ✅ — 2026-06-02 (executor-20260602-003): cards NEUTROS (surface-1) com acento da rede (faixa lateral + badge `var(--rede)`), header em 4 linhas com respiro, "Me surpreender" em destaque elegante (brand-soft), coração/status legíveis, detalhe sem cover gritante
+  - ⚠️ *Pendente smoke ao vivo no browser (console/render/mobile 360px) — auditado por análise estática; sem navegador headless nesta máquina*
 
 ## Graduação para produto
 - [ ] **Etapa 21 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
@@ -125,4 +127,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 19 (Treinos) ✅ — 2026-06-01 (Treinos no modo Pessoal: planos A/B/C + agenda semanal, executar/avulso por modalidade, frequência heatmap+streak, medições, motor de evolução & comparação de períodos com linha/delta colorido/platô/PR, donut modalidade, 5 regras do Mentor, ícone dumbbell). Próxima: Etapa 20 (2ª ideia pessoal) — 🔧 Léo vai detalhar.*
+*Atualizado a cada etapa. Última: Etapa 20 (Salvos) ✅ — 2026-06-02 (Salvos no modo Pessoal: bookmark universal de qualquer link, rede auto-detectada do domínio com cor/ícone oficial, categoria/criador/tags, ❤️ favorito, status pra-ver/já-vi, cards+detalhe com Abrir/copiar/editar/excluir, abas+chips+busca, "Me surpreender", 3 regras do Mentor, ícone bookmark). Próxima: Etapa 21.*

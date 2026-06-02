@@ -52,6 +52,13 @@ const ICONS={
   cake:'<path d="M4 21h16v-8H4z"/><path d="M4 13a4 4 0 0 1 16 0"/><path d="M12 8.5V5"/><circle cx="12" cy="3.5" r="1.2"/>',
   chevleft:'<path d="M15 18l-6-6 6-6"/>',
   chevright:'<path d="M9 18l6-6-6-6"/>',
+  bookmark:'<path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/>',
+  youtube:'<rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z"/>',
+  instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17 7h.01"/>',
+  tiktok:'<path d="M9 12a4 4 0 1 0 4 4V4c1 2 3 3 5 3"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.5-1.5"/>',
+  dice:'<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 8h.01M16 8h.01M8 16h.01M16 16h.01M12 12h.01"/>',
 };
 
 /* ─── PÁGINAS PLACEHOLDER (preenchidas a cada etapa do checklist) ─── */
@@ -155,7 +162,7 @@ document.querySelectorAll('.mood-pick').forEach(p=>p.querySelectorAll('.mood').f
 })));
 
 /* ─── ROUTER (navegação SPA) ─── */
-const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',mentor:'Mentor',perfil:'Perfil'};
+const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',salvos:'Salvos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',mentor:'Mentor',perfil:'Perfil'};
 function navigate(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===page));
   document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
@@ -184,6 +191,7 @@ function navigate(page){
   if(page==='leitura') Leitura.render();
   if(page==='series') Series.render();
   if(page==='treinos') Treinos.render();
+  if(page==='salvos') Salvos.render();
   if(page==='produtos') Produtos.render();
   if(page==='estoque') Estoque.render();
   if(page==='vendas') Vendas.render();
@@ -424,6 +432,18 @@ const DB={
     {id:nid(),nome:'Arte Digital (convite/logo)',emoji:'🎨',categoria:'Personalizados',preco:80.0,custo:0,estoque:999,estoqueMin:0,ativo:true,fixado:false},
   ],
   movimentacoes:[],
+  salvos:[   // {id,titulo,url,rede,categoria,criador,tags:[],nota,favorito,status:'ver'|'visto',data}
+    {id:nid(),titulo:'Bolo de cenoura fofinho',url:'https://www.youtube.com/watch?v=abc123',rede:'youtube',categoria:'Receitas',criador:'Cozinha da Tia',tags:['bolo','doce'],nota:'cobertura de brigadeiro',favorito:true,status:'visto',data:offset(-1)},
+    {id:nid(),titulo:'Macarrão de 10 minutos',url:'https://www.tiktok.com/@chefrapido/video/789',rede:'tiktok',categoria:'Receitas',criador:'@chefrapido',tags:['rápido','almoço'],nota:'',favorito:false,status:'ver',data:offset(-2)},
+    {id:nid(),titulo:'Setup gamer 2026 completo',url:'https://youtu.be/setup2026',rede:'youtube',categoria:'Games',criador:'TechZone',tags:['setup','pc'],nota:'ver mesa e cadeira',favorito:false,status:'ver',data:offset(-3)},
+    {id:nid(),titulo:'Skin nova do free fire',url:'https://www.instagram.com/p/Cx9gamehub',rede:'instagram',categoria:'Games',criador:'@gamehub',tags:['skin'],nota:'',favorito:false,status:'visto',data:offset(-6)},
+    {id:nid(),titulo:'Roteiro de 7 dias em Portugal',url:'https://www.mochileiro.com/portugal-7-dias',rede:'site',categoria:'Viagem',criador:'Mochileiro.com',tags:['europa','roteiro'],nota:'guardar pra próxima viagem',favorito:true,status:'ver',data:offset(-4)},
+    {id:nid(),titulo:'Playlist Foco Total',url:'https://open.spotify.com/playlist/37i9foco',rede:'spotify',categoria:'Música',criador:'Spotify',tags:['foco','lo-fi'],nota:'',favorito:false,status:'visto',data:offset(-5)},
+    {id:nid(),titulo:'Treino em casa sem equipamento',url:'https://www.youtube.com/watch?v=fitgood',rede:'youtube',categoria:'Fitness',criador:'FitGood',tags:['hiit','casa'],nota:'20 min',favorito:false,status:'ver',data:offset(-2)},
+    {id:nid(),titulo:'Ideias de decoração pro quarto',url:'https://br.pinterest.com/pin/decoquarto',rede:'pinterest',categoria:'Casa',criador:'',tags:['decoração','quarto'],nota:'',favorito:false,status:'ver',data:offset(-8)},
+    {id:nid(),titulo:'Thread: como organizar a semana',url:'https://x.com/prodguy/status/123',rede:'x',categoria:'Produtividade',criador:'@prodguy',tags:['rotina'],nota:'método de blocos',favorito:false,status:'visto',data:offset(-7)},
+    {id:nid(),titulo:'Flexbox de uma vez por todas',url:'https://www.youtube.com/watch?v=devtipscss',rede:'youtube',categoria:'Estudo',criador:'DevTips',tags:['css','front'],nota:'revisar guia',favorito:true,status:'ver',data:offset(0)},
+  ],
 };
 
 // Seed movimentações com IDs corretos

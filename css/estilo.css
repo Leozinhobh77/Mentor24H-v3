@@ -965,6 +965,88 @@ select.field{cursor:pointer}
 .cat-tab.on{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
 .cat-tab:hover:not(.on){border-color:var(--brand);color:var(--brand)}
 .pdv-prod-btn{position:relative}
+
+/* ─── ETAPA 20: SALVOS ─── Quiet Premium: card neutro + acento da rede via var(--rede); tokens de espaco e raio */
+/* HEADER em 4 linhas: (1) contadores · (2) Salvar+busca+Me surpreender · (3) abas · (4) chips */
+.sav-head{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-3);margin-bottom:var(--s-3)}
+/* STATS acima dos cards: pílulas elegantes (salvos + favoritos clicável) */
+.sav-statbar{display:flex;align-items:center;gap:var(--s-2);margin-bottom:var(--s-3);flex-wrap:wrap}
+.sav-stat{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--text-2);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-full);padding:6px 14px}
+.sav-stat b{font-family:var(--mono);font-size:13.5px;font-weight:800;color:var(--text-1)}
+.sav-stat-fav{cursor:pointer;transition:.15s var(--ease)}
+.sav-stat-fav svg{color:var(--expense);fill:var(--expense)}
+.sav-stat-fav:hover{border-color:var(--expense);transform:translateY(-1px)}
+.sav-stat-fav.on{background:var(--expense-soft);border-color:var(--expense)}
+.sav-stat-fav.on b{color:var(--expense)}
+.sav-shown{font-size:12px;color:var(--text-3);margin-left:auto}
+.sav-head [data-surpresa]{background:var(--brand-soft);color:var(--brand-text);border:1px solid transparent;font-weight:700;transition:.16s var(--ease)}
+.sav-head [data-surpresa]:hover{border-color:var(--brand);transform:translateY(-1px)}
+.sav-search{display:flex;align-items:center;gap:8px;flex:1;min-width:180px;background:var(--surface-2);border:1px solid transparent;border-radius:var(--r-md);padding:8px 13px;color:var(--text-3);transition:.16s var(--ease)}
+.sav-search:focus-within{border-color:var(--brand);color:var(--text-2)}
+.sav-search svg{flex-shrink:0}
+.sav-search input{flex:1;min-width:0;background:none;border:0;font-size:12.5px;font-weight:500;color:var(--text-1);font-family:inherit}
+.sav-abas{max-width:100%;overflow-x:auto;scrollbar-width:none;margin-bottom:var(--s-3)}
+.sav-abas::-webkit-scrollbar{display:none}
+.sav-abas button{white-space:nowrap;flex-shrink:0}
+.sav-chips{display:flex;gap:var(--s-2);overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:var(--s-5)}
+.sav-chips::-webkit-scrollbar{display:none}
+.sav-chip{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:6px 13px;border-radius:var(--r-full);border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);white-space:nowrap;transition:.15s var(--ease)}
+.sav-chip b{font-family:var(--mono);color:var(--text-3)}
+.sav-chip:hover{border-color:var(--brand);color:var(--brand)}
+.sav-chip.on{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-text)}
+.sav-chip.on b{color:var(--brand-text)}
+.sav-criadorbar{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);background:var(--surface-2);border-radius:var(--r-full);padding:5px 7px 5px 13px;margin-bottom:var(--s-4)}
+.sav-criadorbar button{width:22px;height:22px;border-radius:var(--r-full);display:grid;place-items:center;background:var(--surface-3);color:var(--text-2);transition:.15s var(--ease)}
+.sav-criadorbar button:hover{background:var(--expense);color:#fff}
+
+/* CARDS — neutros (surface-1), acento da rede = faixa lateral + badge. Altura uniforme. */
+.sav-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--s-4)}
+.sav-card{position:relative;display:flex;flex-direction:column;gap:8px;background:var(--surface-1);border:1px solid var(--border);border-left:3px solid var(--rede,var(--border));border-radius:var(--r-lg);padding:var(--s-4);cursor:pointer;transition:transform .16s var(--ease),box-shadow .16s var(--ease)}
+.sav-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.sav-badge{display:inline-flex;align-items:center;gap:5px;align-self:flex-start;max-width:calc(100% - 34px);font-size:10.5px;font-weight:700;color:#fff;background:var(--rede,var(--text-3));padding:3px 9px;border-radius:var(--r-full)}
+.sav-fav{position:absolute;top:11px;right:11px;width:28px;height:28px;border-radius:var(--r-full);display:grid;place-items:center;background:var(--surface-2);color:var(--text-4);transition:.15s var(--ease)}
+.sav-fav:hover{color:var(--expense)}
+.sav-fav.on{background:var(--expense-soft);color:var(--expense)}
+.sav-fav.on svg{fill:var(--expense)}
+.sav-tit{font-size:13.5px;font-weight:700;color:var(--text-1);line-height:1.32;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sav-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.sav-criador{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--text-3);transition:.15s var(--ease)}
+.sav-criador:hover{color:var(--brand)}
+.sav-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);margin-top:auto;padding-top:4px}
+.sav-status{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:var(--r-full);white-space:nowrap}
+.sav-status.ver{background:var(--warning-soft);color:var(--warning)}
+.sav-status.visto{background:var(--income-soft);color:var(--income)}
+.sav-open{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;color:var(--brand-text);transition:.15s var(--ease)}
+.sav-open:hover{gap:6px}
+
+/* DETALHE — sem cover gritante: só badge da rede + categoria */
+.sav-det-top{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-3);margin-bottom:var(--s-4)}
+.sav-det-top .sav-badge{font-size:11.5px;padding:4px 11px}
+.sav-det-cat{font-size:12.5px;color:var(--text-3);font-weight:600}
+.sav-open-big{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--brand);color:#fff;font-weight:700;font-size:14px;padding:12px;border-radius:var(--r-md);box-shadow:var(--shadow-sm);transition:.16s var(--ease)}
+.sav-open-big:hover{filter:brightness(1.07)}
+.sav-url{font-family:var(--mono);font-size:11.5px;color:var(--text-3);background:var(--surface-2);border-radius:var(--r-md);padding:8px 11px;margin-top:var(--s-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sav-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--s-3)}
+.sav-det-nota{font-size:13px;color:var(--text-2);font-style:italic;line-height:1.5;margin-top:var(--s-3);padding-left:11px;border-left:3px solid var(--border)}
+.sav-det-row{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-4)}
+.sav-fav-lbl{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--text-3)}
+.sav-fav-lbl.on{color:var(--expense)}
+.sav-fav-lbl.on svg{fill:var(--expense)}
+.sav-det-data{font-size:12px;color:var(--text-4);margin-left:auto}
+.sav-det-acts{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-4);padding-top:var(--s-4);border-top:1px solid var(--border)}
+
+.sav-detected{margin:-2px 0 var(--s-2)}
+.sav-badge-lg{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#fff;padding:5px 12px;border-radius:var(--r-full)}
+.sav-favchk{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:var(--text-2);background:var(--surface-2);border-radius:var(--r-md);padding:9px 12px;cursor:pointer}
+.sav-favchk input{accent-color:var(--expense)}
+
+@media(max-width:560px){
+  .sav-grid{grid-template-columns:1fr}
+  .sav-head{gap:var(--s-2)}
+  /* linha 1: Salvar + Me surpreender lado a lado · linha 2: busca full-width */
+  .sav-head [data-add],.sav-head [data-surpresa]{flex:1;justify-content:center;white-space:nowrap}
+  .sav-search{order:1;flex:1 1 100%}
+}
 .fix-btn{position:absolute;top:4px;right:4px;font-size:13px;line-height:1;background:none;border:none;cursor:pointer;padding:2px;opacity:.45;transition:opacity .15s;z-index:2}
 .pdv-prod-btn:hover .fix-btn{opacity:1}
 .fix-btn.on{opacity:1}

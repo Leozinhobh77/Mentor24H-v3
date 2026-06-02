@@ -276,6 +276,22 @@ const Mentor=(()=>{
       serio:[d=>`você não treina há ${d.dias} dias`,d=>`já são ${d.dias} dias sem treino`],
       descontraido:[d=>`faz ${d.dias}d que você não treina 👀`,d=>`${d.dias}d longe do treino, bora voltar?`],
       motivador:[d=>`que tal voltar hoje? ${d.dias}d parado, um treino leve já conta 💪`,d=>`retoma o ritmo — ${d.dias}d sem treinar, você consegue 🔥`]
+    },
+    // ── SALVOS (Etapa 20) ──
+    'sav-semana':{
+      serio:[d=>`você salvou ${d.n} ${d.n===1?'coisa':'coisas'} nos últimos 7 dias`,d=>`${d.n} ${d.n===1?'link salvo':'links salvos'} nesta semana`],
+      descontraido:[d=>`você salvou ${d.n} coisas essa semana 🔖`,d=>`${d.n} novidades guardadas na semana 👀`],
+      motivador:[d=>`${d.n} salvos essa semana — que tal ver um agora? 🔖`,d=>`bora aproveitar: ${d.n} coisas novas guardadas essa semana`]
+    },
+    'sav-paraver':{
+      serio:[d=>`você tem ${d.n} itens em "pra ver depois"`,d=>`${d.n} salvos seguem na lista de "pra ver"`],
+      descontraido:[d=>`${d.n} itens em "pra ver depois" 👀`,d=>`a fila de "pra ver" tá em ${d.n} itens`],
+      motivador:[d=>`que tal zerar a fila? ${d.n} itens esperando em "pra ver" 👀`,d=>`${d.n} pra ver depois — escolhe um e marca como visto hoje ✓`]
+    },
+    'sav-cat':{
+      serio:[d=>`sua categoria "${d.cat}" é a que mais cresce (${d.n} itens)`,d=>`"${d.cat}" lidera seus salvos com ${d.n} itens`],
+      descontraido:[d=>`sua categoria "${d.cat}" tá crescendo (${d.n}) 📈`,d=>`"${d.cat}" virou febre: já são ${d.n} salvos`],
+      motivador:[d=>`"${d.cat}" tá bombando (${d.n})! que tal revisitar um? 🚀`,d=>`${d.n} salvos em "${d.cat}" — seu interesse tá claro, explora mais!`]
     }
   };
 
@@ -433,6 +449,14 @@ const Mentor=(()=>{
     ()=>{if(!DB.treinoSessoes.length)return null;const dias=-Math.max(...DB.treinoSessoes.map(s=>diasAte(s.data)));
       if(dias<5)return null;
       return mk('tre-sumido','Treinos','pessoal','atencao',{dias},'Sem treinar',{label:'Treinar',navTo:'treinos'});},
+    // SALVOS (Etapa 20)
+    ()=>{if(!DB.salvos)return null;const n=DB.salvos.filter(s=>diasAte(s.data)>=-6).length;if(n<3)return null;
+      return mk('sav-semana','Salvos','pessoal','info',{n},'Salvos da semana',{label:'Ver salvos',navTo:'salvos'});},
+    ()=>{if(!DB.salvos)return null;const n=DB.salvos.filter(s=>s.status==='ver').length;if(n<5)return null;
+      return mk('sav-paraver','Salvos','pessoal','atencao',{n},'Pra ver depois',{label:'Revisitar',navTo:'salvos'});},
+    ()=>{if(!DB.salvos||!DB.salvos.length)return null;const m={};DB.salvos.forEach(s=>{const c=s.categoria||'Outros';m[c]=(m[c]||0)+1;});
+      const top=Object.entries(m).sort((a,b)=>b[1]-a[1])[0];if(!top||top[1]<3)return null;
+      return mk('sav-cat','Salvos','pessoal','oportunidade',{cat:top[0],n:top[1]},'Categoria em alta',{label:'Ver salvos',navTo:'salvos'});},
   ];
 
   function rodarRegras(){
