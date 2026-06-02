@@ -50,7 +50,7 @@
   - [x] **Stats reaproveitando componentes** — donut (horas por matéria), barras (últimos 7 dias), heatmap de consistência (igual Hábitos), streak 🔥
   - [x] **Histórico de sessões** — o que estudou, quando e por quanto tempo
   - [x] **Mentor — regras novas de Estudos** — prova chegando + pouco estudo · sem estudar há N dias · bateu a meta da semana 🎉
-  - [x] **Dados**: matérias + sessões (em memória → Supabase na Etapa 20)
+  - [x] **Dados**: matérias + sessões (em memória → Supabase na Etapa 28)
   - *Fora do escopo (no Backlog): flashcards/SRS, ranking social*
 - [x] **Etapa 17 — Leitura / Livros** ✅ (modo Pessoal — estante, progresso, hábito de leitura, stats e Mentor) — 2026-06-01
   - [x] **Estante**: Quero ler · Lendo · Lido · Abandonei (abas/filtro)
@@ -61,7 +61,7 @@
   - [x] **Meta anual** ("ler N livros no ano") com progresso
   - [x] **Stats reaproveitando componentes**: donut (gênero), barras (páginas/7 dias), heatmap de consistência, streak 🔥
   - [x] **Mentor — regras novas de Leitura**: livro parado há N dias · faltam X livros pra meta do ano · N dias sem ler
-  - [x] **Dados**: livros + sessões de leitura (em memória → Supabase na Etapa 20)
+  - [x] **Dados**: livros + sessões de leitura (em memória → Supabase na Etapa 28)
   - *Fora do escopo (no Backlog): fóruns/clubes de leitura, resenhas públicas, recomendações sociais*
 - [x] **Etapa 18 — Séries** ✅ (modo Pessoal — listas, progresso por episódio, stats e Mentor) — 2026-06-01
   - [x] **Listas**: Quero assistir · Assistindo · Concluído · Abandonei (abas/filtro)
@@ -71,7 +71,7 @@
   - [x] **Nota (meia-estrela) + resenha** ao concluir
   - [x] **Stats reaproveitando componentes**: donut (gênero), barras (eps/7 dias), heatmap, streak 🔥
   - [x] **Mentor — regras novas de Séries**: série parada há N dias · X séries em "quero assistir" · N dias sem assistir
-  - [x] **Dados**: séries + sessões (eps vistos por dia) (em memória → Supabase na Etapa 20)
+  - [x] **Dados**: séries + sessões (eps vistos por dia) (em memória → Supabase na Etapa 28)
   - *Fora do escopo (no Backlog): auto-scrobble/integração streaming, calendário de estreias, comunidade/resenhas públicas*
 
 ## Corpo & Movimento (Pessoal)
@@ -100,31 +100,43 @@
   - [x] **Cards visuais** (capa cor+ícone da rede + badge) → detalhe com tudo + 🔗 link grande "Abrir" + copiar link + editar/excluir
   - [x] **Toques especiais**: "colar e pronto" (rede auto no modal) · "me surpreender" (sorteia do "pra ver depois")
   - [x] **Mentor — regras de Salvos**: X salvos na semana · N em "pra ver depois" · categoria crescendo (3 regras; seed dispara 2/3)
-  - [x] **Dados**: 10 itens salvos demo (em memória → Supabase na Etapa 22) — seed coerente (rede==detectarRede)
+  - [x] **Dados**: 10 itens salvos demo (em memória → Supabase na Etapa 28) — seed coerente (rede==detectarRede)
   - *Fora do escopo (no Backlog): puxar título/thumbnail automático, extensão "salvar do navegador", compartilhar coleções*
   - [x] **Redesign Premium** ✅ — 2026-06-02 (executor-20260602-003): cards NEUTROS (surface-1) com acento da rede (faixa lateral + badge `var(--rede)`), header em 4 linhas com respiro, "Me surpreender" em destaque elegante (brand-soft), coração/status legíveis, detalhe sem cover gritante
   - ⚠️ *Pendente smoke ao vivo no browser (console/render/mobile 360px) — auditado por análise estática; sem navegador headless nesta máquina*
 
+## Negócio — Expansão (modo Negócio · versátil p/ MEI, autônomos, prestadores)
+> Refinar **1 por 1** (pesquisa fina + proposta + ok) antes de cada Prompt. Tudo "produtos **ou** serviços".
+- [ ] **Etapa 21 — Identidade do Negócio** — nome da empresa alimenta o cabeçalho dos documentos + perfil por modo (Pessoal=Léo Silva · Negócio=**Pizza e Cia BH** · Híbrido=os dois). Config definitiva em Perfil (Etapa 27); por ora **demo "Pizza e Cia BH"**
+- [ ] **Etapa 22 — Produtos: capa elegante** — emoji (atual) · **fallback cor+inicial quando vazio** (nunca quadrado feio) · imagem real = Backlog. + **adicionar o cardápio do Léo aos produtos demo** (complementar, sem apagar os atuais — *pedir o cardápio na hora*)
+- [ ] **Etapa 23 — Documentos & Vitrine** — motor único: **visual Premium no app + envio formatado elegante pro WhatsApp**. 📐 Orçamento · 🧾 Recibo/Notinha · 📖 Catálogo/Cardápio (produtos **ou** serviços), com a marca da empresa no cabeçalho
+- [ ] **Etapa 24 — Encomendas/Pedidos** — agendar entrega, sinal, status (a fazer→produzindo→pronto→entregue); serve pedido **ou** ordem de serviço
+- [ ] **Etapa 25 — Financeiro do Negócio** — fluxo de caixa + despesas · **Controle MEI** (faturamento vs limite + DAS) · metas do negócio
+- [ ] **Etapa 26 — Fidelidade/Cashback + 🍳 Ficha técnica/Produção** — fideliza recorrentes; ficha técnica (receita+custo, quanto produzir) p/ food — mais nichados, por último
+
 ## Graduação para produto
-- [ ] **Etapa 21 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
-- [ ] **Etapa 22 — Supabase** (substituir mock por banco real, sync online-only)
-- [ ] **Etapa 23 — PWA + polish** (manifest, instalável, estados de rede, revisão final)
+- [ ] **Etapa 27 — Auth + Perfil/Config** (cadastro/login, perfil, preferências) — inclui editar nome de usuário **e nome da empresa**
+- [ ] **Etapa 28 — Supabase** (substituir mock por banco real, sync online-only)
+- [ ] **Etapa 29 — PWA + polish** (manifest, instalável, estados de rede, revisão final)
 
 ## 💡 Backlog / Futuro (ideias parqueadas — não esquecer)
 - [ ] **Flashcards + revisão espaçada (SRS)** — cartões pergunta→resposta com reagendamento em intervalos crescentes (1d/3d/7d/15d…), estilo Anki. Liga-se a **Estudos (Etapa 16)**. Dá pra fazer local/vanilla; vira etapa própria quando o Léo quiser.
-- [ ] **Ranking social de estudos** — comparar horas/consistência com outros usuários (estilo YPT). ⛔ Depende de multiusuário → só **pós-Supabase (Etapa 22)**.
-- [ ] **Comunidade de leitura** — fóruns/clubes de leitura, resenhas públicas, recomendações sociais (estilo Fable/PageBound/Goodreads social). ⛔ Multiusuário → **pós-Supabase (Etapa 22)**.
-- [ ] **Séries — auto-scrobble + calendário de estreias** — logar automático do streaming (estilo Trakt/Simkl) e datas de novos episódios (via API tipo TMDB). ⛔ Precisa APIs externas/online → **pós-Supabase (Etapa 22)**.
-- [ ] **Comunidade de séries** — resenhas públicas / recomendações sociais (estilo Serializd/TV Time). ⛔ Multiusuário → **pós-Supabase (Etapa 22)**.
-- [ ] **Treinos — extras** — fotos de progresso, GPS/mapa de corrida, integração smartwatch/Strava, desafios sociais. ⛔ Precisa armazenamento real/API/multiusuário → **pós-Supabase (Etapa 22)**.
-- [ ] **Salvos — auto-metadata** — puxar título/thumbnail automático do link, extensão "salvar do navegador", compartilhar coleções. ⛔ Precisa servidor/API → **pós-Supabase (Etapa 22)**.
+- [ ] **Ranking social de estudos** — comparar horas/consistência com outros usuários (estilo YPT). ⛔ Depende de multiusuário → só **pós-Supabase (Etapa 28)**.
+- [ ] **Comunidade de leitura** — fóruns/clubes de leitura, resenhas públicas, recomendações sociais (estilo Fable/PageBound/Goodreads social). ⛔ Multiusuário → **pós-Supabase (Etapa 28)**.
+- [ ] **Séries — auto-scrobble + calendário de estreias** — logar automático do streaming (estilo Trakt/Simkl) e datas de novos episódios (via API tipo TMDB). ⛔ Precisa APIs externas/online → **pós-Supabase (Etapa 28)**.
+- [ ] **Comunidade de séries** — resenhas públicas / recomendações sociais (estilo Serializd/TV Time). ⛔ Multiusuário → **pós-Supabase (Etapa 28)**.
+- [ ] **Treinos — extras** — fotos de progresso, GPS/mapa de corrida, integração smartwatch/Strava, desafios sociais. ⛔ Precisa armazenamento real/API/multiusuário → **pós-Supabase (Etapa 28)**.
+- [ ] **Salvos — auto-metadata** — puxar título/thumbnail automático do link, extensão "salvar do navegador", compartilhar coleções. ⛔ Precisa servidor/API → **pós-Supabase (Etapa 28)**.
+- [ ] **Negócio — imagem real de produto** — upload de foto do produto (hoje: emoji/fallback cor+inicial). ⛔ Precisa armazenamento → **pós-Supabase (Etapa 28)**.
+- [ ] **Negócio — catálogo com link público** — página compartilhável do cardápio/catálogo (hoje: texto/imagem formatada pro WhatsApp). ⛔ Precisa hospedagem → **pós-Supabase (Etapa 28)**.
+- [ ] **Negócio — Nota Fiscal (NFe/NFCe)** — emissão integrada ao gov. ⛔ Precisa integração externa → **pós-Supabase (Etapa 28)**.
 
 ---
 
 ## Nota de Arquitetura
 
-> **Single-file por enquanto (decisão 2026-05-27):** continuar com `index.html` único até fechar todas as etapas do protótipo. Quando chegar na Etapa 22 (Supabase), **avisar Léo para separar em projeto real** com estrutura adequada (HTML + CSS + JS separados ou framework). O protótipo vira guia de referência de UX e dados.
+> **Single-file por enquanto (decisão 2026-05-27):** continuar com `index.html` único até fechar todas as etapas do protótipo. Quando chegar na Etapa 28 (Supabase), **avisar Léo para separar em projeto real** com estrutura adequada (HTML + CSS + JS separados ou framework). O protótipo vira guia de referência de UX e dados.
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 20 (Salvos) ✅ — 2026-06-02 (Salvos no modo Pessoal: bookmark universal de qualquer link, rede auto-detectada do domínio com cor/ícone oficial, categoria/criador/tags, ❤️ favorito, status pra-ver/já-vi, cards+detalhe com Abrir/copiar/editar/excluir, abas+chips+busca, "Me surpreender", 3 regras do Mentor, ícone bookmark). Próxima: Etapa 21.*
+*Atualizado a cada etapa. Última: Etapa 20 (Salvos) ✅ — 2026-06-02 (Salvos no modo Pessoal: bookmark universal de qualquer link, rede auto-detectada do domínio com cor/ícone oficial, categoria/criador/tags, ❤️ favorito, status pra-ver/já-vi, cards+detalhe com Abrir/copiar/editar/excluir, abas+chips+busca, "Me surpreender", 3 regras do Mentor, ícone bookmark). Próxima: Etapa 21 (Identidade do Negócio) — começando a Expansão do Negócio.*
