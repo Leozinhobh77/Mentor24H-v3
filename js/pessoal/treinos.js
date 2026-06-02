@@ -25,6 +25,7 @@ const Treinos=(()=>{
 
   // ── período (molde relatorios-neg) ──
   let periodo='3m';
+  let medA=null, medB=null, medChart='peso'; // estado do comparador/gráfico de medições
   function periodoRange(p){
     if(p==='7d')return [offset(-6),offset(0)];
     if(p==='30d')return [offset(-29),offset(0)];
@@ -124,6 +125,11 @@ const Treinos=(()=>{
     q('[data-addplano]').onclick=()=>planoForm();
     q('[data-medicao]').onclick=()=>medicaoForm();
     q('[data-modalidades]').onclick=()=>modalidadesForm();
+    root.querySelectorAll('[data-editmed]').forEach(b=>b.onclick=()=>medicaoForm(+b.dataset.editmed));
+    root.querySelectorAll('[data-delmed]').forEach(b=>b.onclick=()=>{const id=+b.dataset.delmed;Modal.confirm('Excluir medição?','Esse registro será removido.',()=>{DB.treinoMedicoes=DB.treinoMedicoes.filter(m=>m.id!==id);Toast.show('Medição excluída');render();});});
+    if(q('#med-a'))q('#med-a').onchange=()=>{medA=q('#med-a').value;render();};
+    if(q('#med-b'))q('#med-b').onchange=()=>{medB=q('#med-b').value;render();};
+    if(q('#med-chart'))q('#med-chart').onchange=()=>{medChart=q('#med-chart').value;render();};
     root.querySelectorAll('[data-per]').forEach(b=>b.onclick=()=>{periodo=b.dataset.per;render();});
     root.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>setDia(b.dataset.day));
     root.querySelectorAll('[data-editp]').forEach(b=>b.onclick=()=>planoForm(+b.dataset.editp));
@@ -183,13 +189,52 @@ const Treinos=(()=>{
     if(!prs.length)return '<p style="font-size:13px;color:var(--text-3);padding:8px 0">Faça treinos de musculação pra registrar recordes.</p>';
     return `<div class="tre-prs">${prs.map(p=>`<div class="tre-pr"><div class="prn">${p.nome}</div><div class="prv">${p.carga}<small>kg</small></div><div class="prd">${fmtBR(p.data)}</div></div>`).join('')}</div>`;
   }
+  const MEDALL=()=>[['peso','Peso','kg'],['gordura','% gordura','%'],...MEDIDAS.map(([k,l])=>[k,l,'cm'])];
+  const medVal=(m,k)=>k==='peso'?m.peso:(k==='gordura'?m.gordura:(m.medidas?.[k]));
+  const BOMDOWN=['peso','gordura','cintura','quadril'];
+  function medDelta(cur,ref,k,u){
+    if(ref==null||cur==null)return '';
+    const d=+(cur-ref).toFixed(1);if(d===0)return '<span class="tre-delta flat">■ 0</span>';
+    const good=BOMDOWN.includes(k)?d<0:d>0;
+    return `<span class="tre-delta ${good?'pos':'neg'}">${d>0?'▲':'▼'} ${Math.abs(d)}${u||''}</span>`;
+  }
   function medicoesHTML(){
-    const meds=[...DB.treinoMedicoes].sort((a,b)=>a.data<b.data?1:-1);
-    if(!meds.length)return '<p style="font-size:13px;color:var(--text-3);padding:8px 0">Sem medições. Registre peso e circunferências.</p>';
-    const last=meds[0], prev=meds[1];
-    const linha=[['Peso',last.peso,prev?.peso,'kg'],...MEDIDAS.map(([k,l])=>[l,last.medidas?.[k],prev?.medidas?.[k],'cm'])];
-    return `<div class="tre-meds">${linha.filter(r=>r[1]!=null).map(([l,a,b,u])=>{const dl=b!=null?+(a-b).toFixed(1):null;return `<div class="tre-med"><div class="tml">${l}</div><div class="tmv">${a}<small>${u}</small></div>${dl!=null&&dl!==0?`<div class="tre-delta ${dl<0?'pos':'neg'}" style="font-size:10.5px">${dl>0?'+':''}${dl}</div>`:''}</div>`;}).join('')}</div>
-      <p style="font-size:11px;color:var(--text-3);margin-top:8px">Última: ${fmtBR(last.data)} · ${meds.length} ${meds.length===1?'registro':'registros'}</p>`;
+    const meds=[...DB.treinoMedicoes].sort((a,b)=>a.data<b.data?-1:1); // asc
+    if(!meds.length)return '<p style="font-size:13px;color:var(--text-3);padding:8px 0">Sem medições. Toque em "Registrar" pra começar.</p>';
+    const desc=[...meds].reverse(), last=desc[0], prev=desc[1];
+    const ref30=desc.find(m=>diasAte(last.data)-diasAte(m.data)>=28)||null;
+    const ALL=MEDALL();
+    const trend=ALL.map(([k,l,u])=>{const cur=medVal(last,k);if(cur==null)return '';
+      return `<div class="tre-trend"><div class="ttl">${l}</div><div class="ttv">${cur}<small>${u}</small></div>
+        <div class="ttd">${prev?medDelta(cur,medVal(prev,k),k):'<span class="tre-delta flat">—</span>'}${ref30?`<span class="ttd30">30d ${medDelta(cur,medVal(ref30,k),k)}</span>`:''}</div></div>`;}).filter(Boolean).join('');
+    // comparar A×B
+    const dates=meds.map(m=>m.data);
+    const a=medA&&dates.includes(medA)?medA:dates[0];
+    const bb=medB&&dates.includes(medB)?medB:dates[dates.length-1];
+    const mA=meds.find(m=>m.data===a), mB=meds.find(m=>m.data===bb);
+    const opt=sel=>dates.map(d=>`<option value="${d}"${d===sel?' selected':''}>${fmtBR(d)}</option>`).join('');
+    const cmpRows=ALL.map(([k,l,u])=>{const va=medVal(mA,k),vb=medVal(mB,k);if(va==null&&vb==null)return '';
+      const d=(va!=null&&vb!=null)?+(vb-va).toFixed(1):null, good=d==null?null:(BOMDOWN.includes(k)?d<0:d>0);
+      return `<tr><td>${l}</td><td>${va!=null?va+u:'—'}</td><td>${vb!=null?vb+u:'—'}</td><td>${d==null||d===0?'<span class="tre-delta flat">—</span>':`<span class="tre-delta ${good?'pos':'neg'}">${d>0?'▲':'▼'} ${Math.abs(d)}</span>`}</td></tr>`;}).filter(Boolean).join('');
+    // gráfico
+    const ck=medChart&&ALL.some(m=>m[0]===medChart)?medChart:'peso';
+    const cvals=meds.map(m=>medVal(m,ck)).filter(v=>v!=null);
+    const chartSel=ALL.map(([k,l])=>`<option value="${k}"${k===ck?' selected':''}>${l}</option>`).join('');
+    // histórico
+    const hist=desc.map(m=>{const res=MEDIDAS.map(([k,l])=>m.medidas?.[k]!=null?`${l.slice(0,3)} ${m.medidas[k]}`:'').filter(Boolean).slice(0,3).join(' · ');
+      return `<div class="hist-row"><div class="hist-main"><div class="hist-nm">${m.peso}kg${m.gordura?` · ${m.gordura}%`:''}</div><div class="hist-dt">${fmtBR(m.data)}${res?' · '+res:''}</div></div><button class="icon-mini-btn" data-editmed="${m.id}">${svg('pencil',14)}</button><button class="icon-mini-btn" data-delmed="${m.id}">${svg('trash',14)}</button></div>`;}).join('');
+    return `
+      <div class="tre-trends">${trend}</div>
+      <div class="tre-medsub">
+        <div class="tre-medsub-h">Comparar datas</div>
+        <div class="tre-cmpsel"><select class="field" id="med-a">${opt(a)}</select><span class="cmpar">→</span><select class="field" id="med-b">${opt(bb)}</select></div>
+        <table class="tre-cmptable"><thead><tr><th>Medida</th><th>${fmtBR(a)}</th><th>${fmtBR(bb)}</th><th>Δ</th></tr></thead><tbody>${cmpRows}</tbody></table>
+      </div>
+      <div class="tre-medsub">
+        <div class="tre-medsub-h">Evolução <select class="field tre-chartsel" id="med-chart">${chartSel}</select></div>
+        ${cvals.length>1?Charts.line(cvals,140):'<p style="font-size:12px;color:var(--text-3);padding:8px 0">Poucos dados pra essa medida.</p>'}
+      </div>
+      <div class="tre-medsub"><div class="tre-medsub-h">Histórico · ${meds.length} ${meds.length===1?'registro':'registros'}</div>${hist}</div>`;
   }
   function histHTML(){
     const regs=[...DB.treinoSessoes].sort((a,b)=>a.data<b.data?1:(a.data>b.data?-1:b.id-a.id)).slice(0,12);
@@ -226,7 +271,7 @@ const Treinos=(()=>{
   }
   function avulso(){
     const body=`
-      <div class="fg"><label>Modalidade</label><select class="field" id="av-mod">${DB.treinoModalidades.map(m=>`<option value="${m.key}">${m.label}</option>`).join('')}</select></div>
+      <div class="fg"><label>Modalidade</label><div class="tre-modsel"><select class="field" id="av-mod">${DB.treinoModalidades.map(m=>`<option value="${m.key}">${m.label}</option>`).join('')}</select><button type="button" class="tre-addmod" id="av-newmod" title="Nova modalidade">${svg('plus',16)}</button></div></div>
       <div id="av-dyn"></div>
       <div class="fg"><label>Data</label><input class="field" id="av-data" type="date" value="${offset(0)}"></div>`;
     const back=Modal.open('Treino avulso',body,(b)=>{
@@ -245,6 +290,7 @@ const Treinos=(()=>{
     };
     paint(back.querySelector('#av-mod').value);
     back.querySelector('#av-mod').onchange=e=>paint(e.target.value);
+    back.querySelector('#av-newmod').onclick=()=>modalidadesForm(()=>{const sel=back.querySelector('#av-mod'),cur=sel.value;sel.innerHTML=DB.treinoModalidades.map(m=>`<option value="${m.key}">${m.label}</option>`).join('');sel.value=cur;paint(sel.value);});
   }
   function setDia(k){
     const opts=[['','— livre —'],...DB.treinoPlanos.map(p=>[p.id,p.nome])];
@@ -265,7 +311,7 @@ const Treinos=(()=>{
       <button type="button" class="icon-mini-btn" data-rmex="${i}">${svg('trash',14)}</button></div>`;
     const body=`
       <div class="frow"><div class="fg"><label>Nome</label><input class="field" id="pl-nome" value="${p?p.nome.replace(/"/g,'&quot;'):''}" placeholder="Plano A"></div>
-      <div class="fg"><label>Modalidade</label><select class="field" id="pl-mod">${DB.treinoModalidades.map(m=>`<option value="${m.key}"${m.key===curMod?' selected':''}>${m.label}</option>`).join('')}</select></div></div>
+      <div class="fg"><label>Modalidade</label><div class="tre-modsel"><select class="field" id="pl-mod">${DB.treinoModalidades.map(m=>`<option value="${m.key}"${m.key===curMod?' selected':''}>${m.label}</option>`).join('')}</select><button type="button" class="tre-addmod" id="pl-newmod" title="Nova modalidade">${svg('plus',16)}</button></div></div></div>
       <div class="fg"><label>Cor</label><div class="swatches" id="pl-cores">${cores.map(c=>`<button type="button" class="sw${c===curCor?' on':''}" data-cor="${c}" style="background:${c}"></button>`).join('')}</div></div>
       <div id="pl-exbox"><label style="font-size:11.5px;font-weight:700;color:var(--text-3)">Exercícios (séries · reps · kg)</label><div id="pl-exs">${exs.map(exRow).join('')}</div>
         <button type="button" class="btn btn-soft sm" id="pl-addex" style="margin-top:8px">${svg('plus',14)} Exercício</button></div>`;
@@ -283,28 +329,31 @@ const Treinos=(()=>{
     const exsBox=back.querySelector('#pl-exs');
     const toggleEx=()=>{back.querySelector('#pl-exbox').style.display=tipoDe(back.querySelector('#pl-mod').value)==='forca'?'':'none';};
     toggleEx();back.querySelector('#pl-mod').onchange=toggleEx;
+    back.querySelector('#pl-newmod').onclick=()=>modalidadesForm(()=>{const sel=back.querySelector('#pl-mod'),cur=sel.value;sel.innerHTML=DB.treinoModalidades.map(m=>`<option value="${m.key}">${m.label}</option>`).join('');sel.value=cur;toggleEx();});
     const bindRm=()=>back.querySelectorAll('[data-rmex]').forEach(btn=>btn.onclick=()=>{btn.closest('[data-exrow]').remove();});
     bindRm();
     back.querySelector('#pl-addex').onclick=()=>{const i=Date.now();const div=document.createElement('div');div.innerHTML=exRow({},i);exsBox.appendChild(div.firstElementChild);bindRm();};
   }
   function delPlano(id){const p=plano(id);if(!p)return;Modal.confirm('Excluir plano?',`"${p.nome}" será removido (sessões antigas permanecem).`,()=>{DB.treinoPlanos=DB.treinoPlanos.filter(x=>x.id!==id);Object.keys(DB.treinoAgenda).forEach(k=>{if(DB.treinoAgenda[k]===id)DB.treinoAgenda[k]=null;});Toast.show('Plano excluído');render();});}
-  function medicaoForm(){
-    const last=ultimaMedicao();
+  function medicaoForm(id){
+    const m=id?DB.treinoMedicoes.find(x=>x.id===id):null;
     const body=`
-      <div class="frow"><div class="fg"><label>Peso (kg)</label><input class="field" id="me-peso" type="number" step="0.1" min="0" value="${last?last.peso:''}" placeholder="80"></div>
-      <div class="fg"><label>Gordura (%) opc.</label><input class="field" id="me-gord" type="number" step="0.1" min="0" value="${last?.gordura||''}" placeholder="18"></div></div>
+      <div class="frow"><div class="fg"><label>Peso (kg)</label><input class="field" id="me-peso" type="number" step="0.1" min="0" value="${m?m.peso:''}" placeholder="80"></div>
+      <div class="fg"><label>Gordura (%) opc.</label><input class="field" id="me-gord" type="number" step="0.1" min="0" value="${m&&m.gordura?m.gordura:''}" placeholder="18"></div></div>
       <label style="font-size:11.5px;font-weight:700;color:var(--text-3)">Circunferências (cm)</label>
-      <div class="tre-medgrid">${MEDIDAS.map(([k,l])=>`<div class="fg"><label>${l}</label><input class="field" id="me-${k}" type="number" step="0.1" min="0" value="${last?.medidas?.[k]||''}"></div>`).join('')}</div>
-      <div class="fg"><label>Data</label><input class="field" id="me-data" type="date" value="${offset(0)}"></div>`;
-    Modal.open('Registrar medição',body,(b)=>{
+      <div class="tre-medgrid">${MEDIDAS.map(([k,l])=>`<div class="fg"><label>${l}</label><input class="field" id="me-${k}" type="number" step="0.1" min="0" value="${m&&m.medidas?.[k]!=null?m.medidas[k]:''}"></div>`).join('')}</div>
+      <div class="fg"><label>Data</label><input class="field" id="me-data" type="date" value="${m?m.data:offset(0)}"></div>`;
+    Modal.open(id?'Editar medição':'Registrar medição',body,(b)=>{
       const peso=parseFloat(b.querySelector('#me-peso').value);if(!(peso>0)){Toast.show('Informe o peso','err');return false;}
       const medidas={};MEDIDAS.forEach(([k])=>{const v=parseFloat(b.querySelector(`#me-${k}`).value);if(v>0)medidas[k]=v;});
-      DB.treinoMedicoes.push({id:nid(),data:b.querySelector('#me-data').value||offset(0),peso,gordura:parseFloat(b.querySelector('#me-gord').value)||null,medidas});
-      Toast.show('Medição registrada 📏');render();
-    },'Salvar');
+      const data=b.querySelector('#me-data').value||offset(0), gordura=parseFloat(b.querySelector('#me-gord').value)||null;
+      if(m){Object.assign(m,{data,peso,gordura,medidas});Toast.show('Medição atualizada 📏');}
+      else{DB.treinoMedicoes.push({id:nid(),data,peso,gordura,medidas});Toast.show('Medição registrada 📏');}
+      render();
+    },id?'Salvar':'Registrar');
   }
 
-  function modalidadesForm(){
+  function modalidadesForm(onDone){
     const TIPOS=[['forca','Força','séries · reps · carga'],['distancia','Distância','km + tempo'],['duracao','Duração','min + intensidade']];
     const ICDEF={forca:'dumbbell',distancia:'run',duracao:'activity'};
     const cores=['#2D7FF9','#6C5CE7','#0FB9B1','#E1740B','#27B6A3','#00A8E8','#1F9D55','#7FB069','#DB4A4A','#E0568C','#C8860B','#9B59B6','#8E6E53','#8A867C'];
@@ -320,7 +369,7 @@ const Treinos=(()=>{
         <div class="fg"><label>Cor</label><div class="swatches" id="nm-cores">${cores.map((c,i)=>`<button type="button" class="sw${i===0?' on':''}" data-cor="${c}" style="background:${c}"></button>`).join('')}</div></div>
         <button type="button" class="btn btn-primary sm" id="nm-add">${svg('plus',14)} Adicionar modalidade</button>
       </div>`;
-    const back=Modal.open('Modalidades de treino',body,()=>{render();},'Concluído');
+    const back=Modal.open('Modalidades de treino',body,()=>{onDone?onDone():render();},'Concluído');
     const refresh=()=>{back.querySelector('#mod-list').innerHTML=chips();bindRm();};
     const bindRm=()=>back.querySelectorAll('[data-rmmod]').forEach(btn=>btn.onclick=()=>{
       const key=btn.dataset.rmmod;
