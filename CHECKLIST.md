@@ -89,7 +89,19 @@
   - [x] **Modalidades editáveis** (add/remove + 3 tipos de registro força/distância/duração + variedade demo de esportes: natação, dança, yoga, crossfit, ciclismo…) ✅ — 2026-06-02 (ajuste; data-driven via DB.treinoModalidades, gerenciador com chips por tipo, guarda ao remover modalidade com sessões/planos)
   - [x] **Medições: histórico + comparar datas + gráfico de evolução; "+ nova modalidade" visível nos seletores** ✅ — 2026-06-02 (ajuste; tendência rápida Δ anterior/30d, comparador A×B com delta colorido, Charts.line por medida, editar/excluir registro, fix do `.card-h` (botão alinhado), atalho "+" no avulso e no plano)
   - *Fora do escopo (no Backlog): fotos de progresso, GPS/mapa de corrida, smartwatch/Strava, desafios sociais*
-- [ ] **Etapa 20 — (2ª ideia pessoal)** 🔧 *Léo vai detalhar*
+## Conteúdo & Salvos (Pessoal)
+- [ ] **Etapa 20 — Salvos** (modo Pessoal — salvar qualquer link da internet, organizado por rede/categoria/criador) 🔧 *aguardando 1 detalhe do Léo antes do Prompt*
+  - [ ] **Salvar link**: cola a URL → abre direto depois (link clicável, `target=_blank`)
+  - [ ] **Rede automática**: detecta a rede pelo domínio (YouTube/Instagram/TikTok/Pinterest/X/Spotify/Site/Google) com ícone + cor oficial — offline
+  - [ ] **Campos**: título, nota, categoria (custom), criador/canal, tags
+  - [ ] **❤️ Favorito** (coração vermelho) + filtro "Favoritos" (fixados no topo)
+  - [ ] **🔖 Status "pra ver depois → já vi"** (read-it-later)
+  - [ ] **Navegação**: abas por rede · chips por categoria (com contador) · filtro por criador · busca (título/criador/nota/tag)
+  - [ ] **Cards visuais** (capa cor+ícone da rede + badge) → tela/detalhe com tudo + 🔗 link grande "Abrir" + copiar link
+  - [ ] **Toques especiais**: "colar e pronto" (rede auto) · "me surpreenda" (sorteia do "pra ver depois")
+  - [ ] **Mentor — regras de Salvos**: X salvos na semana · N em "pra ver depois" · categoria crescendo
+  - [ ] **Dados**: itens salvos (em memória → Supabase na Etapa 22)
+  - *Fora do escopo (no Backlog): puxar título/thumbnail automático, extensão "salvar do navegador", compartilhar coleções*
 
 ## Graduação para produto
 - [ ] **Etapa 21 — Auth + Perfil/Config** (cadastro/login, perfil, preferências)
@@ -103,6 +115,7 @@
 - [ ] **Séries — auto-scrobble + calendário de estreias** — logar automático do streaming (estilo Trakt/Simkl) e datas de novos episódios (via API tipo TMDB). ⛔ Precisa APIs externas/online → **pós-Supabase (Etapa 22)**.
 - [ ] **Comunidade de séries** — resenhas públicas / recomendações sociais (estilo Serializd/TV Time). ⛔ Multiusuário → **pós-Supabase (Etapa 22)**.
 - [ ] **Treinos — extras** — fotos de progresso, GPS/mapa de corrida, integração smartwatch/Strava, desafios sociais. ⛔ Precisa armazenamento real/API/multiusuário → **pós-Supabase (Etapa 22)**.
+- [ ] **Salvos — auto-metadata** — puxar título/thumbnail automático do link, extensão "salvar do navegador", compartilhar coleções. ⛔ Precisa servidor/API → **pós-Supabase (Etapa 22)**.
 
 ---
 
