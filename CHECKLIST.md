@@ -108,7 +108,7 @@
 ## Negócio — Expansão (modo Negócio · versátil p/ MEI, autônomos, prestadores)
 > Refinar **1 por 1** (pesquisa fina + proposta + ok) antes de cada Prompt. Tudo "produtos **ou** serviços".
 - [x] **Etapa 21 — Identidade do Negócio** ✅ — 2026-06-02 (executor-20260602-004): ficha demo `DB.usuario` (Léo Silva · Pró · 'L') + `DB.negocio` (Pizza e Cia BH · Salgados · whats · Pró · 🍕); `renderPerfil(mode)` deixa o chip da sidebar dinâmico (Pessoal=Léo Silva · Negócio=🍕 Pizza e Cia BH · Híbrido=os dois); avatar exibe inicial **e** emoji; smoke visual Playwright ✅ (3 modos + screenshots conferidos). Config definitiva em Perfil (Etapa 27)
-- [ ] **Etapa 22 — Produtos: capa elegante** — emoji (atual) · **fallback cor+inicial quando vazio** (nunca quadrado feio) · imagem real = Backlog. + **adicionar o cardápio do Léo aos produtos demo** (complementar, sem apagar os atuais — *pedir o cardápio na hora*)
+- [x] **Etapa 22 — Produtos: capa elegante** ✅ — 2026-06-02 (executor-20260602-005): capa `.prod-cover` com fundo tonal por categoria (mapa de cor; `${cor}22` ~13% alpha) + emoji OU **inicial fallback** (`.prod-cover-ini`) quando sem emoji; campo **descrição** no card (`.prod-desc`, line-clamp 2) e no form (`#pf-desc`); 11 produtos reais do Léo (Pizza e Cia BH — Salgados/Tortas/Massas) somados aos demos sem apagar. Smoke visual Playwright ✅ 18/18 (grid alinhado, fallback "P", form salva descrição, Vendas/Estoque/Relatórios sem regressão, mobile 360px sem overflow, tema claro). Imagem real = Backlog
 - [ ] **Etapa 23 — Documentos & Vitrine** — motor único: **visual Premium no app + envio formatado elegante pro WhatsApp**. 📐 Orçamento · 🧾 Recibo/Notinha · 📖 Catálogo/Cardápio (produtos **ou** serviços), com a marca da empresa no cabeçalho
 - [ ] **Etapa 24 — Encomendas/Pedidos** — agendar entrega, sinal, status (a fazer→produzindo→pronto→entregue); serve pedido **ou** ordem de serviço
 - [ ] **Etapa 25 — Financeiro do Negócio** — fluxo de caixa + despesas · **Controle MEI** (faturamento vs limite + DAS) · metas do negócio
@@ -139,4 +139,4 @@
 
 ---
 
-*Atualizado a cada etapa. Última: Etapa 21 (Identidade do Negócio) ✅ — 2026-06-02 (fichas demo usuario/negocio "Pizza e Cia BH 🍕", chip da sidebar dinâmico por modo via renderPerfil, avatar com inicial/emoji; smoke visual Playwright nos 3 modos). Próxima: Etapa 22 (Produtos: capa elegante).*
+*Atualizado a cada etapa. Última: Etapa 22 (Produtos: capa elegante) ✅ — 2026-06-02 (capa tonal por categoria + emoji/inicial fallback, campo descrição no card e form, 11 produtos reais do Léo somados aos demos; smoke visual Playwright 18/18). Próxima: Etapa 23 (Documentos & Vitrine).*

@@ -447,6 +447,20 @@ const DB={
     {id:nid(),nome:'Refrigerante Lata',emoji:'🥤',categoria:'Bebidas',preco:5.0,custo:2.0,estoque:36,estoqueMin:12,ativo:true,fixado:false},
     // Personalizados — índice 19
     {id:nid(),nome:'Arte Digital (convite/logo)',emoji:'🎨',categoria:'Personalizados',preco:80.0,custo:0,estoque:999,estoqueMin:0,ativo:true,fixado:false},
+    // === Pizza e Cia BH (reais) ===
+    // Bandejas c/ 10 unidades — R$40 (Salgados)
+    {id:nid(),nome:'Mini pizzas',emoji:'🍕',categoria:'Salgados',descricao:'Bandeja com 10 unidades',preco:40,custo:15,estoque:20,estoqueMin:5,ativo:true,fixado:true},
+    {id:nid(),nome:'Trouxinhas de frango com milho',emoji:'🥟',categoria:'Salgados',descricao:'Bandeja com 10 unidades',preco:40,custo:15,estoque:18,estoqueMin:5,ativo:true,fixado:false},
+    {id:nid(),nome:'Enroladinho gourmet de salsicha',emoji:'🌭',categoria:'Salgados',descricao:'Bandeja com 10 unidades',preco:40,custo:15,estoque:16,estoqueMin:5,ativo:true,fixado:false},
+    {id:nid(),nome:'Hamburguinho',emoji:'🍔',categoria:'Salgados',descricao:'Bandeja com 10 unidades',preco:40,custo:15,estoque:15,estoqueMin:5,ativo:true,fixado:false},
+    {id:nid(),nome:'Esfihas de Carne',emoji:'🫓',categoria:'Salgados',descricao:'Bandeja com 10 unidades',preco:40,custo:15,estoque:14,estoqueMin:5,ativo:true,fixado:false},
+    {id:nid(),nome:'Calzone de Frango Cremoso c/ milho e alho poró',emoji:'🥐',categoria:'Salgados',descricao:'Bandeja com 10 unidades',preco:40,custo:16,estoque:12,estoqueMin:5,ativo:true,fixado:false},
+    // Individuais
+    {id:nid(),nome:'Mini Coquetel',emoji:'🍢',categoria:'Salgados',descricao:'Bandeja com 20 unidades · salgados sortidos',preco:45,custo:17,estoque:10,estoqueMin:3,ativo:true,fixado:true},
+    {id:nid(),nome:'Empadinhas de Frango',emoji:'🥧',categoria:'Salgados',descricao:'24 unidades',preco:45,custo:16,estoque:10,estoqueMin:3,ativo:true,fixado:false},
+    {id:nid(),nome:'Tortinhas de Frango c/ milho e catupiry',emoji:'🥧',categoria:'Tortas',descricao:'1,150 kg · 6 unidades',preco:50,custo:20,estoque:8,estoqueMin:2,ativo:true,fixado:false},
+    {id:nid(),nome:'Empadão de Frango c/ milho e requeijão',emoji:'🥧',categoria:'Tortas',descricao:'1,4 kg',preco:60,custo:24,estoque:6,estoqueMin:2,ativo:true,fixado:true},
+    {id:nid(),nome:'Lasanha à Bolonhesa',emoji:'🍝',categoria:'Massas',descricao:'1 kg',preco:50,custo:20,estoque:6,estoqueMin:2,ativo:true,fixado:false},
   ],
   movimentacoes:[],
   // Fichas demo (edição definitiva = Perfil/Etapa 27; usadas no cabeçalho dos documentos na Etapa 23)

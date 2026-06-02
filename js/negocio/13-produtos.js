@@ -6,6 +6,15 @@ const Produtos=(()=>{
   function margem(p){if(!p.custo||!p.preco)return 0;return Math.round(((p.preco-p.custo)/p.preco)*100);}
   function estoqueStatus(p){if(p.estoque<=0)return 'sem';if(p.estoque<p.estoqueMin)return 'baixo';return 'ok';}
 
+  // Capa elegante: fundo tonal pela categoria + emoji (ou inicial do nome quando vazio). Imagem real = Backlog.
+  const CAT_COR={Doces:'#D9608C',Salgados:'#E08A3C',Tortas:'#C2783A',Massas:'#C9A227',Kits:'#7C5CD0',Bebidas:'#3C9BD0',Embalagens:'#6B8E6B',Personalizados:'#8E6E53'};
+  function catCor(cat){return CAT_COR[cat]||'#8A867C';}
+  function capa(p){
+    const cor=catCor(p.categoria);
+    const dentro=p.emoji?p.emoji:`<span class="prod-cover-ini">${(p.nome||'?').trim().charAt(0).toUpperCase()}</span>`;
+    return `<div class="prod-cover" style="background:${cor}22;color:${cor}">${dentro}</div>`;
+  }
+
   function segBar(){
     return `<div class="toolbar" style="margin-bottom:var(--s-3)">
       <div class="seg">
@@ -62,10 +71,11 @@ const Produtos=(()=>{
           const mg=margem(p);const st=estoqueStatus(p);
           return `<div class="prod-card">
             <div class="prod-head">
-              <div class="prod-emoji">${p.emoji}</div>
+              ${capa(p)}
               <div class="prod-info">
                 <div class="prod-name">${p.nome}</div>
                 <div class="prod-cat">${p.categoria}${!p.ativo?' · <span style="color:var(--text-3)">Inativo</span>':''}</div>
+                ${p.descricao?`<div class="prod-desc">${p.descricao}</div>`:''}
                 ${st!=='ok'?`<div class="prod-badge-low">${svg('alert',10)} ${st==='sem'?'Sem estoque':'Estoque baixo'}</div>`:''}
               </div>
               <div style="display:flex;flex-direction:column;gap:4px">
@@ -221,6 +231,7 @@ const Produtos=(()=>{
         <div class="fg" style="flex:0 0 90px"><label>Emoji</label><input class="field" id="pf-emoji" value="${p?p.emoji:'📦'}" placeholder="📦" maxlength="2"></div>
         <div class="fg"><label>Nome do produto</label><input class="field" id="pf-nome" value="${p?p.nome.replace(/"/g,'&quot;'):''}" placeholder="Ex: Brigadeiro Tradicional"></div>
       </div>
+      <div class="fg"><label>Descrição (opcional)</label><input class="field" id="pf-desc" value="${p&&p.descricao?p.descricao.replace(/"/g,'&quot;'):''}" placeholder="Ex: Bandeja com 10 unidades"></div>
       <div class="frow">
         <div class="fg">
           <label>Categoria</label>
@@ -240,7 +251,7 @@ const Produtos=(()=>{
     `,(b)=>{
       const nome=b.querySelector('#pf-nome').value.trim();
       if(!nome){Toast.show('Informe o nome do produto','err');return false;}
-      const dd={nome,emoji:b.querySelector('#pf-emoji').value.trim()||'📦',categoria:b.querySelector('#pf-cat').value.trim()||'Geral',ativo:b.querySelector('#pf-ativo').value==='1',custo:+b.querySelector('#pf-custo').value||0,preco:+b.querySelector('#pf-preco').value||0,estoque:+b.querySelector('#pf-estoque').value||0,estoqueMin:+b.querySelector('#pf-estoquemin').value||0};
+      const dd={nome,emoji:b.querySelector('#pf-emoji').value.trim(),descricao:b.querySelector('#pf-desc').value.trim(),categoria:b.querySelector('#pf-cat').value.trim()||'Geral',ativo:b.querySelector('#pf-ativo').value==='1',custo:+b.querySelector('#pf-custo').value||0,preco:+b.querySelector('#pf-preco').value||0,estoque:+b.querySelector('#pf-estoque').value||0,estoqueMin:+b.querySelector('#pf-estoquemin').value||0};
       if(p){Object.assign(p,dd);Toast.show('Produto atualizado');}
       else{DB.produtos.push(Object.assign({id:nid()},dd));Toast.show('Produto adicionado');}
       render();
