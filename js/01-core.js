@@ -62,6 +62,7 @@ const ICONS={
   file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/>',
   eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
   copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
+  package:'<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/>',
 };
 
 /* ─── PÁGINAS PLACEHOLDER (preenchidas a cada etapa do checklist) ─── */
@@ -182,7 +183,7 @@ document.querySelectorAll('.mood-pick').forEach(p=>p.querySelectorAll('.mood').f
 })));
 
 /* ─── ROUTER (navegação SPA) ─── */
-const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',salvos:'Salvos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',documentos:'Documentos',mentor:'Mentor',perfil:'Perfil'};
+const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',salvos:'Salvos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',documentos:'Documentos',encomendas:'Encomendas',mentor:'Mentor',perfil:'Perfil'};
 function navigate(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===page));
   document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
@@ -218,6 +219,7 @@ function navigate(page){
   if(page==='clientes') Clientes.render();
   if(page==='relatorios') RelatoriosNeg.render();
   if(page==='documentos') Documentos.render();
+  if(page==='encomendas') Encomendas.render();
   if(page==='mentor') Mentor.render();
   closeDrawer();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -485,6 +487,7 @@ const DB={
   catalogos:[],   // modelos de cardápio/catálogo (Etapa 23A) — preenchido no SEED abaixo
   orcamentos:[],  // modelos/orçamentos salvos (Etapa 23B) — preenchido no SEED abaixo
   recibos:[],     // modelos/recibos salvos (Etapa 23C) — preenchido no SEED abaixo
+  encomendas:[],  // encomendas/pedidos (Etapa 24) — preenchido no SEED abaixo
 };
 
 // Seed movimentações com IDs corretos
@@ -524,6 +527,13 @@ const DB={
   ];
   DB.recibos=[
     {id:nid(), nome:'Recibo Festa', cliente:'Maria Souza', valor:320, referente:'Salgados para festa', formaPgto:'Pix', data:offset(0)},
+  ];
+  const P=nome=>DB.produtos.find(p=>p.nome===nome)||{};
+  const it=(nome,qtd)=>{const p=P(nome);return {produtoId:p.id||null,desc:nome,qtd,valor:p.preco||0};};
+  DB.encomendas=[
+    {id:nid(), cliente:'Maria Souza', telefone:'31988881111', itens:[it('Mini pizzas',5),it('Trouxinhas de frango com milho',3)], data:offset(1), hora:'14:00', tipoEntrega:'entrega', endereco:'Rua das Flores, 120 — Centro', sinal:100, status:'produzindo', obs:'Festa de aniversário'},
+    {id:nid(), cliente:'João Pedro', telefone:'31977772222', itens:[it('Empadão de Frango c/ milho e requeijão',2)], data:offset(0), hora:'18:30', tipoEntrega:'retirada', endereco:'', sinal:0, status:'afazer', obs:''},
+    {id:nid(), cliente:'Ana Lima', telefone:'31966663333', itens:[it('Lasanha à Bolonhesa',1),it('Mini Coquetel',1)], data:offset(-1), hora:'12:00', tipoEntrega:'retirada', endereco:'', sinal:50, status:'pronto', obs:''},
   ];
 })();
 

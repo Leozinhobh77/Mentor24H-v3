@@ -48,6 +48,31 @@ const Mentor=(()=>{
   ];
   // Núcleos factuais por id × tom (slots reais via fmt/venceTxt). 2 variações por tom.
   const NUC={
+    // ENCOMENDAS (Etapa 24)
+    'enc-hoje':{
+      serio:[d=>`a encomenda de ${d.cliente} é ${d.quando}`,
+             d=>`${d.cliente} tem encomenda marcada pra ${d.quando}`],
+      descontraido:[d=>`bora! a encomenda de ${d.cliente} é ${d.quando} 📦`,
+             d=>`${d.cliente} te espera ${d.quando} — encomenda no jeito!`],
+      motivador:[d=>`${d.cliente} conta com você ${d.quando}: vai ser sucesso! 💪`,
+             d=>`encomenda da ${d.cliente} é ${d.quando} — você dá conta! 🙌`]
+    },
+    'enc-produzir':{
+      serio:[d=>`${d.n===1?'1 encomenda':d.n+' encomendas'} pra produzir até amanhã`,
+             d=>`há ${d.n===1?'1 encomenda':d.n+' encomendas'} na fila de produção`],
+      descontraido:[d=>`tem ${d.n===1?'1 encomenda':d.n+' encomendas'} batendo na porta pra produzir`,
+             d=>`${d.n===1?'1 encomenda':d.n+' encomendas'} esperando a mágica acontecer 🧑‍🍳`],
+      motivador:[d=>`${d.n===1?'1 encomenda':d.n+' encomendas'} pra adiantar — mãos à massa! 🧑‍🍳`,
+             d=>`bora produzir ${d.n===1?'a encomenda':'as '+d.n+' encomendas'} e sair na frente!`]
+    },
+    'enc-parada':{
+      serio:[d=>`a encomenda de ${d.cliente} está pronta há ${d.dias} dias e não foi retirada`,
+             d=>`${d.cliente} ainda não retirou a encomenda (pronta há ${d.dias} dias)`],
+      descontraido:[d=>`a encomenda de ${d.cliente} tá pronta faz ${d.dias}d e ninguém buscou 👀`,
+             d=>`${d.cliente} esqueceu a encomenda? Pronta há ${d.dias}d 👀`],
+      motivador:[d=>`que tal cutucar ${d.cliente}? Encomenda pronta há ${d.dias}d esperando`,
+             d=>`um zap pra ${d.cliente} resolve: encomenda pronta há ${d.dias}d`]
+    },
     'fin-vencida':{
       serio:[d=>d.n===1?`a conta ${d.nome} venceu e segue em aberto (${fmt(d.total)})`:`${d.n} contas já venceram, somando ${fmt(d.total)}`,
              d=>d.n===1?`${d.nome} passou do vencimento e continua pendente (${fmt(d.total)})`:`há ${d.n} contas vencidas em aberto (${fmt(d.total)})`],
@@ -457,6 +482,21 @@ const Mentor=(()=>{
     ()=>{if(!DB.salvos||!DB.salvos.length)return null;const m={};DB.salvos.forEach(s=>{const c=s.categoria||'Outros';m[c]=(m[c]||0)+1;});
       const top=Object.entries(m).sort((a,b)=>b[1]-a[1])[0];if(!top||top[1]<3)return null;
       return mk('sav-cat','Salvos','pessoal','oportunidade',{cat:top[0],n:top[1]},'Categoria em alta',{label:'Ver salvos',navTo:'salvos'});},
+    // ENCOMENDAS (Etapa 24)
+    ()=>{if(!DB.encomendas)return null;
+      const cand=DB.encomendas.filter(e=>e.status!=='entregue'&&[0,1].includes(diasAte(e.data)));
+      if(!cand.length)return null;
+      cand.sort((a,b)=>diasAte(a.data)-diasAte(b.data));const e=cand[0];
+      return mk('enc-hoje','Encomendas','negocio','atencao',{cliente:e.cliente,quando:diasAte(e.data)===0?'hoje':'amanhã'},
+        'Encomenda chegando',{label:'Ver encomendas',navTo:'encomendas'});},
+    ()=>{if(!DB.encomendas)return null;
+      const n=DB.encomendas.filter(e=>(e.status==='afazer'||e.status==='produzindo')&&diasAte(e.data)<=1).length;if(!n)return null;
+      return mk('enc-produzir','Encomendas','negocio','info',{n},'Encomendas pra produzir',{label:'Ver encomendas',navTo:'encomendas'});},
+    ()=>{if(!DB.encomendas)return null;
+      const p=DB.encomendas.filter(e=>e.status==='pronto'&&diasAte(e.data)<=-2);if(!p.length)return null;
+      p.sort((a,b)=>diasAte(a.data)-diasAte(b.data));const e=p[0];
+      return mk('enc-parada','Encomendas','negocio','atencao',{cliente:e.cliente,dias:-diasAte(e.data)},
+        'Encomenda pronta parada',{label:'Ver encomendas',navTo:'encomendas'});},
   ];
 
   function rodarRegras(){
@@ -579,7 +619,7 @@ function pintaBriefingDash(){
   const wa=tel=>window.open('https://wa.me/55'+(tel||'').replace(/\D/g,''),'_blank');
 
   // ── índice estático ──
-  const NAVICON={dashboard:'home',financas:'wallet',transacoes:'repeat',metas:'target',agenda:'calendar',saude:'heart',tarefas:'check',habitos:'flame',contatos:'users',vendas:'cart',produtos:'box',estoque:'archive',clientes:'users',relatorios:'chart',documentos:'file',mentor:'spark',perfil:'user'};
+  const NAVICON={dashboard:'home',financas:'wallet',transacoes:'repeat',metas:'target',agenda:'calendar',saude:'heart',tarefas:'check',habitos:'flame',contatos:'users',vendas:'cart',produtos:'box',estoque:'archive',clientes:'users',relatorios:'chart',documentos:'file',encomendas:'package',mentor:'spark',perfil:'user'};
   const NAVLIST=[['dashboard','Dashboard'],...Object.entries(TITLES)];
   const ACOES=[
     {key:'new:conta',titulo:'Nova conta',tela:'financas'},

@@ -1190,3 +1190,29 @@ select.field{cursor:pointer}
 .reb-sign{margin-top:42px;text-align:center}
 .reb-sign-line{width:260px;max-width:80%;margin:0 auto;border-top:1px solid var(--text-1)}
 .reb-sign-name{margin-top:6px;font-size:13px;font-weight:700;color:var(--text-1)}
+
+/* ETAPA 24: ENCOMENDAS */
+.enc-seg .enc-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;margin-left:5px;border-radius:20px;background:var(--surface-3);color:var(--text-2);font-size:10.5px;font-weight:700;vertical-align:middle}
+.enc-seg button.on .enc-count{background:var(--brand);color:#fff}
+.enc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--s-4)}
+.enc-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);transition:box-shadow .2s var(--ease)}
+.enc-card:hover{box-shadow:var(--shadow-sm)}
+.enc-top{display:flex;align-items:center;justify-content:space-between;gap:var(--s-2)}
+.enc-cliente{font-size:15px;font-weight:700;color:var(--text-1);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.enc-badge{flex-shrink:0;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.02em}
+.enc-badge.afazer{background:var(--surface-3);color:var(--text-2)}
+.enc-badge.produzindo{background:var(--warning-soft);color:var(--warning)}
+.enc-badge.pronto{background:var(--info-soft);color:var(--info)}
+.enc-badge.entregue{background:var(--income-soft);color:var(--income)}
+.enc-meta{display:flex;flex-wrap:wrap;gap:4px var(--s-3);font-size:12.5px;color:var(--text-2)}
+.enc-meta span{display:inline-flex;align-items:center;gap:5px}
+.enc-meta svg{color:var(--text-3)}
+.enc-itens{font-size:12.5px;color:var(--text-3);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.enc-vals{display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);padding:var(--s-3);background:var(--surface-2);border-radius:var(--r-md);font-size:12px;color:var(--text-3)}
+.enc-vals b{display:block;font-size:13.5px;color:var(--text-1);margin-top:1px}
+.enc-vals .enc-rest b{color:var(--brand-text)}
+.enc-acts{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:auto}
+.enc-acts .btn{flex:1 1 auto}
+.enc-acts-ico{display:inline-flex;gap:6px;flex-shrink:0;margin-left:auto}
+.enc-done{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--income);flex:1 1 auto}
+@media(max-width:560px){.enc-grid{grid-template-columns:1fr}}
