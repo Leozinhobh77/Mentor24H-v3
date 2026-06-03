@@ -23,7 +23,7 @@ const Documentos=(()=>{
       <div class="seg">
         <button class="${aba==='catalogo'?'on':''}" data-aba="catalogo">${svg('book',14)} Catálogo</button>
         <button class="${aba==='orcamento'?'on':''}" data-aba="orcamento">${svg('file',14)} Orçamento</button>
-        <button class="seg-soon" disabled title="Em breve (23C)">${svg('card',14)} Recibo</button>
+        <button class="${aba==='recibo'?'on':''}" data-aba="recibo">${svg('card',14)} Recibo</button>
       </div>
     </div>`;
   }
@@ -78,13 +78,13 @@ const Documentos=(()=>{
 
   function render(){
     const root=document.getElementById('documentos-root');if(!root)return;
-    root.innerHTML=`${segBar()}${aba==='orcamento'?orcamentoHTML():catalogoHTML()}`;
+    root.innerHTML=`${segBar()}${aba==='recibo'?reciboHTML():aba==='orcamento'?orcamentoHTML():catalogoHTML()}`;
     bind(root);
   }
 
   function bind(root){
     root.querySelectorAll('[data-aba]').forEach(b=>b.onclick=()=>{aba=b.dataset.aba;render();});
-    if(aba==='orcamento')bindOrc(root);else bindCat(root);
+    if(aba==='orcamento')bindOrc(root);else if(aba==='recibo')bindReb(root);else bindCat(root);
   }
 
   function bindCat(root){
@@ -104,6 +104,30 @@ const Documentos=(()=>{
     root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>formOrc(+b.dataset.edit));
     root.querySelectorAll('[data-dup]').forEach(b=>b.onclick=()=>{const o=oById(b.dataset.dup);if(o){DB.orcamentos.push({id:nid(),nome:o.nome+' (cópia)',cliente:o.cliente,itens:o.itens.map(it=>({...it})),validadeDias:o.validadeDias,condicoes:o.condicoes,prazo:o.prazo});Toast.show('Orçamento duplicado');render();}});
     root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const o=oById(b.dataset.del);if(o)Modal.confirm('Excluir orçamento?',`"${esc(o.nome)}" será removido permanentemente.`,()=>{DB.orcamentos=DB.orcamentos.filter(x=>x.id!==o.id);Toast.show('Orçamento excluído');render();});});
+  }
+
+  function reciboHTML(){
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)">
+        <div>
+          <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin:0">Recibos</h2>
+          <p style="font-size:13px;color:var(--text-3);margin:4px 0 0">Comprovantes reutilizáveis · cliente, valor por extenso, referente, forma de pagamento</p>
+        </div>
+        <button class="btn btn-primary btn-sm" data-novo-reb>${svg('plus',16)} Novo recibo</button>
+      </div>
+      ${DB.recibos.length===0
+        ?`<div class="empty"><div style="font-size:32px;margin-bottom:8px">🧾</div><p style="color:var(--text-3)">Nenhum recibo ainda. Crie o primeiro!</p></div>`
+        :`<div class="doc-grid">${DB.recibos.map(cardHTMLReb).join('')}</div>`}`;
+  }
+
+  function bindReb(root){
+    const rById=id=>DB.recibos.find(x=>x.id===+id);
+    const nv=root.querySelector('[data-novo-reb]');if(nv)nv.onclick=()=>formReb();
+    root.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>{const r=rById(b.dataset.wa);if(r)enviarWAtxt(waTextReb(r));});
+    root.querySelectorAll('[data-ver]').forEach(b=>b.onclick=()=>{const r=rById(b.dataset.ver);if(r)verModal(r.nome,previewWAReb(r),previewPDFReb(r),waTextReb(r));});
+    root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>formReb(+b.dataset.edit));
+    root.querySelectorAll('[data-dup]').forEach(b=>b.onclick=()=>{const r=rById(b.dataset.dup);if(r){DB.recibos.push({id:nid(),nome:r.nome+' (cópia)',cliente:r.cliente,valor:r.valor,referente:r.referente,formaPgto:r.formaPgto,data:r.data});Toast.show('Recibo duplicado');render();}});
+    root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const r=rById(b.dataset.del);if(r)Modal.confirm('Excluir recibo?',`"${esc(r.nome)}" será removido permanentemente.`,()=>{DB.recibos=DB.recibos.filter(x=>x.id!==r.id);Toast.show('Recibo excluído');render();});});
   }
 
   function form(id){
@@ -185,6 +209,12 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 .orc-total-box{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:11px 14px;border-radius:11px;background:rgba(22,138,124,.10);color:#0f6f63;font-weight:800;font-size:17px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .orc-meta{margin-top:10px;display:flex;flex-direction:column;gap:3px}
 .orc-meta-line{font-size:12px;color:#8a867c;font-style:italic}
+.reb-body{font-size:15px;line-height:1.7;color:#1b1a16}
+.reb-ext{font-style:italic;color:#56524a}
+.reb-meta{margin-top:14px;display:flex;flex-direction:column;gap:3px;font-size:13px;color:#56524a}
+.reb-sign{margin-top:48px;text-align:center}
+.reb-sign-line{width:260px;max-width:80%;margin:0 auto;border-top:1px solid #1b1a16}
+.reb-sign-name{margin-top:6px;font-size:13px;font-weight:700;color:#1b1a16}
 @media print{body{padding:0}}`;
     w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(titulo)}</title><style>${css}</style></head><body>${pdfHTML}<script>window.onload=function(){window.print();};<\/script></body></html>`);
     w.document.close();
@@ -366,6 +396,129 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
       <div class="doc-pv-sec">${linhas}</div>
       <div class="orc-total-box"><span>TOTAL</span><span>${fmt(totalOrc(o))}</span></div>
       ${meta?`<div class="orc-meta">${meta}</div>`:''}
+      <div class="doc-pv-foot">${svg('chat',13)} ${esc(foneFmt(n.whatsapp))}</div>
+    </div>`;
+  }
+
+  /* ═══ RECIBO (23C) — comprovante, mesmo motor ═══ */
+  const dataFmt=iso=>{const p=(iso||'').slice(0,10).split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:'';};
+
+  // número → por extenso em pt-BR (reais + centavos)
+  function extenso(v){
+    v=Math.round((+v||0)*100)/100;
+    const reais=Math.floor(v), cent=Math.round((v-reais)*100);
+    const u=['zero','um','dois','três','quatro','cinco','seis','sete','oito','nove','dez','onze','doze','treze','quatorze','quinze','dezesseis','dezessete','dezoito','dezenove'];
+    const dez=['','','vinte','trinta','quarenta','cinquenta','sessenta','setenta','oitenta','noventa'];
+    const cem=['','cento','duzentos','trezentos','quatrocentos','quinhentos','seiscentos','setecentos','oitocentos','novecentos'];
+    function ate999(n){
+      if(n===0)return '';
+      if(n===100)return 'cem';
+      const c=Math.floor(n/100), resto=n%100; let s='';
+      if(c)s+=cem[c];
+      if(resto){ if(s)s+=' e '; s+= resto<20?u[resto]:dez[Math.floor(resto/10)]+(resto%10?' e '+u[resto%10]:''); }
+      return s;
+    }
+    function inteiro(n){
+      if(n===0)return 'zero';
+      const mi=Math.floor(n/1000000), mil=Math.floor((n%1000000)/1000), r=n%1000, parts=[];
+      if(mi)parts.push((mi===1?'um':ate999(mi))+(mi===1?' milhão':' milhões'));
+      if(mil)parts.push(mil===1?'mil':ate999(mil)+' mil');
+      if(r)parts.push(ate999(r));
+      return parts.join(', ');
+    }
+    const out=[];
+    if(reais>0)out.push(`${inteiro(reais)} ${reais===1?'real':'reais'}`);
+    if(cent>0)out.push(`${inteiro(cent)} ${cent===1?'centavo':'centavos'}`);
+    return out.length?out.join(' e '):'zero reais';
+  }
+
+  function cardHTMLReb(r){
+    return `<div class="doc-card">
+      <div class="doc-card-h">
+        <div class="doc-card-ico">${svg('card',20)}</div>
+        <div class="doc-card-tx">
+          <div class="doc-card-nome">${esc(r.nome)}</div>
+          <div class="doc-card-sub">${r.cliente?esc(r.cliente)+' · ':''}<b style="color:var(--text-1)">${fmt(r.valor)}</b></div>
+        </div>
+      </div>
+      <div class="doc-card-acts">
+        <button class="btn btn-primary btn-sm" data-wa="${r.id}">${svg('chat',14)} Enviar</button>
+        <button class="btn btn-ghost btn-sm" data-ver="${r.id}">${svg('eye',14)} Ver</button>
+        <button class="btn-icon" title="Editar" data-edit="${r.id}">${svg('pencil',15)}</button>
+        <button class="btn-icon" title="Duplicar" data-dup="${r.id}">${svg('copy',15)}</button>
+        <button class="btn-icon" title="Excluir" data-del="${r.id}" style="color:var(--expense)">${svg('trash',15)}</button>
+      </div>
+    </div>`;
+  }
+
+  function formReb(id){
+    const r=id?DB.recibos.find(x=>x.id===+id):null;
+    const body=`
+      <div class="frow">
+        <div class="fg"><label>Nome do recibo</label><input class="field" id="reb-nome" value="${r?esc(r.nome):''}" placeholder="Ex: Recibo Festa"></div>
+        <div class="fg"><label>Cliente (pagador)</label><input class="field" id="reb-cli" value="${r?esc(r.cliente||''):''}" placeholder="Nome do cliente"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Valor (R$)</label><input class="field" id="reb-valor" type="number" min="0" step="0.01" value="${r?r.valor:''}" placeholder="0,00"></div>
+        <div class="fg"><label>Forma de pagamento</label><input class="field" id="reb-forma" value="${r?esc(r.formaPgto||''):''}" placeholder="Ex: Pix, Dinheiro, Cartão"></div>
+      </div>
+      <div class="fg"><label>Referente a</label><input class="field" id="reb-ref" value="${r?esc(r.referente||''):''}" placeholder="Ex: Salgados para festa"></div>
+      <div class="fg" style="flex:0 0 50%"><label>Data</label><input class="field" id="reb-data" type="date" value="${r?(r.data||'').slice(0,10):(new Date()).toISOString().slice(0,10)}"></div>
+      <div class="reb-extenso-prev" id="reb-ext"></div>`;
+    const back=Modal.open(id?'Editar recibo':'Novo recibo',body,(b)=>{
+      const nome=b.querySelector('#reb-nome').value.trim();
+      if(!nome){Toast.show('Dê um nome ao recibo','err');return false;}
+      const valor=+b.querySelector('#reb-valor').value||0;
+      if(valor<=0){Toast.show('Informe o valor do recibo','err');return false;}
+      const dd={nome,cliente:b.querySelector('#reb-cli').value.trim(),valor,
+        referente:b.querySelector('#reb-ref').value.trim(),
+        formaPgto:b.querySelector('#reb-forma').value.trim(),
+        data:b.querySelector('#reb-data').value||offset(0)};
+      if(r){Object.assign(r,dd);Toast.show('Recibo atualizado');}
+      else{DB.recibos.push(Object.assign({id:nid()},dd));Toast.show('Recibo criado');}
+      render();
+    },id?'Salvar':'Criar');
+    const valEl=back.querySelector('#reb-valor'),extEl=back.querySelector('#reb-ext');
+    const upd=()=>{const v=+valEl.value||0;extEl.textContent=v>0?`(${extenso(v)})`:'';};
+    valEl.oninput=upd;upd();
+  }
+
+  // Texto WhatsApp do recibo (padrão Léo)
+  function waTextReb(r){
+    const n=DB.negocio, L=n.logo?n.logo:'';
+    let t='╔══════════════════════╗\n';
+    t+=cen(`*${L?L+' ':''}${(n.nome||'').toUpperCase()}${L?' '+L:''}*`)+'\n';
+    t+=cen('*RECIBO*')+'\n';
+    t+='╚══════════════════════╝\n';
+    t+=`Recebi de *${r.cliente||'—'}*\n`;
+    t+=`a importância de *${fmt(r.valor)}*\n`;
+    t+=`_(${extenso(r.valor)})_\n`;
+    if(r.referente)t+=`Referente a: ${r.referente}\n`;
+    t+=`${r.formaPgto?`Pgto: ${r.formaPgto} · `:''}${n.cidade?n.cidade+', ':''}${dataFmt(r.data)}\n`;
+    t+=LINHA+'\n';
+    t+=`📲 ${foneFmt(n.whatsapp)}\n`;
+    t+='_Obrigado pela preferência!!! 😊🙏🏼_';
+    return t;
+  }
+  const previewWAReb=r=>bolha(waTextReb(r));
+
+  // Preview PDF elegante do recibo (reusa .doc-pv-* + corpo .reb-* + assinatura)
+  function previewPDFReb(r){
+    const n=DB.negocio;
+    return `<div class="doc-preview doc-pdf">
+      <div class="doc-pv-head">
+        <div class="doc-pv-logo">${esc(n.logo||inicial(n.nome))}</div>
+        <div><div class="doc-pv-marca">${esc(n.nome)}</div><div class="doc-pv-seg">Recibo</div></div>
+      </div>
+      <div class="reb-body">
+        Recebi de <b>${esc(r.cliente||'—')}</b> a importância de <b>${fmt(r.valor)}</b>
+        <span class="reb-ext">(${esc(extenso(r.valor))})</span>${r.referente?`, referente a <b>${esc(r.referente)}</b>`:''}.
+      </div>
+      <div class="reb-meta">
+        ${r.formaPgto?`<div>Forma de pagamento: <b>${esc(r.formaPgto)}</b></div>`:''}
+        <div>${esc(n.cidade?n.cidade+', ':'')}${esc(dataFmt(r.data))}</div>
+      </div>
+      <div class="reb-sign"><div class="reb-sign-line"></div><div class="reb-sign-name">${esc(n.nome)}</div></div>
       <div class="doc-pv-foot">${svg('chat',13)} ${esc(foneFmt(n.whatsapp))}</div>
     </div>`;
   }

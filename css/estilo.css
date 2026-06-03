@@ -1182,3 +1182,11 @@ select.field{cursor:pointer}
   .orc-row .field{padding:6px 6px;font-size:12px}
   .orc-sub{font-size:11.5px}
 }
+/* ETAPA 23C: RECIBO — corpo + extenso + assinatura */
+.reb-extenso-prev{font-size:12.5px;color:var(--text-3);font-style:italic;min-height:18px;margin-top:-2px}
+.reb-body{font-size:14.5px;line-height:1.7;color:var(--text-1)}
+.reb-ext{font-style:italic;color:var(--text-3)}
+.reb-meta{margin-top:14px;display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--text-2)}
+.reb-sign{margin-top:42px;text-align:center}
+.reb-sign-line{width:260px;max-width:80%;margin:0 auto;border-top:1px solid var(--text-1)}
+.reb-sign-name{margin-top:6px;font-size:13px;font-weight:700;color:var(--text-1)}
