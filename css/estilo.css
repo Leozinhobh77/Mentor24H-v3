@@ -1163,4 +1163,22 @@ select.field{cursor:pointer}
 .doc-pv-desc{font-size:11px;font-weight:400;color:var(--text-3);margin-top:1px}
 .doc-pv-preco{font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--text-1);flex-shrink:0}
 .doc-pv-foot{display:flex;align-items:center;gap:6px;padding-top:var(--s-3);border-top:1px solid var(--border);font-size:12px;color:var(--text-2);font-weight:600}
+/* ETAPA 23B: ORÇAMENTO — form (linhas de item) + total + preview */
+.orc-head,.orc-row{display:grid;grid-template-columns:1fr 52px 78px auto 30px;gap:6px;align-items:center}
+.orc-head{font-size:10.5px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.03em;padding:0 2px 4px}
+.orc-head span:nth-child(2),.orc-head span:nth-child(3),.orc-row .orc-qtd,.orc-row .orc-val{text-align:center}
+.orc-row{margin-bottom:6px}
+.orc-row .field{min-width:0;padding:7px 8px}
+.orc-sub{font-size:12.5px;font-weight:700;color:var(--text-1);text-align:right;white-space:nowrap}
+.orc-add-row{display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);margin-top:8px;flex-wrap:wrap}
+.orc-total-row{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:var(--r-md);background:var(--surface-2);font-weight:800;font-size:16px;color:var(--text-1)}
+.orc-total-box{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:11px 14px;border-radius:var(--r-md);background:var(--brand-soft);color:var(--brand-text);font-weight:800;font-size:16px}
+.orc-meta{margin-top:10px;display:flex;flex-direction:column;gap:3px}
+.orc-meta-line{font-size:12px;color:var(--text-3);font-style:italic}
 @media(max-width:560px){.doc-grid{grid-template-columns:1fr}}
+@media(max-width:480px){
+  .orc-head,.orc-row{grid-template-columns:1fr 40px 62px auto 26px;gap:4px}
+  .orc-head{font-size:9px;letter-spacing:0}
+  .orc-row .field{padding:6px 6px;font-size:12px}
+  .orc-sub{font-size:11.5px}
+}

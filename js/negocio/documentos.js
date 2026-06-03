@@ -22,7 +22,7 @@ const Documentos=(()=>{
     return `<div class="toolbar" style="margin-bottom:var(--s-3)">
       <div class="seg">
         <button class="${aba==='catalogo'?'on':''}" data-aba="catalogo">${svg('book',14)} Catálogo</button>
-        <button class="seg-soon" disabled title="Em breve (23B)">${svg('file',14)} Orçamento</button>
+        <button class="${aba==='orcamento'?'on':''}" data-aba="orcamento">${svg('file',14)} Orçamento</button>
         <button class="seg-soon" disabled title="Em breve (23C)">${svg('card',14)} Recibo</button>
       </div>
     </div>`;
@@ -48,10 +48,8 @@ const Documentos=(()=>{
     </div>`;
   }
 
-  function render(){
-    const root=document.getElementById('documentos-root');if(!root)return;
-    root.innerHTML=`
-      ${segBar()}
+  function catalogoHTML(){
+    return `
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)">
         <div>
           <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin:0">Documentos</h2>
@@ -61,19 +59,51 @@ const Documentos=(()=>{
       </div>
       ${DB.catalogos.length===0
         ?`<div class="empty"><div style="font-size:32px;margin-bottom:8px">📄</div><p style="color:var(--text-3)">Nenhum cardápio ainda. Crie o primeiro!</p></div>`
-        :`<div class="doc-grid">${DB.catalogos.map(cardHTML).join('')}</div>`}
-    `;
+        :`<div class="doc-grid">${DB.catalogos.map(cardHTML).join('')}</div>`}`;
+  }
+
+  function orcamentoHTML(){
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)">
+        <div>
+          <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin:0">Orçamentos</h2>
+          <p style="font-size:13px;color:var(--text-3);margin:4px 0 0">Modelos de orçamento reutilizáveis · cliente, itens, total, validade</p>
+        </div>
+        <button class="btn btn-primary btn-sm" data-novo-orc>${svg('plus',16)} Novo orçamento</button>
+      </div>
+      ${DB.orcamentos.length===0
+        ?`<div class="empty"><div style="font-size:32px;margin-bottom:8px">📄</div><p style="color:var(--text-3)">Nenhum orçamento ainda. Crie o primeiro!</p></div>`
+        :`<div class="doc-grid">${DB.orcamentos.map(cardHTMLOrc).join('')}</div>`}`;
+  }
+
+  function render(){
+    const root=document.getElementById('documentos-root');if(!root)return;
+    root.innerHTML=`${segBar()}${aba==='orcamento'?orcamentoHTML():catalogoHTML()}`;
     bind(root);
   }
 
   function bind(root){
     root.querySelectorAll('[data-aba]').forEach(b=>b.onclick=()=>{aba=b.dataset.aba;render();});
+    if(aba==='orcamento')bindOrc(root);else bindCat(root);
+  }
+
+  function bindCat(root){
     const nv=root.querySelector('[data-novo]');if(nv)nv.onclick=()=>form();
-    root.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.wa);if(c)enviarWA(c);});
-    root.querySelectorAll('[data-ver]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.ver);if(c)verModal(c);});
+    root.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.wa);if(c)enviarWAtxt(waText(c));});
+    root.querySelectorAll('[data-ver]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.ver);if(c)verModal(c.nome,previewWA(c),previewPDF(c),waText(c));});
     root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>form(+b.dataset.edit));
     root.querySelectorAll('[data-dup]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.dup);if(c){DB.catalogos.push({id:nid(),nome:c.nome+' (cópia)',produtoIds:[...c.produtoIds],obs:c.obs});Toast.show('Cardápio duplicado');render();}});
     root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.del);if(c)Modal.confirm('Excluir cardápio?',`"${esc(c.nome)}" será removido permanentemente.`,()=>{DB.catalogos=DB.catalogos.filter(x=>x.id!==c.id);Toast.show('Cardápio excluído');render();});});
+  }
+
+  function bindOrc(root){
+    const oById=id=>DB.orcamentos.find(x=>x.id===+id);
+    const nv=root.querySelector('[data-novo-orc]');if(nv)nv.onclick=()=>formOrc();
+    root.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>{const o=oById(b.dataset.wa);if(o)enviarWAtxt(waTextOrc(o));});
+    root.querySelectorAll('[data-ver]').forEach(b=>b.onclick=()=>{const o=oById(b.dataset.ver);if(o)verModal(o.nome,previewWAOrc(o),previewPDFOrc(o),waTextOrc(o));});
+    root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>formOrc(+b.dataset.edit));
+    root.querySelectorAll('[data-dup]').forEach(b=>b.onclick=()=>{const o=oById(b.dataset.dup);if(o){DB.orcamentos.push({id:nid(),nome:o.nome+' (cópia)',cliente:o.cliente,itens:o.itens.map(it=>({...it})),validadeDias:o.validadeDias,condicoes:o.condicoes,prazo:o.prazo});Toast.show('Orçamento duplicado');render();}});
+    root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const o=oById(b.dataset.del);if(o)Modal.confirm('Excluir orçamento?',`"${esc(o.nome)}" será removido permanentemente.`,()=>{DB.orcamentos=DB.orcamentos.filter(x=>x.id!==o.id);Toast.show('Orçamento excluído');render();});});
   }
 
   function form(id){
@@ -135,8 +165,8 @@ const Documentos=(()=>{
     </div>`;
   }
 
-  // baixarPDF = abre janela com o previewPDF + CSS de impressão (fundo branco) e chama print() → salvar como PDF (sem libs)
-  function baixarPDF(c){
+  // baixarPDFdoc = abre janela com o HTML elegante (catálogo OU orçamento) + CSS de impressão e chama print() (sem libs)
+  function baixarPDFdoc(titulo,pdfHTML){
     const w=window.open('','_blank');if(!w)return;
     const css=`*{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1b1a16;background:#fff;padding:32px;max-width:620px;margin:0 auto}
@@ -152,8 +182,11 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
 .doc-pv-desc{font-size:11.5px;font-weight:400;color:#8a867c;margin-top:1px}
 .doc-pv-preco{font-weight:800;font-size:14px;white-space:nowrap}
 .doc-pv-foot{display:flex;align-items:center;gap:6px;padding-top:14px;border-top:1px solid #e7e3da;font-size:13px;color:#56524a;font-weight:600;margin-top:8px}
+.orc-total-box{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:11px 14px;border-radius:11px;background:rgba(22,138,124,.10);color:#0f6f63;font-weight:800;font-size:17px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.orc-meta{margin-top:10px;display:flex;flex-direction:column;gap:3px}
+.orc-meta-line{font-size:12px;color:#8a867c;font-style:italic}
 @media print{body{padding:0}}`;
-    w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(c.nome)}</title><style>${css}</style></head><body>${previewPDF(c)}<script>window.onload=function(){window.print();};<\/script></body></html>`);
+    w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(titulo)}</title><style>${css}</style></head><body>${pdfHTML}<script>window.onload=function(){window.print();};<\/script></body></html>`);
     w.document.close();
   }
 
@@ -181,10 +214,15 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
     t+='_Obrigado pela preferência!!! 😊🙏🏼_';
     return t;
   }
-  function enviarWA(c){window.open('https://wa.me/?text='+encodeURIComponent(waText(c)),'_blank');}
+  function enviarWAtxt(txt){window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');}
+  // bolha do WhatsApp a partir de um texto qualquer (mesma transformação da previewWA — usada pelo orçamento)
+  function bolha(txt){
+    const html=esc(txt).replace(/\*([^*\n]+)\*/g,'<strong>$1</strong>').replace(/_([^_\n]+)_/g,'<em>$1</em>');
+    return `<div class="doc-preview"><div class="doc-wa-bubble">${html}</div></div>`;
+  }
 
-  // Modal "Ver" — toggle entre as 2 visualizações (WhatsApp / PDF) + ações
-  function verModal(c){
+  // Modal "Ver" — genérico (catálogo OU orçamento): toggle WhatsApp/PDF + ações
+  function verModal(titulo,waHTML,pdfHTML,waTxt){
     const body=`
       <div class="doc-ver-bar">
         <div class="seg">
@@ -193,14 +231,143 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1
         </div>
         <button class="btn btn-ghost btn-sm" data-pdf>${svg('file',14)} Baixar PDF</button>
       </div>
-      <div id="doc-ver-box">${previewWA(c)}</div>`;
-    const back=Modal.open(esc(c.nome),body,()=>enviarWA(c),'Enviar WhatsApp');
+      <div id="doc-ver-box">${waHTML}</div>`;
+    const back=Modal.open(esc(titulo),body,()=>enviarWAtxt(waTxt),'Enviar WhatsApp');
     const box=back.querySelector('#doc-ver-box');
     back.querySelectorAll('[data-vmodo]').forEach(b=>b.onclick=()=>{
       back.querySelectorAll('[data-vmodo]').forEach(x=>x.classList.toggle('on',x===b));
-      box.innerHTML=b.dataset.vmodo==='pdf'?previewPDF(c):previewWA(c);
+      box.innerHTML=b.dataset.vmodo==='pdf'?pdfHTML:waHTML;
     });
-    back.querySelector('[data-pdf]').onclick=()=>baixarPDF(c);
+    back.querySelector('[data-pdf]').onclick=()=>baixarPDFdoc(titulo,pdfHTML);
+  }
+
+  /* ═══ ORÇAMENTO (23B) — mesmo motor, estrutura própria ═══ */
+  const totalOrc=o=>(o.itens||[]).reduce((s,it)=>s+(+it.qtd||0)*(+it.valor||0),0);
+
+  function cardHTMLOrc(o){
+    return `<div class="doc-card">
+      <div class="doc-card-h">
+        <div class="doc-card-ico">${svg('file',20)}</div>
+        <div class="doc-card-tx">
+          <div class="doc-card-nome">${esc(o.nome)}</div>
+          <div class="doc-card-sub">${o.cliente?esc(o.cliente)+' · ':''}<b style="color:var(--text-1)">${fmt(totalOrc(o))}</b></div>
+        </div>
+      </div>
+      <div class="doc-card-acts">
+        <button class="btn btn-primary btn-sm" data-wa="${o.id}">${svg('chat',14)} Enviar</button>
+        <button class="btn btn-ghost btn-sm" data-ver="${o.id}">${svg('eye',14)} Ver</button>
+        <button class="btn-icon" title="Editar" data-edit="${o.id}">${svg('pencil',15)}</button>
+        <button class="btn-icon" title="Duplicar" data-dup="${o.id}">${svg('copy',15)}</button>
+        <button class="btn-icon" title="Excluir" data-del="${o.id}" style="color:var(--expense)">${svg('trash',15)}</button>
+      </div>
+    </div>`;
+  }
+
+  function formOrc(id){
+    const o=id?DB.orcamentos.find(x=>x.id===+id):null;
+    const linhas=o?o.itens.map(it=>({desc:it.desc,qtd:it.qtd,valor:it.valor})):[{desc:'',qtd:1,valor:0}];
+    const prodOpts=DB.produtos.map(p=>`<option value="${p.id}">${esc(p.nome)} — ${fmt(p.preco)}</option>`).join('');
+    const total=()=>linhas.reduce((s,it)=>s+(+it.qtd||0)*(+it.valor||0),0);
+    const rowsHTML=()=>linhas.map((it,i)=>`<div class="orc-row" data-i="${i}">
+      <input class="field orc-desc" placeholder="Descrição do item ou serviço" value="${esc(it.desc||'')}">
+      <input class="field orc-qtd" type="number" min="0" step="1" value="${it.qtd}" title="Quantidade">
+      <input class="field orc-val" type="number" min="0" step="0.01" value="${it.valor}" title="Valor unitário">
+      <span class="orc-sub">${fmt((+it.qtd||0)*(+it.valor||0))}</span>
+      <button class="btn-icon orc-rm" type="button" title="Remover"${linhas.length<=1?' disabled':''}>${svg('trash',14)}</button>
+    </div>`).join('');
+    const body=`
+      <div class="frow">
+        <div class="fg"><label>Nome do orçamento</label><input class="field" id="orc-nome" value="${o?esc(o.nome):''}" placeholder="Ex: Orçamento Festa"></div>
+        <div class="fg"><label>Cliente</label><input class="field" id="orc-cli" value="${o?esc(o.cliente||''):''}" placeholder="Nome do cliente"></div>
+      </div>
+      <div class="fg"><label>Itens</label>
+        <div class="orc-head"><span>Descrição</span><span>Qtd</span><span>Valor</span><span>Subtotal</span><span></span></div>
+        <div id="orc-itens">${rowsHTML()}</div>
+        <div class="orc-add-row">
+          <button class="btn btn-ghost btn-sm" id="orc-add" type="button">${svg('plus',14)} Adicionar item</button>
+          <select class="field" id="orc-prod" style="width:auto"><option value="">+ Puxar de produto…</option>${prodOpts}</select>
+        </div>
+      </div>
+      <div class="orc-total-row"><span>Total</span><span id="orc-total">${fmt(total())}</span></div>
+      <div class="frow">
+        <div class="fg"><label>Validade (dias)</label><input class="field" id="orc-dias" type="number" min="0" value="${o?(o.validadeDias||0):7}"></div>
+        <div class="fg"><label>Prazo</label><input class="field" id="orc-prazo" value="${o?esc(o.prazo||''):''}" placeholder="Ex: Entrega em até 3 dias"></div>
+      </div>
+      <div class="fg"><label>Condições</label><input class="field" id="orc-cond" value="${o?esc(o.condicoes||''):''}" placeholder="Ex: 50% de sinal, restante na entrega"></div>`;
+    const back=Modal.open(id?'Editar orçamento':'Novo orçamento',body,(b)=>{
+      const nome=b.querySelector('#orc-nome').value.trim();
+      if(!nome){Toast.show('Dê um nome ao orçamento','err');return false;}
+      readDOM();
+      const itens=linhas.filter(it=>(it.desc||'').trim()&&(+it.qtd>0));
+      if(itens.length===0){Toast.show('Adicione ao menos 1 item','err');return false;}
+      const dd={nome,cliente:b.querySelector('#orc-cli').value.trim(),itens,
+        validadeDias:+b.querySelector('#orc-dias').value||0,
+        prazo:b.querySelector('#orc-prazo').value.trim(),
+        condicoes:b.querySelector('#orc-cond').value.trim()};
+      if(o){Object.assign(o,dd);Toast.show('Orçamento atualizado');}
+      else{DB.orcamentos.push(Object.assign({id:nid()},dd));Toast.show('Orçamento criado');}
+      render();
+    },id?'Salvar':'Criar');
+    const box=back.querySelector('#orc-itens'),totEl=back.querySelector('#orc-total');
+    function readDOM(){box.querySelectorAll('.orc-row').forEach((r,i)=>{linhas[i]={desc:r.querySelector('.orc-desc').value,qtd:+r.querySelector('.orc-qtd').value||0,valor:+r.querySelector('.orc-val').value||0};});}
+    function bindRows(){box.querySelectorAll('.orc-row').forEach(r=>{
+      const i=+r.dataset.i;
+      r.querySelectorAll('input').forEach(inp=>inp.oninput=()=>{readDOM();r.querySelector('.orc-sub').textContent=fmt((+r.querySelector('.orc-qtd').value||0)*(+r.querySelector('.orc-val').value||0));totEl.textContent=fmt(total());});
+      const rm=r.querySelector('.orc-rm');if(rm)rm.onclick=()=>{readDOM();linhas.splice(i,1);paint();};
+    });}
+    function paint(){box.innerHTML=rowsHTML();bindRows();totEl.textContent=fmt(total());}
+    back.querySelector('#orc-add').onclick=()=>{readDOM();linhas.push({desc:'',qtd:1,valor:0});paint();};
+    back.querySelector('#orc-prod').onchange=e=>{const p=DB.produtos.find(x=>x.id===+e.target.value);if(p){readDOM();linhas.push({desc:p.nome,qtd:1,valor:p.preco});paint();}e.target.value='';};
+    bindRows();
+  }
+
+  // Texto WhatsApp do orçamento (padrão Léo — moldura, cliente, itens, TOTAL, validade/condições/prazo, rodapé)
+  function waTextOrc(o){
+    const n=DB.negocio, L=n.logo?n.logo:'';
+    let t='╔══════════════════════╗\n';
+    t+=cen(`*${L?L+' ':''}${(n.nome||'').toUpperCase()}${L?' '+L:''}*`)+'\n';
+    t+=cen('*ORÇAMENTO*')+'\n';
+    t+='╚══════════════════════╝\n';
+    if(o.cliente)t+=`Cliente: *${o.cliente}*\n`;
+    t+=LINHA+'\n';
+    (o.itens||[]).forEach(it=>{
+      const sub=(+it.qtd||0)*(+it.valor||0);
+      t+=`*${it.desc}*\n`;
+      t+=`${(+it.qtd>1)?`${it.qtd} x ${fmt(it.valor)} = `:''}*${fmt(sub)}*\n`;
+    });
+    t+=LINHA+'\n';
+    t+=`*TOTAL: ${fmt(totalOrc(o))}*\n`;
+    if(o.validadeDias)t+=`_Validade: ${o.validadeDias} dias_\n`;
+    if(o.condicoes)t+=`_${o.condicoes}_\n`;
+    if(o.prazo)t+=`_${o.prazo}_\n`;
+    t+=`\n📲 ${foneFmt(n.whatsapp)}\n`;
+    t+='_Obrigado pela preferência!!! 😊🙏🏼_';
+    return t;
+  }
+  const previewWAOrc=o=>bolha(waTextOrc(o));
+
+  // Preview PDF elegante do orçamento (reusa .doc-pv-* + total destacado/meta .orc-*)
+  function previewPDFOrc(o){
+    const n=DB.negocio;
+    const linhas=(o.itens||[]).map(it=>{
+      const sub=(+it.qtd||0)*(+it.valor||0);
+      return `<div class="doc-pv-item">
+        <span class="doc-pv-nome">${esc(it.desc)}${(+it.qtd>1)?`<span class="doc-pv-desc">${it.qtd} × ${fmt(it.valor)}</span>`:''}</span>
+        <span class="doc-pv-preco">${fmt(sub)}</span>
+      </div>`;
+    }).join('');
+    const meta=[o.validadeDias?`Validade: ${o.validadeDias} dias`:'',o.condicoes,o.prazo].filter(Boolean)
+      .map(x=>`<div class="orc-meta-line">${esc(x)}</div>`).join('');
+    return `<div class="doc-preview doc-pdf">
+      <div class="doc-pv-head">
+        <div class="doc-pv-logo">${esc(n.logo||inicial(n.nome))}</div>
+        <div><div class="doc-pv-marca">${esc(n.nome)}</div><div class="doc-pv-seg">Orçamento${o.cliente?' · '+esc(o.cliente):''}</div></div>
+      </div>
+      <div class="doc-pv-sec">${linhas}</div>
+      <div class="orc-total-box"><span>TOTAL</span><span>${fmt(totalOrc(o))}</span></div>
+      ${meta?`<div class="orc-meta">${meta}</div>`:''}
+      <div class="doc-pv-foot">${svg('chat',13)} ${esc(foneFmt(n.whatsapp))}</div>
+    </div>`;
   }
 
   return {render};

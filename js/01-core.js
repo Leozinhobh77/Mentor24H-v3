@@ -483,6 +483,7 @@ const DB={
     {id:nid(),titulo:'Flexbox de uma vez por todas',url:'https://www.youtube.com/watch?v=devtipscss',rede:'youtube',categoria:'Estudo',criador:'DevTips',tags:['css','front'],nota:'revisar guia',favorito:true,status:'ver',data:offset(0)},
   ],
   catalogos:[],   // modelos de cardápio/catálogo (Etapa 23A) — preenchido no SEED abaixo
+  orcamentos:[],  // modelos/orçamentos salvos (Etapa 23B) — preenchido no SEED abaixo
 };
 
 // Seed movimentações com IDs corretos
@@ -514,6 +515,11 @@ const DB={
   DB.catalogos=[
     {id:nid(), nome:'Cardápio Completo', produtoIds: DB.produtos.filter(p=>['Salgados','Tortas','Massas'].includes(p.categoria)).map(p=>p.id), obs:'Consulte a taxa de entrega'},
     {id:nid(), nome:'Cardápio de Segunda', produtoIds: DB.produtos.filter(p=>p.categoria==='Salgados').slice(0,4).map(p=>p.id), obs:'Consulte a taxa de entrega'},
+  ];
+  DB.orcamentos=[
+    {id:nid(), nome:'Orçamento Festa', cliente:'Maria Souza',
+      itens:[{desc:'Salgados sortidos',qtd:100,valor:1.2},{desc:'Mini pizzas (bandeja 10)',qtd:5,valor:40}],
+      validadeDias:7, condicoes:'50% de sinal, restante na entrega', prazo:'Entrega em até 3 dias'},
   ];
 })();
 
