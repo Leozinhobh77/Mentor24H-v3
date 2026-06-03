@@ -70,7 +70,7 @@ const Documentos=(()=>{
     root.querySelectorAll('[data-aba]').forEach(b=>b.onclick=()=>{aba=b.dataset.aba;render();});
     const nv=root.querySelector('[data-novo]');if(nv)nv.onclick=()=>form();
     root.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.wa);if(c)enviarWA(c);});
-    root.querySelectorAll('[data-ver]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.ver);if(c)Modal.open(esc(c.nome),previewHTML(c),()=>enviarWA(c),'Enviar WhatsApp');});
+    root.querySelectorAll('[data-ver]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.ver);if(c)verModal(c);});
     root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>form(+b.dataset.edit));
     root.querySelectorAll('[data-dup]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.dup);if(c){DB.catalogos.push({id:nid(),nome:c.nome+' (cópia)',produtoIds:[...c.produtoIds],obs:c.obs});Toast.show('Cardápio duplicado');render();}});
     root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const c=byId(b.dataset.del);if(c)Modal.confirm('Excluir cardápio?',`"${esc(c.nome)}" será removido permanentemente.`,()=>{DB.catalogos=DB.catalogos.filter(x=>x.id!==c.id);Toast.show('Cardápio excluído');render();});});
@@ -105,12 +105,56 @@ const Documentos=(()=>{
     },id?'Salvar':'Criar');
   }
 
-  // Preview = EXATAMENTE o texto do WhatsApp (bolha estilo zap, com *negrito* e _itálico_ interpretados)
-  function previewHTML(c){
+  // previewWA = EXATAMENTE o texto do WhatsApp (bolha estilo zap, com *negrito* e _itálico_ interpretados)
+  function previewWA(c){
     const html=esc(waText(c))
       .replace(/\*([^*\n]+)\*/g,'<strong>$1</strong>')
       .replace(/_([^_\n]+)_/g,'<em>$1</em>');
     return `<div class="doc-preview"><div class="doc-wa-bubble">${html}</div></div>`;
+  }
+
+  // previewPDF = versão elegante/Premium (marca + categorias + cards + preços) — usada no toggle e no PDF
+  function previewPDF(c){
+    const n=DB.negocio;
+    const corpo=porCategoria(itens(c)).map(([cat,ps])=>`
+      <div class="doc-pv-sec">
+        <div class="doc-pv-cat">${esc(cat)}</div>
+        ${ps.map(p=>`<div class="doc-pv-item">
+          <span class="doc-pv-cap" style="background:${catCor(p.categoria)}22;color:${catCor(p.categoria)}">${p.emoji||esc(inicial(p.nome))}</span>
+          <span class="doc-pv-nome">${esc(p.nome)}${p.descricao?`<span class="doc-pv-desc">${esc(p.descricao)}</span>`:''}</span>
+          <span class="doc-pv-preco">${fmt(p.preco)}</span>
+        </div>`).join('')}
+      </div>`).join('');
+    return `<div class="doc-preview doc-pdf">
+      <div class="doc-pv-head">
+        <div class="doc-pv-logo">${esc(n.logo||inicial(n.nome))}</div>
+        <div><div class="doc-pv-marca">${esc(n.nome)}</div><div class="doc-pv-seg">${esc(n.slogan||n.segmento||'')}</div></div>
+      </div>
+      ${corpo}
+      <div class="doc-pv-foot">${svg('chat',13)} ${esc(n.whatsapp||'')}${c.obs?` · ${esc(c.obs)}`:''}</div>
+    </div>`;
+  }
+
+  // baixarPDF = abre janela com o previewPDF + CSS de impressão (fundo branco) e chama print() → salvar como PDF (sem libs)
+  function baixarPDF(c){
+    const w=window.open('','_blank');if(!w)return;
+    const css=`*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#1b1a16;background:#fff;padding:32px;max-width:620px;margin:0 auto}
+.doc-pv-head{display:flex;align-items:center;gap:14px;padding-bottom:14px;border-bottom:1px solid #e7e3da;margin-bottom:16px}
+.doc-pv-logo{width:54px;height:54px;border-radius:13px;background:rgba(22,138,124,.10);color:#0f6f63;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800}
+.doc-pv-marca{font-size:21px;font-weight:800}
+.doc-pv-seg{font-size:13px;color:#8a867c;margin-top:2px}
+.doc-pv-sec{margin-bottom:14px;page-break-inside:avoid}
+.doc-pv-cat{font-size:12px;font-weight:800;color:#0f6f63;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.doc-pv-item{display:flex;align-items:center;gap:11px;padding:7px 0;border-bottom:1px solid #f2efe9}
+.doc-pv-cap{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;flex-shrink:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.doc-pv-nome{flex:1;min-width:0;font-size:14px;font-weight:600;display:flex;flex-direction:column}
+.doc-pv-desc{font-size:11.5px;font-weight:400;color:#8a867c;margin-top:1px}
+.doc-pv-preco{font-weight:800;font-size:14px;white-space:nowrap}
+.doc-pv-foot{display:flex;align-items:center;gap:6px;padding-top:14px;border-top:1px solid #e7e3da;font-size:13px;color:#56524a;font-weight:600;margin-top:8px}
+@media print{body{padding:0}}`;
+    w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(c.nome)}</title><style>${css}</style></head><body>${previewPDF(c)}<script>window.onload=function(){window.print();};<\/script></body></html>`);
+    w.document.close();
   }
 
   // Texto formatado pro WhatsApp — no padrão do Léo (moldura, categorias centralizadas, item nome+qtd/preço, rodapé)
@@ -138,6 +182,26 @@ const Documentos=(()=>{
     return t;
   }
   function enviarWA(c){window.open('https://wa.me/?text='+encodeURIComponent(waText(c)),'_blank');}
+
+  // Modal "Ver" — toggle entre as 2 visualizações (WhatsApp / PDF) + ações
+  function verModal(c){
+    const body=`
+      <div class="doc-ver-bar">
+        <div class="seg">
+          <button class="on" data-vmodo="wa">${svg('chat',14)} WhatsApp</button>
+          <button data-vmodo="pdf">${svg('file',14)} PDF</button>
+        </div>
+        <button class="btn btn-ghost btn-sm" data-pdf>${svg('file',14)} Baixar PDF</button>
+      </div>
+      <div id="doc-ver-box">${previewWA(c)}</div>`;
+    const back=Modal.open(esc(c.nome),body,()=>enviarWA(c),'Enviar WhatsApp');
+    const box=back.querySelector('#doc-ver-box');
+    back.querySelectorAll('[data-vmodo]').forEach(b=>b.onclick=()=>{
+      back.querySelectorAll('[data-vmodo]').forEach(x=>x.classList.toggle('on',x===b));
+      box.innerHTML=b.dataset.vmodo==='pdf'?previewPDF(c):previewWA(c);
+    });
+    back.querySelector('[data-pdf]').onclick=()=>baixarPDF(c);
+  }
 
   return {render};
 })();
