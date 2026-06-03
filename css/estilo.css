@@ -1117,3 +1117,46 @@ select.field{cursor:pointer}
 .mov-qtd.entrada{color:var(--income)}
 .mov-qtd.saida{color:var(--expense)}
 .mov-qtd.ajuste{color:var(--brand)}
+
+/* ETAPA 23A: DOCUMENTOS */
+.seg .seg-soon{opacity:.45;cursor:not-allowed}
+/* lista de modelos */
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--s-4)}
+.doc-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);transition:box-shadow .2s var(--ease)}
+.doc-card:hover{box-shadow:var(--shadow-sm)}
+.doc-card-h{display:flex;align-items:center;gap:var(--s-3)}
+.doc-card-ico{width:42px;height:42px;border-radius:var(--r-md);background:var(--brand-soft);color:var(--brand-text);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.doc-card-tx{min-width:0}
+.doc-card-nome{font-size:14px;font-weight:700;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-card-sub{font-size:12px;color:var(--text-3);margin-top:2px}
+.doc-card-acts{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.doc-card-acts .btn{flex:0 0 auto}
+/* seletor de produtos no form */
+.doc-pick{max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-2)}
+.doc-pick-cat{margin-bottom:var(--s-2)}
+.doc-pick-lbl{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em;padding:6px 6px 4px}
+.doc-pick-item{display:flex;align-items:center;gap:var(--s-2);padding:6px;border-radius:var(--r-sm);cursor:pointer}
+.doc-pick-item:hover{background:var(--surface-2)}
+.doc-pick-item input{flex:0 0 auto;accent-color:var(--brand)}
+.doc-pick-cap{width:26px;height:26px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0}
+.doc-pick-nome{flex:1;min-width:0;font-size:13px;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-pick-preco{font-size:12px;font-weight:700;color:var(--text-2);flex-shrink:0}
+/* preview premium do cardápio */
+.doc-preview{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-4);display:flex;justify-content:center}
+/* bolha estilo WhatsApp — mostra o texto exatamente como vai ser enviado */
+.doc-wa-bubble{white-space:pre-wrap;word-break:break-word;font-size:13px;line-height:1.45;color:var(--text-1);background:var(--surface-1);border:1px solid var(--border);border-radius:14px;border-top-left-radius:4px;padding:12px 14px;max-width:360px;width:100%;box-shadow:var(--shadow-sm)}
+.doc-wa-bubble strong{font-weight:800}
+.doc-wa-bubble em{font-style:italic;color:var(--text-2)}
+.doc-pv-head{display:flex;align-items:center;gap:var(--s-3);padding-bottom:var(--s-3);border-bottom:1px solid var(--border);margin-bottom:var(--s-3)}
+.doc-pv-logo{width:48px;height:48px;border-radius:var(--r-md);background:var(--brand-soft);color:var(--brand-text);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;flex-shrink:0}
+.doc-pv-marca{font-size:17px;font-weight:800;color:var(--text-1)}
+.doc-pv-seg{font-size:12px;color:var(--text-3);margin-top:1px}
+.doc-pv-sec{margin-bottom:var(--s-3)}
+.doc-pv-cat{font-size:12px;font-weight:800;color:var(--brand-text);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.doc-pv-item{display:flex;align-items:center;gap:var(--s-2);padding:5px 0}
+.doc-pv-cap{width:30px;height:30px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0}
+.doc-pv-nome{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--text-1);display:flex;flex-direction:column}
+.doc-pv-desc{font-size:11px;font-weight:400;color:var(--text-3);margin-top:1px}
+.doc-pv-preco{font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--text-1);flex-shrink:0}
+.doc-pv-foot{display:flex;align-items:center;gap:6px;padding-top:var(--s-3);border-top:1px solid var(--border);font-size:12px;color:var(--text-2);font-weight:600}
+@media(max-width:560px){.doc-grid{grid-template-columns:1fr}}

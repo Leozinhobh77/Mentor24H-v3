@@ -59,6 +59,9 @@ const ICONS={
   globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.5-1.5"/>',
   dice:'<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 8h.01M16 8h.01M8 16h.01M16 16h.01M12 12h.01"/>',
+  file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/>',
+  eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
 };
 
 /* ─── PÁGINAS PLACEHOLDER (preenchidas a cada etapa do checklist) ─── */
@@ -179,7 +182,7 @@ document.querySelectorAll('.mood-pick').forEach(p=>p.querySelectorAll('.mood').f
 })));
 
 /* ─── ROUTER (navegação SPA) ─── */
-const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',salvos:'Salvos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',mentor:'Mentor',perfil:'Perfil'};
+const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',salvos:'Salvos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',documentos:'Documentos',mentor:'Mentor',perfil:'Perfil'};
 function navigate(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===page));
   document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
@@ -214,6 +217,7 @@ function navigate(page){
   if(page==='vendas') Vendas.render();
   if(page==='clientes') Clientes.render();
   if(page==='relatorios') RelatoriosNeg.render();
+  if(page==='documentos') Documentos.render();
   if(page==='mentor') Mentor.render();
   closeDrawer();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -465,7 +469,7 @@ const DB={
   movimentacoes:[],
   // Fichas demo (edição definitiva = Perfil/Etapa 27; usadas no cabeçalho dos documentos na Etapa 23)
   usuario:{ nome:'Léo Silva', plano:'Pró', logo:'L' },               // logo = monograma (inicial)
-  negocio:{ nome:'Pizza e Cia BH', segmento:'Salgados', whatsapp:'31999990000', plano:'Pró', logo:'🍕' },
+  negocio:{ nome:'Pizza e Cia BH', segmento:'Salgados', slogan:'Salgados Artesanais', whatsapp:'31999990000', plano:'Pró', logo:'🍕' },
   salvos:[   // {id,titulo,url,rede,categoria,criador,tags:[],nota,favorito,status:'ver'|'visto',data}
     {id:nid(),titulo:'Bolo de cenoura fofinho',url:'https://www.youtube.com/watch?v=abc123',rede:'youtube',categoria:'Receitas',criador:'Cozinha da Tia',tags:['bolo','doce'],nota:'cobertura de brigadeiro',favorito:true,status:'visto',data:offset(-1)},
     {id:nid(),titulo:'Macarrão de 10 minutos',url:'https://www.tiktok.com/@chefrapido/video/789',rede:'tiktok',categoria:'Receitas',criador:'@chefrapido',tags:['rápido','almoço'],nota:'',favorito:false,status:'ver',data:offset(-2)},
@@ -478,6 +482,7 @@ const DB={
     {id:nid(),titulo:'Thread: como organizar a semana',url:'https://x.com/prodguy/status/123',rede:'x',categoria:'Produtividade',criador:'@prodguy',tags:['rotina'],nota:'método de blocos',favorito:false,status:'visto',data:offset(-7)},
     {id:nid(),titulo:'Flexbox de uma vez por todas',url:'https://www.youtube.com/watch?v=devtipscss',rede:'youtube',categoria:'Estudo',criador:'DevTips',tags:['css','front'],nota:'revisar guia',favorito:true,status:'ver',data:offset(0)},
   ],
+  catalogos:[],   // modelos de cardápio/catálogo (Etapa 23A) — preenchido no SEED abaixo
 };
 
 // Seed movimentações com IDs corretos
@@ -501,6 +506,14 @@ const DB={
     {id:nid(),produtoId:ps[12].id,tipo:'saida',qtd:12,obs:'Caixas 16un. vendidas',data:offset(-3)},
     {id:nid(),produtoId:ps[13].id,tipo:'saida',qtd:20,obs:'Uso na embalagem',data:offset(-3)},
     {id:nid(),produtoId:ps[1].id,tipo:'saida',qtd:6,obs:'Venda do dia',data:offset(-1)},
+  ];
+})();
+
+// Seed modelos de cardápio (Etapa 23A) — referenciam os IDs reais dos produtos
+(function(){
+  DB.catalogos=[
+    {id:nid(), nome:'Cardápio Completo', produtoIds: DB.produtos.filter(p=>['Salgados','Tortas','Massas'].includes(p.categoria)).map(p=>p.id), obs:'Consulte a taxa de entrega'},
+    {id:nid(), nome:'Cardápio de Segunda', produtoIds: DB.produtos.filter(p=>p.categoria==='Salgados').slice(0,4).map(p=>p.id), obs:'Consulte a taxa de entrega'},
   ];
 })();
 
