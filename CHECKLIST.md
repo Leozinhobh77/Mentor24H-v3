@@ -139,7 +139,9 @@
 
 ## Nota de Arquitetura
 
-> **Single-file por enquanto (decisão 2026-05-27):** continuar com `index.html` único até fechar todas as etapas do protótipo. Quando chegar na Etapa 28 (Supabase), **avisar Léo para separar em projeto real** com estrutura adequada (HTML + CSS + JS separados ou framework). O protótipo vira guia de referência de UX e dados.
+> **Modular desde 2026-06 (nota atualizada 2026-06-10):** o app já está separado em `index.html` + `css/estilo.css` + módulos JS por domínio (`js/pessoal/` e `js/negocio/`). A decisão antiga de "single-file até o fim" foi superada na prática. Na Etapa 28 (Supabase) reavaliar apenas a troca do mock `DB` pelo banco real — a estrutura de arquivos já é a de projeto real.
+>
+> **Estrutura Kit (2026-06-10):** projeto alinhado ao Kit de Estrutura do Forge — `tarefas\` + `.mural\` (PADROES/eventos/licoes) + `PROMPT.md` + `README.md` criados; CLAUDE.md atualizado pro modelo PT-BR; `testar-celular.bat` agora acha porta livre sozinho.
 
 ---
 
