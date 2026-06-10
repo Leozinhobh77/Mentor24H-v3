@@ -230,7 +230,8 @@ const Clientes=(()=>{
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:6px;padding-right:var(--s-3)">
-        ${devo>0?`<div style="font-family:var(--mono);font-weight:800;font-size:13px;color:var(--expense)" title="A pagar">${fmt(devo)}</div>`:''}
+        ${devo>0?`<div style="font-family:var(--mono);font-weight:800;font-size:13px;color:var(--expense)" title="A pagar">${fmt(devo)}</div>
+        <button class="btn btn-soft btn-sm" data-payf="${f.id}" title="Registrar pagamento (vira saída no caixa)">${svg('tick',13)} Paguei</button>`:''}
         ${tel?`<a class="docbtn wa" href="https://wa.me/55${tel}" target="_blank" rel="noopener" title="WhatsApp">${svg('chat',15)}</a>`:''}
         <button class="docbtn" data-editf="${f.id}" title="Editar">${svg('pencil',15)}</button>
         <button class="docbtn" data-delf="${f.id}" title="Excluir">${svg('trash',15)}</button>
@@ -277,6 +278,26 @@ const Clientes=(()=>{
     root.querySelector('[data-addf]').onclick=()=>formForn();
     root.querySelectorAll('[data-editf]').forEach(b=>b.onclick=()=>formForn(+b.dataset.editf));
     root.querySelectorAll('[data-delf]').forEach(b=>b.onclick=()=>{const f=DB.fornecedores.find(x=>x.id===+b.dataset.delf);Modal.confirm('Excluir fornecedor?',`"${f.nome}" será removido.`,()=>{DB.fornecedores=DB.fornecedores.filter(x=>x.id!==f.id);Toast.show('Fornecedor excluído');render();});});
+    // Etapa 25A — "✓ Paguei": abate a dívida (contas pendentes) e vira saída no caixa (DB.despesasNeg)
+    root.querySelectorAll('[data-payf]').forEach(b=>b.onclick=()=>{
+      const f=DB.fornecedores.find(x=>x.id===+b.dataset.payf);if(!f)return;
+      const devo=devoFornecedor(f.id);
+      Modal.open(`Pagar ${f.nome}`,`
+        <p style="font-size:13px;color:var(--text-2);margin-bottom:var(--s-3)">Dívida atual: <b style="color:var(--expense)">${fmt(devo)}</b></p>
+        <div class="fg"><label>Valor pago (R$)</label><input class="field" id="pf-valor" type="number" min="0" step="0.01" value="${devo}"></div>`,
+        bb=>{
+          const valor=+bb.querySelector('#pf-valor').value||0;
+          if(valor<=0){Toast.show('Informe o valor','err');return false;}
+          let resta=valor;
+          DB.contas.filter(c=>c.tipo==='pagar'&&c.status==='pendente'&&c.fornecedorId===f.id)
+            .sort((a,c2)=>(a.venc||'').localeCompare(c2.venc||''))
+            .forEach(c=>{if(resta<=0)return;
+              if(resta>=c.valor){resta-=c.valor;c.status='paga';}
+              else{c.valor-=resta;resta=0;}});
+          DB.despesasNeg.push({id:nid(),desc:`Pagamento — ${f.nome}`,categoria:'insumos',valor,tipo:'variavel',recorrencia:null,parcelas:null,pago:true,vencimento:offset(0),pagoEm:offset(0),fornecedorId:f.id});
+          Toast.show('Pagamento registrado no caixa');render();
+        },'Confirmar pagamento');
+    });
   }
   function formForn(id){
     const f=id?DB.fornecedores.find(x=>x.id===id):null;

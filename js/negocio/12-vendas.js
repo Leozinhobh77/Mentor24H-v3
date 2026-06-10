@@ -446,6 +446,7 @@ const Vendas=(()=>{
       const v=DB.vendas.find(x=>x.id===+b.dataset.receber);if(!v)return;
       Modal.confirm('Marcar como recebido?',`Venda de ${fmt(v.total)} para ${v.clienteNome||'sem cliente'} será marcada como paga.`,()=>{
         v.status='pago';
+        v.recebidoEm=offset(0); // Etapa 25A — data real do recebimento (regime de caixa)
         DB.transacoes.unshift({id:nid(),tipo:'entrada',descricao:`Recebimento — ${v.itens.map(i=>i.nome).join(', ')}${v.clienteNome?' ('+v.clienteNome+')':''}`,valor:v.total,cat:'receita',metodo:PGTO_LABEL[v.pagamento]||v.pagamento,data:offset(0)});
         Toast.show('Venda marcada como paga');renderHistorico();
       },'Confirmar recebimento');

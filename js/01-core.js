@@ -183,7 +183,7 @@ document.querySelectorAll('.mood-pick').forEach(p=>p.querySelectorAll('.mood').f
 })));
 
 /* ─── ROUTER (navegação SPA) ─── */
-const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',salvos:'Salvos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',documentos:'Documentos',encomendas:'Encomendas',mentor:'Mentor',perfil:'Perfil'};
+const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',salvos:'Salvos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',documentos:'Documentos',encomendas:'Encomendas',financeiro:'Financeiro',mentor:'Mentor',perfil:'Perfil'};
 function navigate(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===page));
   document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
@@ -220,6 +220,7 @@ function navigate(page){
   if(page==='relatorios') RelatoriosNeg.render();
   if(page==='documentos') Documentos.render();
   if(page==='encomendas') Encomendas.render();
+  if(page==='financeiro') Financeiro.render();
   if(page==='mentor') Mentor.render();
   closeDrawer();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -488,6 +489,8 @@ const DB={
   orcamentos:[],  // modelos/orçamentos salvos (Etapa 23B) — preenchido no SEED abaixo
   recibos:[],     // modelos/recibos salvos (Etapa 23C) — preenchido no SEED abaixo
   encomendas:[],  // encomendas/pedidos (Etapa 24) — preenchido no SEED abaixo
+  despesasNeg:[], // despesas do negócio (Etapa 25A) — preenchido no SEED abaixo
+  caixaAvulso:[], // lançamentos manuais de caixa (Etapa 25A) — preenchido no SEED abaixo
 };
 
 // Seed movimentações com IDs corretos
@@ -531,9 +534,9 @@ const DB={
   const P=nome=>DB.produtos.find(p=>p.nome===nome)||{};
   const it=(nome,qtd)=>{const p=P(nome);return {produtoId:p.id||null,desc:nome,qtd,valor:p.preco||0};};
   DB.encomendas=[
-    {id:nid(), cliente:'Maria Souza', telefone:'31988881111', itens:[it('Mini pizzas',5),it('Trouxinhas de frango com milho',3)], data:offset(1), hora:'14:00', tipoEntrega:'entrega', endereco:'Rua das Flores, 120 — Centro', sinal:100, status:'produzindo', obs:'Festa de aniversário'},
-    {id:nid(), cliente:'João Pedro', telefone:'31977772222', itens:[it('Empadão de Frango c/ milho e requeijão',2)], data:offset(0), hora:'18:30', tipoEntrega:'retirada', endereco:'', sinal:0, status:'afazer', obs:''},
-    {id:nid(), cliente:'Ana Lima', telefone:'31966663333', itens:[it('Lasanha à Bolonhesa',1),it('Mini Coquetel',1)], data:offset(-1), hora:'12:00', tipoEntrega:'retirada', endereco:'', sinal:50, status:'pronto', obs:''},
+    {id:nid(), cliente:'Maria Souza', telefone:'31988881111', itens:[it('Mini pizzas',5),it('Trouxinhas de frango com milho',3)], data:offset(1), hora:'14:00', tipoEntrega:'entrega', endereco:'Rua das Flores, 120 — Centro', sinal:100, status:'produzindo', obs:'Festa de aniversário', criadaEm:offset(-2)},
+    {id:nid(), cliente:'João Pedro', telefone:'31977772222', itens:[it('Empadão de Frango c/ milho e requeijão',2)], data:offset(0), hora:'18:30', tipoEntrega:'retirada', endereco:'', sinal:0, status:'afazer', obs:'', criadaEm:offset(-1)},
+    {id:nid(), cliente:'Ana Lima', telefone:'31966663333', itens:[it('Lasanha à Bolonhesa',1),it('Mini Coquetel',1)], data:offset(-1), hora:'12:00', tipoEntrega:'retirada', endereco:'', sinal:50, status:'pronto', obs:'', criadaEm:offset(-4)},
   ];
 })();
 
@@ -635,6 +638,38 @@ const DB={
     {id:nid(),tipo:'pagar',descricao:'Pedido de embalagens',valor:240,cat:'outros',metodo:'Pix',venc:offset(8),status:'pendente',fornecedorId:emb.id},
     {id:nid(),tipo:'pagar',descricao:'Compra de insumos (chocolate)',valor:380,cat:'alimentacao',metodo:'Pix',venc:offset(12),status:'pendente',fornecedorId:doc.id},
   );
+})();
+
+// Seed financeiro do negócio (Etapa 25A) — despesas + caixa avulso
+(function(){
+  const emb=DB.fornecedores[0], doc=DB.fornecedores[1];
+  // shape: {id,desc,categoria,valor,tipo:'fixa'|'variavel',recorrencia:null|'mensal'|'semanal',parcelas:null|{atual,total},pago,vencimento,pagoEm,fornecedorId}
+  DB.despesasNeg=[
+    // Recorrentes mensais (instância do mês gerada on-render, técnica das Contas pessoais)
+    {id:nid(),desc:'Aluguel da cozinha',categoria:'aluguel',valor:1200,tipo:'fixa',recorrencia:'mensal',parcelas:null,pago:true,vencimento:offset(-5),pagoEm:offset(-5),fornecedorId:null},
+    {id:nid(),desc:'Luz e água',categoria:'luz/água',valor:425,tipo:'fixa',recorrencia:'mensal',parcelas:null,pago:true,vencimento:offset(-3),pagoEm:offset(-2),fornecedorId:null},
+    // Parcelada (estilo Kyte): forno em 6x, parcela 3 vence em breve
+    {id:nid(),desc:'Forno industrial (parcela)',categoria:'outros',valor:350,tipo:'fixa',recorrencia:null,parcelas:{atual:3,total:6},pago:false,vencimento:offset(6),pagoEm:null,fornecedorId:null},
+    // A pagar com vencimento próximo
+    {id:nid(),desc:'Gás (2 botijões)',categoria:'insumos',valor:150,tipo:'variavel',recorrencia:null,parcelas:null,pago:false,vencimento:offset(3),pagoEm:null,fornecedorId:null},
+    // Pagas — espalhadas por ~90 dias
+    {id:nid(),desc:'Chocolate e leite condensado',categoria:'insumos',valor:380,tipo:'variavel',recorrencia:null,parcelas:null,pago:true,vencimento:offset(-12),pagoEm:offset(-12),fornecedorId:doc.id},
+    {id:nid(),desc:'Caixas e sacos kraft',categoria:'embalagem',valor:240,tipo:'variavel',recorrencia:null,parcelas:null,pago:true,vencimento:offset(-20),pagoEm:offset(-20),fornecedorId:emb.id},
+    {id:nid(),desc:'Farinha, ovos e recheios',categoria:'insumos',valor:210,tipo:'variavel',recorrencia:null,parcelas:null,pago:true,vencimento:offset(-35),pagoEm:offset(-35),fornecedorId:null},
+    {id:nid(),desc:'Impulsionamento Instagram',categoria:'marketing',valor:90,tipo:'variavel',recorrencia:null,parcelas:null,pago:true,vencimento:offset(-15),pagoEm:offset(-15),fornecedorId:null},
+    {id:nid(),desc:'Taxa da maquininha',categoria:'taxas',valor:64,tipo:'variavel',recorrencia:null,parcelas:null,pago:true,vencimento:offset(-30),pagoEm:offset(-30),fornecedorId:null},
+    {id:nid(),desc:'Embalagens personalizadas',categoria:'embalagem',valor:185,tipo:'variavel',recorrencia:null,parcelas:null,pago:true,vencimento:offset(-55),pagoEm:offset(-55),fornecedorId:emb.id},
+    {id:nid(),desc:'Aluguel da cozinha (mês anterior)',categoria:'aluguel',valor:1200,tipo:'fixa',recorrencia:null,parcelas:null,pago:true,vencimento:offset(-65),pagoEm:offset(-65),fornecedorId:null},
+    {id:nid(),desc:'Luz e água (mês anterior)',categoria:'luz/água',valor:398,tipo:'fixa',recorrencia:null,parcelas:null,pago:true,vencimento:offset(-33),pagoEm:offset(-33),fornecedorId:null},
+    {id:nid(),desc:'Forno industrial (parcela 2/6)',categoria:'outros',valor:350,tipo:'fixa',recorrencia:null,parcelas:{atual:2,total:6},pago:true,vencimento:offset(-24),pagoEm:offset(-24),fornecedorId:null},
+  ];
+  // Lançamentos manuais de caixa: {id,tipo:'entrada'|'saida',desc,valor,data}
+  DB.caixaAvulso=[
+    {id:nid(),tipo:'entrada',desc:'Saldo inicial do caixa',valor:5000,data:offset(-88)},
+    {id:nid(),tipo:'entrada',desc:'Venda de forma usada',valor:60,data:offset(-18)},
+    {id:nid(),tipo:'saida',desc:'Combustível das entregas',valor:55,data:offset(-4)},
+    {id:nid(),tipo:'saida',desc:'Retirada pro troco',valor:80,data:offset(-10)},
+  ];
 })();
 
 // Perfil inicial reflete o modo atual (DB já definido aqui — sem TDZ) — Etapa 21

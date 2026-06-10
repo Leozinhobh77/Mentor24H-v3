@@ -1216,3 +1216,52 @@ select.field{cursor:pointer}
 .enc-acts-ico{display:inline-flex;gap:6px;flex-shrink:0;margin-left:auto}
 .enc-done{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--income);flex:1 1 auto}
 @media(max-width:560px){.enc-grid{grid-template-columns:1fr}}
+
+/* ═══ FINANCEIRO (Etapa 25A) ═══ */
+.fin-mes{display:flex;align-items:center;gap:var(--s-2)}
+.fin-mes b{font-size:14.5px;color:var(--text-1);min-width:120px;text-align:center}
+.fin-kpi-sub{font-size:11.5px;color:var(--text-3);margin-top:3px}
+/* lista de despesas */
+.fin-lista{display:flex;flex-direction:column;gap:var(--s-2)}
+.fin-card{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);padding:var(--s-3) var(--s-4);background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-md)}
+.fin-card-l{min-width:0;flex:1}
+.fin-desc{font-size:13.5px;font-weight:700;color:var(--text-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fin-meta{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:5px}
+.fin-st{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:var(--r-full)}
+.fin-st.pago{background:var(--income-soft);color:var(--income)}
+.fin-st.apagar{background:var(--warning-soft);color:var(--warning)}
+.fin-st.atrasada{background:var(--expense-soft);color:var(--expense)}
+.fin-card-r{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.fin-val{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;color:var(--text-1)}
+.fin-acts{display:flex;align-items:center;gap:5px}
+/* donut + legenda */
+.fin-donut{display:flex;align-items:center;gap:var(--s-5);flex-wrap:wrap}
+.fin-legend{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.fin-leg{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-2)}
+.fin-leg .dot{width:10px;height:10px;border-radius:var(--r-full);flex-shrink:0}
+.fin-leg b{margin-left:auto;font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--text-1)}
+.fin-check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);margin-top:var(--s-2);cursor:pointer}
+/* projecao 30d */
+.fin-alert{font-size:13px;color:var(--expense);background:var(--expense-soft);padding:var(--s-3);border-radius:var(--r-md);margin-bottom:var(--s-3);line-height:1.5}
+.fin-ok{font-size:13px;color:var(--income);background:var(--income-soft);padding:var(--s-3);border-radius:var(--r-md);margin-bottom:var(--s-3)}
+/* extrato */
+.fin-extrato{display:flex;flex-direction:column}
+.fin-ev{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-2) 0;border-top:1px solid var(--border)}
+.fin-ev:first-child{border-top:none}
+.fin-ev-ico{width:30px;height:30px;border-radius:var(--r-full);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.fin-ev-ico.in{background:var(--income-soft);color:var(--income)}
+.fin-ev-ico.out{background:var(--expense-soft);color:var(--expense)}
+.fin-ev-mid{min-width:0;flex:1}
+.fin-ev-desc{font-size:13px;font-weight:600;color:var(--text-1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fin-ev-sub{font-size:11.5px;color:var(--text-3);margin-top:1px}
+.fin-ev-val{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;flex-shrink:0}
+.fin-ev-val.in{color:var(--income)}
+.fin-ev-val.out{color:var(--expense)}
+/* delta em pilula (escopado ao Financeiro — .delta global so existe no .hero) */
+#fin-body .delta{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:3px 9px;border-radius:var(--r-full)}
+/* responsivo 360px: card empilha, valor/acoes descem sem sobrepor */
+@media(max-width:560px){
+  .fin-card{flex-direction:column;align-items:stretch}
+  .fin-card-r{flex-direction:row;align-items:center;justify-content:space-between}
+  .fin-donut{justify-content:center}
+}

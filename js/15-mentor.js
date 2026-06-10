@@ -619,7 +619,7 @@ function pintaBriefingDash(){
   const wa=tel=>window.open('https://wa.me/55'+(tel||'').replace(/\D/g,''),'_blank');
 
   // ── índice estático ──
-  const NAVICON={dashboard:'home',financas:'wallet',transacoes:'repeat',metas:'target',agenda:'calendar',saude:'heart',tarefas:'check',habitos:'flame',contatos:'users',vendas:'cart',produtos:'box',estoque:'archive',clientes:'users',relatorios:'chart',documentos:'file',encomendas:'package',mentor:'spark',perfil:'user'};
+  const NAVICON={dashboard:'home',financas:'wallet',transacoes:'repeat',metas:'target',agenda:'calendar',saude:'heart',tarefas:'check',habitos:'flame',contatos:'users',vendas:'cart',produtos:'box',estoque:'archive',clientes:'users',relatorios:'chart',documentos:'file',encomendas:'package',financeiro:'wallet',mentor:'spark',perfil:'user'};
   const NAVLIST=[['dashboard','Dashboard'],...Object.entries(TITLES)];
   const ACOES=[
     {key:'new:conta',titulo:'Nova conta',tela:'financas'},
