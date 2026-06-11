@@ -6,14 +6,16 @@
 
 ## 🔄 Pendente / Agora
 
-### Etapa 25B — Financeiro: MEI + Metas + Pró-labore + Mentor (executor-20260610-003)
-- [ ] 06 · DB — config MEI + metasNeg + proLabore + reservaNeg + seed → construtor · dep: —
-- [ ] 07 · Aba 🏛️ MEI — faturamento vs limite + projeção + DAS + DASN → construtor · dep: 06
-- [ ] 08 · Aba 🎯 Metas + Pró-labore (ponte PF/PJ) + Reserva → construtor · dep: 07
-- [ ] 09 · Mentor — 7 regras novas de Financeiro (mk + NUC 3 tons) → construtor · dep: 08
-- [ ] 10 · CSS .fin-* (MEI/Metas) + polish responsivo + tema → forge · dep: 09
+<!-- próxima etapa entra aqui -->
 
 ## ✅ Concluído
+
+### Etapa 25B — Financeiro: MEI + Metas + Pró-labore + Mentor ✅ (2026-06-10 · executor-20260610-003 · Sentinela 30/30)
+- [x] 06 · DB — config MEI + metasNeg + proLabore + reservaNeg + seed → construtor · dep: — ✅ 5 collections + seed completo
+- [x] 07 · Aba 🏛️ MEI — faturamento vs limite + projeção + DAS + DASN → construtor · dep: 06 ✅ barra+projeção+DAS 12 meses+config
+- [x] 08 · Aba 🎯 Metas + Pró-labore (ponte PF/PJ) + Reserva → construtor · dep: 07 ✅ CRUD+pró-labore pont PF/PJ+reserva guardar/resgatar
+- [x] 09 · Mentor — 7 regras novas de Financeiro (mk + NUC 3 tons) → construtor · dep: 08 ✅ 7 regras + NUC + rotas virtuais
+- [x] 10 · CSS .fin-* (MEI/Metas) + polish responsivo + tema → forge · dep: 09 ✅ 360px sem overflow, claro+escuro, zero hardcode
 <!-- tarefas concluídas descem pra cá -->
 
 ### Etapa 25A — Financeiro do Negócio: Caixa + Despesas ✅ (2026-06-10 · executor-20260610-002 · Sentinela 31/31)

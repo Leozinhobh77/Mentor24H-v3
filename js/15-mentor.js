@@ -317,6 +317,63 @@ const Mentor=(()=>{
       serio:[d=>`sua categoria "${d.cat}" é a que mais cresce (${d.n} itens)`,d=>`"${d.cat}" lidera seus salvos com ${d.n} itens`],
       descontraido:[d=>`sua categoria "${d.cat}" tá crescendo (${d.n}) 📈`,d=>`"${d.cat}" virou febre: já são ${d.n} salvos`],
       motivador:[d=>`"${d.cat}" tá bombando (${d.n})! que tal revisitar um? 🚀`,d=>`${d.n} salvos em "${d.cat}" — seu interesse tá claro, explora mais!`]
+    },
+    // ── FINANCEIRO NEGÓCIO 25B ──
+    'fin-das-vence':{
+      serio:[d=>d.dv<0?`o DAS deste mês está atrasado — pague logo para evitar multa`:`o DAS vence em ${d.dv} dia${d.dv===1?'':'s'} — organize o pagamento`,
+             d=>d.dv<0?`DAS do MEI em atraso; juros crescem com o tempo`:`faltam ${d.dv} dia${d.dv===1?'':'s'} pro DAS: ${fmt(76.90)} — coloca no radar`],
+      descontraido:[d=>d.dv<0?`ó, o DAS ficou pra trás 😬 — paga logo pra não acumular multa`:`DAS chegando: ${d.dv}d (${fmt(d.valor)}) 👀`,
+             d=>d.dv<0?`o DAS foi esquecido esse mês, hein — melhor regularizar logo`:`${d.dv}d pro DAS do MEI — é rapidinho no app do INSS`],
+      motivador:[d=>d.dv<0?`DAS atrasado: quita hoje e limpa essa pendência 💪`:`bora adiantar o DAS (${d.dv}d, ${fmt(d.valor)}) e tirar da cabeça! 🎯`,
+             d=>d.dv<0?`regulariza o DAS agora e segue em dia com o MEI`:`${d.dv}d pro DAS — paga e pronto, MEI em dia! ✓`]
+    },
+    'fin-mei-limite':{
+      serio:[d=>`você usou ${d.pct}% do limite MEI (${fmt(d.fat)} de ${fmt(d.limite)})`,
+             d=>`faturamento do ano em ${d.pct}% do teto MEI — acompanhe de perto`],
+      descontraido:[d=>`já usou ${d.pct}% do limite do MEI esse ano 📊`,
+             d=>`${d.pct}% do teto MEI consumido — ficar de olho não custa nada`],
+      motivador:[d=>`${d.pct}% do limite MEI — que tal revisar o ritmo e planejar? 🎯`,
+             d=>`${fmt(d.fat)} faturados: ${d.pct}% do MEI. Acompanha de perto e decide o próximo passo`]
+    },
+    'fin-mei-projecao':{
+      serio:[d=>`nesse ritmo você fecha o ano em ${fmt(d.proj)}, ultrapassando o limite MEI de ${fmt(d.limite)}`,
+             d=>`projeção anual: ${fmt(d.proj)} — acima do teto de ${fmt(d.limite)}`],
+      descontraido:[d=>`a conta não fecha: projetando ${fmt(d.proj)} num limite de ${fmt(d.limite)} 👀`,
+             d=>`pelo ritmo atual, vai estourar o MEI (${fmt(d.proj)} vs ${fmt(d.limite)})`],
+      motivador:[d=>`planeje agora: projeção em ${fmt(d.proj)} — hora de decidir o que fazer antes de estourar 💡`,
+             d=>`${fmt(d.proj)} projetados — revisa o ritmo e já sai na frente da situação`]
+    },
+    'fin-cx-negativo':{
+      serio:[d=>`o caixa está projetado para ficar negativo nos próximos 30 dias`,
+             d=>`pelo ritmo atual, o saldo do caixa pode zerar em breve`],
+      descontraido:[d=>`atenção: o caixa pode entrar no negativo nos próximos 30d 📉`,
+             d=>`o fluxo do caixa tá apertado — dá uma olhada nos próximos compromissos`],
+      motivador:[d=>`antecipa um recebimento ou segura uma despesa — o caixa pede atenção agora 💪`,
+             d=>`hora de agir: o caixa projetado pede um reforço nas próximas semanas`]
+    },
+    'fin-despesa-subindo':{
+      serio:[d=>`as despesas deste mês subiram ${d.pct}% em relação ao mês anterior`,
+             d=>`despesas do negócio cresceram ${d.pct}% no período`],
+      descontraido:[d=>`gastos do negócio foram ${d.pct}% a mais que o mês passado 📊`,
+             d=>`despesas subindo ${d.pct}% — vale olhar onde tá crescendo`],
+      motivador:[d=>`despesas +${d.pct}%: pequenas revisões agora podem fazer diferença 💡`,
+             d=>`${d.pct}% a mais em despesas — identifica o que subiu e já toma a decisão`]
+    },
+    'fin-meta-batida':{
+      serio:[d=>`meta de ${d.tipo==='faturamento'?'faturamento':'lucro'} do mês atingida (${fmt(d.alvo)})`,
+             d=>`a meta de ${d.tipo} foi alcançada: ${fmt(d.alvo)} no mês`],
+      descontraido:[d=>`boa! meta de ${d.tipo==='faturamento'?'faturamento':'lucro'} batida esse mês 🎉`,
+             d=>`${d.tipo==='faturamento'?'faturamento':'lucro'} no alvo: ${fmt(d.alvo)} conquistado 🏆`],
+      motivador:[d=>`meta de ${d.tipo} batida! bora manter o ritmo e superar no próximo mês 🚀`,
+             d=>`${fmt(d.alvo)} de ${d.tipo} — você bateu a meta! foco em manter esse nível 💪`]
+    },
+    'fin-prolabore':{
+      serio:[d=>`o pró-labore de ${fmt(d.valor)} deste mês ainda não foi retirado`,
+             d=>`retirada do pró-labore (${fmt(d.valor)}) pendente no mês`],
+      descontraido:[d=>`não esquece do seu salário! pró-labore de ${fmt(d.valor)} ainda não foi retirado`,
+             d=>`o dono merece pagar — pró-labore de ${fmt(d.valor)} no aguardo 😄`],
+      motivador:[d=>`bora retirar seu pró-labore de ${fmt(d.valor)} — separa PJ de PF e fortalece as duas partes! 💪`,
+             d=>`retire o pró-labore (${fmt(d.valor)}) e fortaleça também sua vida pessoal 🎯`]
     }
   };
 
@@ -376,6 +433,67 @@ const Mentor=(()=>{
     ()=>{const p=DB.produtos.filter(x=>x.ativo&&x.preco>0&&(x.preco-x.custo)/x.preco<0.20);if(!p.length)return null;
       return mk('neg-margem','Negócio','negocio','atencao',{n:p.length,nomes:p.slice(0,3).map(x=>x.nome).join(', ')+(p.length>3?'…':'')},
         'Margem baixa',{label:'Ver produtos',navTo:'produtos'});},
+    // FINANCEIRO NEGÓCIO — Etapa 25B (MEI + Metas + Pró-labore)
+    ()=>{if(!DB.negocioFin||!DB.dasPagos)return null;
+      const mk2=offset(0).slice(0,7);const rec=DB.dasPagos.find(x=>x.ym===mk2);
+      if(rec&&rec.pago)return null;
+      const venc=`${mk2}-${String(DB.negocioFin.dasDia).padStart(2,'0')}`;
+      const dv=Math.round((new Date(venc+'T00:00:00')-new Date(offset(0)+'T00:00:00'))/86400000);
+      if(dv>3)return null;
+      return mk('fin-das-vence','Negócio','negocio',dv<0?'critico':'atencao',{dv,venc,valor:DB.negocioFin.dasValor},
+        dv<0?'DAS atrasado':'DAS vencendo em breve',{label:'Ver MEI',navTo:'financeiro-mei'});},
+    ()=>{if(!DB.negocioFin)return null;
+      const ano=offset(0).slice(0,4);const fat=DB.vendas.filter(v=>v.data.startsWith(ano)).reduce((s,v)=>s+(+v.total),0);
+      const pct=fat/DB.negocioFin.meiLimite*100;if(pct<70)return null;
+      return mk('fin-mei-limite','Negócio','negocio','atencao',{pct:Math.round(pct),fat,limite:DB.negocioFin.meiLimite},
+        pct>=90?'Limite MEI crítico':'Limite MEI em atenção',{label:'Ver MEI',navTo:'financeiro-mei'});},
+    ()=>{if(!DB.negocioFin)return null;
+      const ano=offset(0).slice(0,4);const mesN=+offset(0).slice(5,7);
+      const meses=[];for(let m=1;m<=mesN;m++)meses.push(DB.vendas.filter(v=>v.data.startsWith(`${ano}-${String(m).padStart(2,'0')}`)).reduce((s,v)=>s+(+v.total),0));
+      const media=meses.reduce((s,v)=>s+v,0)/Math.max(1,mesN);const proj=media*12;
+      if(proj<=DB.negocioFin.meiLimite)return null;
+      return mk('fin-mei-projecao','Negócio','negocio','atencao',{proj,limite:DB.negocioFin.meiLimite},
+        'MEI: projeção estourando',{label:'Ver MEI',navTo:'financeiro-mei'});},
+    ()=>{if(!DB.caixaAvulso||!DB.despesasNeg)return null;
+      // projeção inline: saldo acumulado + despesas a pagar nos próximos 30d
+      const h2=offset(0);
+      let sAtu=0;
+      DB.vendas.forEach(v=>{const d=v.pagamento!=='a_prazo'?v.data:(v.recebidoEm||v.data);if(d<=h2)sAtu+=+v.total;});
+      DB.encomendas.forEach(e=>{if((e.criadaEm||e.data)<=h2&&+e.sinal>0)sAtu+=+e.sinal;});
+      DB.despesasNeg.forEach(d=>{if(d.pago&&d.pagoEm&&d.pagoEm<=h2)sAtu-=d.valor;});
+      DB.caixaAvulso.forEach(a=>{if(a.data<=h2)sAtu+=a.tipo==='entrada'?+a.valor:-a.valor;});
+      let s=sAtu,diaN=null;
+      for(let i=1;i<=30&&!diaN;i++){
+        DB.despesasNeg.forEach(d=>{if(!d.pago&&d.vencimento===offset(i))s-=d.valor;});
+        if(s<0)diaN=offset(i);
+      }
+      if(!diaN)return null;
+      return mk('fin-cx-negativo','Negócio','negocio','atencao',{dia:diaN},
+        'Caixa projetado negativo',{label:'Ver Caixa',navTo:'financeiro-caixa'});},
+    ()=>{if(!DB.despesasNeg)return null;
+      const mk2=offset(0).slice(0,7);
+      const addMesM=(ym,n)=>{const a=+ym.slice(0,4),m=+ym.slice(5,7);const d=new Date(a,m-1+n,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;};
+      const totMes=m=>DB.despesasNeg.filter(d=>d.vencimento&&d.vencimento.startsWith(m)).reduce((s,d)=>s+d.valor,0);
+      const tAt=totMes(mk2),tAnt=totMes(addMesM(mk2,-1));
+      if(!tAnt||tAt<=tAnt*1.20)return null;
+      const pct=Math.round((tAt-tAnt)/tAnt*100);
+      return mk('fin-despesa-subindo','Negócio','negocio','info',{pct,tAt},
+        'Despesas subindo',{label:'Ver despesas',navTo:'financeiro-despesas'});},
+    ()=>{if(!DB.metasNeg||!DB.metasNeg.length)return null;
+      const mk2=offset(0).slice(0,7);
+      const bat=DB.metasNeg.filter(m=>m.mesRef===mk2).find(m=>{
+        const fat2=DB.vendas.filter(v=>v.data.startsWith(m.mesRef)).reduce((s,v)=>s+(+v.total),0);
+        return fat2>=m.alvo;
+      });
+      if(!bat)return null;
+      return mk('fin-meta-batida','Negócio','negocio','oportunidade',{tipo:bat.tipo,alvo:bat.alvo},
+        'Meta batida 🎉',{label:'Ver Metas',navTo:'financeiro-metas'});},
+    ()=>{if(!DB.negocioFin||!DB.proLaboreReg)return null;
+      const mk2=offset(0).slice(0,7);
+      if(DB.proLaboreReg.some(r=>r.ym===mk2))return null;
+      if(+offset(0).slice(8,10)<DB.negocioFin.proLaboreDia)return null;
+      return mk('fin-prolabore','Negócio','negocio','info',{valor:DB.negocioFin.proLaboreValor,dia:DB.negocioFin.proLaboreDia},
+        'Pró-labore não retirado',{label:'Ver Metas',navTo:'financeiro-metas'});},
     // SAÚDE
     ()=>{let n=0;DB.medicamentos.filter(m=>m.status==='ativo'&&m.freq==='diario').forEach(m=>{
         (m.horarios||[]).forEach(h=>{if(h.hora<HHMM&&!DB.tomadas.some(t=>t.medId===m.id&&t.data===offset(0)&&t.hora===h.hora))n++;});});

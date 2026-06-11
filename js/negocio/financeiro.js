@@ -25,8 +25,8 @@ const Financeiro=(()=>{
 
   function segBar(){
     const btn=(k,l)=>`<button class="${aba===k?'on':''}" data-faba="${k}">${l}</button>`;
-    return `<div class="toolbar" style="margin-bottom:var(--s-3)"><div class="seg enc-seg">
-      ${btn('caixa','💵 Caixa')}${btn('despesas','📑 Despesas')}
+    return `<div class="toolbar fin-seg-wrap" style="margin-bottom:var(--s-3)"><div class="seg enc-seg fin-seg4">
+      ${btn('caixa','💵 Caixa')}${btn('despesas','📑 Despesas')}${btn('mei','🏛️ MEI')}${btn('metas','🎯 Metas')}
     </div></div>`;
   }
 
@@ -36,14 +36,118 @@ const Financeiro=(()=>{
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)">
         <div>
           <h2 style="font-size:20px;font-weight:700;color:var(--text-1);margin:0">Financeiro</h2>
-          <p style="font-size:13px;color:var(--text-3);margin:4px 0 0">Caixa e despesas do negócio · regime de caixa</p>
+          <p style="font-size:13px;color:var(--text-3);margin:4px 0 0">Caixa, despesas, MEI e metas do negócio</p>
         </div>
       </div>
       ${segBar()}
       <div id="fin-body"></div>`;
     root.querySelectorAll('[data-faba]').forEach(b=>b.onclick=()=>{aba=b.dataset.faba;render();});
     const body=root.querySelector('#fin-body');
-    if(aba==='caixa')renderCaixa(body);else renderDespesas(body);
+    if(aba==='caixa')renderCaixa(body);
+    else if(aba==='despesas')renderDespesas(body);
+    else if(aba==='mei')renderMei(body);
+    else renderMetas(body);
+  }
+
+  /* ════════ 🏛️ MEI ════════ */
+  // ATENÇÃO: MEI conta por COMPETÊNCIA (data da venda, total cheio) — diferente da aba Caixa (regime de caixa)
+  function fatAno(){
+    const ano=offset(0).slice(0,4);
+    return DB.vendas.filter(v=>v.data.startsWith(ano)).reduce((s,v)=>s+(+v.total),0);
+  }
+  function fatMes(ym){return DB.vendas.filter(v=>v.data.startsWith(ym)).reduce((s,v)=>s+(+v.total),0);}
+
+  function renderMei(root){
+    const cfg=DB.negocioFin;
+    const ano=offset(0).slice(0,4);
+    const mesAtualN=+offset(0).slice(5,7);
+    const fat=fatAno();
+    const pct=Math.min(Math.round(fat/cfg.meiLimite*100),200);
+    const barCor=pct<70?'var(--income)':pct<100?'var(--warning)':'var(--expense)';
+    const disp=Math.max(0,cfg.meiLimite-fat);
+    // projeção: média mensal × 12
+    const fatMeses=[];for(let m=1;m<=mesAtualN;m++)fatMeses.push(fatMes(`${ano}-${String(m).padStart(2,'0')}`));
+    const mediaM=fatMeses.reduce((s,v)=>s+v,0)/Math.max(1,mesAtualN);
+    const projecao=Math.round(mediaM*12);
+    const projEstoura=projecao>cfg.meiLimite;
+    // DAS — 12 meses do ano
+    const dasRows=[];
+    for(let m=1;m<=12;m++){
+      const ym=`${ano}-${String(m).padStart(2,'0')}`;
+      const rec=DB.dasPagos.find(x=>x.ym===ym)||{ym,pago:false,pagoEm:null};
+      const venc=`${ym}-${String(cfg.dasDia).padStart(2,'0')}`;
+      const dv=Math.round((new Date(venc+'T00:00:00')-new Date(hoje()+'T00:00:00'))/86400000);
+      const eMes=m===mesAtualN;
+      let status='';
+      if(rec.pago)status=`<span class="fin-das-st pago">${svg('tick',11)} Pago ${dmy(rec.pagoEm)}</span>`;
+      else if(eMes&&dv<0)status=`<span class="fin-das-st atrasado">Atrasado</span>`;
+      else if(eMes)status=`<span class="fin-das-st avencer">${dv===0?'Vence hoje':`Vence em ${dv}d`}</span>`;
+      else if(m<mesAtualN)status=`<span class="fin-das-st atrasado">Em aberto</span>`;
+      else status=`<span class="fin-das-st futuro">${dmy(venc)}</span>`;
+      dasRows.push(`<div class="fin-das-item${eMes?' atual':''}">
+        <span class="fin-das-mes">${MESES[m-1].slice(0,3)}</span>
+        <span class="fin-das-val">${fmt(cfg.dasValor)}</span>
+        ${status}
+        ${!rec.pago&&m<=mesAtualN?`<button class="btn btn-primary btn-sm" data-pagadas="${ym}">${svg('tick',12)} Paguei</button>`:''}
+      </div>`);
+    }
+    // DASN: aviso até maio+1 (vence 31/05)
+    const dasnVenc=`${ano}-05-31`;const dasnDv=Math.round((new Date(dasnVenc+'T00:00:00')-new Date(hoje()+'T00:00:00'))/86400000);
+
+    root.innerHTML=`
+      <div class="page-kpis" style="margin-bottom:var(--s-4)">
+        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--brand-soft);color:var(--brand-text)">${svg('activity',14)}</span>Faturado no ano</div><div class="kv" style="color:${barCor}">${fmt(fat)}</div></div>
+        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--income-soft);color:var(--income)">${svg('wallet',14)}</span>Disponível MEI</div><div class="kv">${fmt(disp)}</div></div>
+        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--info-soft);color:var(--info)">${svg('chart',14)}</span>% do limite</div><div class="kv" style="color:${barCor}">${pct}%</div></div>
+      </div>
+      <div class="card" style="margin-bottom:var(--s-4)">
+        <div class="card-head"><div class="ico" style="background:var(--brand-soft);color:var(--brand-text)">${svg('trendup',16)}</div>
+          <h3>Limite MEI ${ano}</h3>
+          <button class="btn-icon" data-meicfg style="margin-left:auto" title="Configurar MEI">${svg('pencil',16)}</button>
+        </div>
+        <div class="fin-mei-label"><span>${fmt(fat)}</span><span style="color:var(--text-3)"> de ${fmt(cfg.meiLimite)}</span></div>
+        <div class="fin-mei-bar"><div class="fin-mei-prog" style="width:${Math.min(pct,100)}%;background:${barCor}"></div></div>
+        ${pct>=90?`<div class="fin-alert" style="margin-top:var(--s-3)">⚠️ ${pct>=100?'Limite ultrapassado! Desenquadramento retroativo se >R$ 97.200.':'Faturamento em '+pct+'% do limite — atenção ao próximo mês.'}</div>`:''}
+        <div class="fin-mei-proj" style="margin-top:var(--s-3)">📊 Nesse ritmo você fecha o ano em <b style="color:${projEstoura?'var(--expense)':'var(--income)'}">${fmt(projecao)}</b>${projEstoura?` <span class="chip-mini" style="background:var(--expense-soft);color:var(--expense)">⚠️ estoura o limite</span>`:''}</div>
+        <p style="font-size:11px;color:var(--text-3);margin-top:var(--s-2)">Faturamento por COMPETÊNCIA — data da venda, total cheio (à vista e a prazo).</p>
+      </div>
+      <div class="card" style="margin-bottom:var(--s-4)">
+        <div class="card-head"><div class="ico" style="background:var(--expense-soft);color:var(--expense)">${svg('calendar',16)}</div><h3>DAS Mensal · ${fmt(cfg.dasValor)}/mês</h3></div>
+        <div class="fin-das-grid">${dasRows.join('')}</div>
+      </div>
+      ${dasnDv>=0?`<div class="card fin-dasn-card" style="margin-bottom:var(--s-4)">
+        <div class="card-head"><div class="ico" style="background:var(--info-soft);color:var(--info)">${svg('file',16)}</div><h3>DASN-SIMEI</h3></div>
+        <p style="color:var(--text-2);font-size:13px">Declaração anual obrigatória — prazo: <b>31/05/${ano}</b>${dasnDv>0?` (${dasnDv}d)`:' <span style="color:var(--expense)">hoje!</span>'}.</p>
+      </div>`:''}`;
+
+    root.querySelectorAll('[data-pagadas]').forEach(b=>b.onclick=()=>{
+      const ym=b.dataset.pagadas,rec=DB.dasPagos.find(x=>x.ym===ym);
+      if(rec){rec.pago=true;rec.pagoEm=hoje();}else DB.dasPagos.push({ym,pago:true,pagoEm:hoje()});
+      Toast.show('DAS marcado como pago');render();
+    });
+    root.querySelector('[data-meicfg]').onclick=()=>formMeiCfg();
+  }
+
+  function formMeiCfg(){
+    const cfg=DB.negocioFin;
+    Modal.open('Configurar MEI',`
+      <div class="frow">
+        <div class="fg"><label>Limite MEI (R$)</label><input class="field" id="mc-lim" type="number" min="1" step="100" value="${cfg.meiLimite}"></div>
+        <div class="fg"><label>Valor DAS (R$)</label><input class="field" id="mc-das" type="number" min="0" step="0.01" value="${cfg.dasValor}"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Vencimento DAS (dia)</label><input class="field" id="mc-dia" type="number" min="1" max="28" value="${cfg.dasDia}"></div>
+        <div class="fg"><label>Pró-labore (R$)</label><input class="field" id="mc-pl" type="number" min="0" step="100" value="${cfg.proLaboreValor}"></div>
+      </div>
+      <div class="fg"><label>Dia do pró-labore</label><input class="field" id="mc-pldia" type="number" min="1" max="28" value="${cfg.proLaboreDia}"></div>`,
+      b=>{
+        cfg.meiLimite=+b.querySelector('#mc-lim').value||cfg.meiLimite;
+        cfg.dasValor=+(+b.querySelector('#mc-das').value||cfg.dasValor).toFixed(2);
+        cfg.dasDia=+b.querySelector('#mc-dia').value||cfg.dasDia;
+        cfg.proLaboreValor=+b.querySelector('#mc-pl').value||cfg.proLaboreValor;
+        cfg.proLaboreDia=+b.querySelector('#mc-pldia').value||cfg.proLaboreDia;
+        Toast.show('Configuração salva');render();
+      },'Salvar');
   }
 
   /* ════════ 📑 DESPESAS ════════ */
@@ -190,6 +294,152 @@ const Financeiro=(()=>{
       },d?'Salvar':'Adicionar');
   }
 
+  /* ════════ 🎯 METAS + PRÓ-LABORE + RESERVA ════════ */
+  function lucroMes(ym){
+    const vendas=DB.vendas.filter(v=>v.data.startsWith(ym));
+    const receita=vendas.reduce((s,v)=>s+(+v.total),0);
+    let custo=0;
+    vendas.forEach(v=>v.itens.forEach(i=>{const p=DB.produtos&&DB.produtos.find(x=>x.id===i.produtoId);if(p)custo+=p.custo*(i.qtd||1);}));
+    const despPagas=DB.despesasNeg.filter(d=>d.pago&&ymOf(d.pagoEm)===ym).reduce((s,d)=>s+d.valor,0);
+    return receita-custo-despPagas;
+  }
+
+  function renderMetas(root){
+    const cfg=DB.negocioFin;
+    const mesAtual=offset(0).slice(0,7);
+    // ── Metas ──
+    function progMeta(m){
+      if(m.tipo==='faturamento')return fatMes(m.mesRef);
+      return Math.max(0,lucroMes(m.mesRef));
+    }
+    const metasHTML=DB.metasNeg.length===0
+      ?`<div class="empty"><div style="font-size:32px;margin-bottom:8px">🎯</div><h4>Nenhuma meta cadastrada</h4><p style="color:var(--text-3)">Defina alvos de faturamento ou lucro pra acompanhar o desempenho.</p></div>`
+      :DB.metasNeg.map(m=>{
+        const prog=progMeta(m);
+        const pct=Math.min(Math.round(prog/m.alvo*100),200);
+        const cor=pct>=100?'var(--income)':pct>=70?'var(--warning)':'var(--brand-text)';
+        const batida=pct>=100;
+        return `<div class="fin-meta-card">
+          <div class="fin-meta-top">
+            <div>
+              <div class="fin-meta-tipo">${m.tipo==='faturamento'?'📈 Faturamento':'💰 Lucro'} · ${mesLabel(m.mesRef)}</div>
+              <div class="fin-meta-val"><b style="color:${cor}">${fmt(prog)}</b> <span style="color:var(--text-3)">de ${fmt(m.alvo)}</span> ${batida?'<span class="chip-mini" style="background:var(--income-soft);color:var(--income)">🎉 Batida!</span>':''}</div>
+            </div>
+            <div class="fin-acts">
+              <button class="btn-icon" title="Editar" data-editm="${m.id}">${svg('pencil',14)}</button>
+              <button class="btn-icon" title="Excluir" data-delm="${m.id}" style="color:var(--expense)">${svg('trash',14)}</button>
+            </div>
+          </div>
+          <div class="fin-meta-bar"><div style="width:${Math.min(pct,100)}%;background:${cor}"></div></div>
+          <div class="fin-meta-pct" style="color:${cor}">${pct}%</div>
+        </div>`;
+      }).join('');
+
+    // ── Pró-labore ──
+    const plMes=DB.proLaboreReg.find(r=>r.ym===mesAtual);
+    const plOk=!!plMes;
+    const passoLaboreDia=+offset(0).slice(8,10)>=cfg.proLaboreDia;
+
+    // ── Reserva ──
+    const saldo=DB.reservaNeg.saldo;
+    const ultMovs=DB.reservaNeg.movimentos.slice(-3).reverse();
+
+    root.innerHTML=`
+      <div class="card" style="margin-bottom:var(--s-4)">
+        <div class="card-head"><div class="ico" style="background:var(--brand-soft);color:var(--brand-text)">${svg('target',16)}</div><h3>Metas do negócio</h3>
+          <button class="btn btn-primary btn-sm" style="margin-left:auto" data-novam>${svg('plus',14)} Nova meta</button>
+        </div>
+        ${metasHTML}
+      </div>
+      <div class="card fin-prolab-card" style="margin-bottom:var(--s-4)">
+        <div class="card-head"><div class="ico" style="background:var(--income-soft);color:var(--income)">${svg('wallet',16)}</div><h3>Pró-labore</h3></div>
+        <p style="font-size:12px;color:var(--text-3);margin:0 0 var(--s-3)">Pró-labore separa o dinheiro da empresa do seu — saúde financeira pra PF e PJ.</p>
+        <div style="display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap">
+          <div>
+            <div class="fin-meta-tipo">Valor mensal</div>
+            <div class="fin-meta-val"><b>${fmt(cfg.proLaboreValor)}</b></div>
+          </div>
+          <div>
+            <div class="fin-meta-tipo">Status ${mesLabel(mesAtual)}</div>
+            ${plOk
+              ?`<span class="fin-st pago">${svg('tick',12)} Retirado ${dmy(plMes.data)}</span>`
+              :`<span class="fin-st ${passoLaboreDia?'apagar':'futuro'}">${passoLaboreDia?'Em aberto':'Aguarda dia '+cfg.proLaboreDia}</span>`}
+          </div>
+          ${!plOk?`<button class="btn btn-primary" data-retirpl style="margin-left:auto">💸 Retirar pró-labore</button>`:''}
+        </div>
+      </div>
+      <div class="card fin-reserva-card" style="margin-bottom:var(--s-4)">
+        <div class="card-head"><div class="ico" style="background:var(--info-soft);color:var(--info)">${svg('archive',16)}</div><h3>Reserva do negócio</h3></div>
+        <div class="fin-reserva-saldo">Saldo: <b>${fmt(saldo)}</b></div>
+        <div style="display:flex;gap:var(--s-2);margin:var(--s-3) 0">
+          <button class="btn btn-primary btn-sm" data-guardar>💰 Guardar</button>
+          <button class="btn btn-sm" data-resgatar style="background:var(--surface-2);color:var(--text-2)">↩ Resgatar</button>
+        </div>
+        ${ultMovs.length?`<div class="fin-lista" style="gap:var(--s-1)">${ultMovs.map(m=>`<div class="fin-card" style="padding:var(--s-2) var(--s-3)">
+          <div class="fin-card-l"><div class="fin-desc">${m.tipo==='guardar'?'💰 Guardou':'↩ Resgatou'}</div><div class="fin-meta">${dmy(m.data)}</div></div>
+          <div class="fin-card-r"><div class="fin-val" style="color:${m.tipo==='guardar'?'var(--income)':'var(--expense)'}">${m.tipo==='guardar'?'+':'−'} ${fmt(m.valor)}</div></div>
+        </div>`).join('')}</div>`:''}
+      </div>`;
+
+    root.querySelector('[data-novam]').onclick=()=>formMeta();
+    root.querySelectorAll('[data-editm]').forEach(b=>b.onclick=()=>formMeta(+b.dataset.editm));
+    root.querySelectorAll('[data-delm]').forEach(b=>b.onclick=()=>{
+      Modal.confirm('Excluir meta?','Essa ação não pode ser desfeita.',()=>{DB.metasNeg=DB.metasNeg.filter(x=>x.id!==+b.dataset.delm);render();});
+    });
+    if(root.querySelector('[data-retirpl]'))root.querySelector('[data-retirpl]').onclick=()=>retirarProLabore();
+    if(root.querySelector('[data-guardar]'))root.querySelector('[data-guardar]').onclick=()=>movReserva('guardar');
+    if(root.querySelector('[data-resgatar]'))root.querySelector('[data-resgatar]').onclick=()=>movReserva('resgatar');
+  }
+
+  function formMeta(id){
+    const m=id?DB.metasNeg.find(x=>x.id===id):null;
+    const mesAtual=offset(0).slice(0,7);
+    Modal.open(m?'Editar meta':'Nova meta',`
+      <div class="fg"><label>Tipo</label><select class="field" id="fm-tipo">
+        <option value="faturamento"${!m||m.tipo==='faturamento'?' selected':''}>📈 Faturamento</option>
+        <option value="lucro"${m&&m.tipo==='lucro'?' selected':''}>💰 Lucro</option>
+      </select></div>
+      <div class="fg"><label>Alvo (R$)</label><input class="field" id="fm-alvo" type="number" min="1" step="100" value="${m?m.alvo:''}"></div>
+      <div class="fg"><label>Mês de referência</label><input class="field" id="fm-mes" type="month" value="${m?m.mesRef:mesAtual}"></div>`,
+      b=>{
+        const alvo=+b.querySelector('#fm-alvo').value||0;
+        const mesRef=b.querySelector('#fm-mes').value||mesAtual;
+        if(!alvo){Toast.show('Informe o alvo','err');return false;}
+        if(m){m.tipo=b.querySelector('#fm-tipo').value;m.alvo=alvo;m.mesRef=mesRef;}
+        else DB.metasNeg.push({id:nid(),tipo:b.querySelector('#fm-tipo').value,alvo,mesRef,criadaEm:hoje()});
+        Toast.show(m?'Meta atualizada':'Meta criada');render();
+      },m?'Salvar':'Criar');
+  }
+
+  function retirarProLabore(){
+    const cfg=DB.negocioFin,mesAtual=offset(0).slice(0,7);
+    if(DB.proLaboreReg.some(r=>r.ym===mesAtual)){Toast.show('Pró-labore deste mês já retirado','err');return;}
+    const h=hoje();
+    // 1. Registra retirada
+    DB.proLaboreReg.push({id:nid(),valor:cfg.proLaboreValor,ym:mesAtual,data:h});
+    // 2. Saída no Caixa do negócio
+    DB.caixaAvulso.push({id:nid(),tipo:'saida',desc:'Pró-labore — retirada do dono',valor:cfg.proLaboreValor,data:h});
+    // 3. ⭐ PONTE PF/PJ: entrada nas Finanças pessoais (DB.transacoes)
+    DB.transacoes.push({id:nid(),tipo:'entrada',descricao:'Pró-labore',valor:cfg.proLaboreValor,cat:'receita',metodo:'Transferência',data:h});
+    Toast.show(`💸 Pró-labore retirado! R$ ${fmt(cfg.proLaboreValor)} entrou na sua vida pessoal.`);
+    render();
+  }
+
+  function movReserva(tipo){
+    Modal.open(tipo==='guardar'?'Guardar na reserva':'Resgatar da reserva',`
+      <div class="fg"><label>Valor (R$)</label><input class="field" id="mr-val" type="number" min="0.01" step="10"></div>`,
+      b=>{
+        const valor=+b.querySelector('#mr-val').value||0;
+        if(!valor){Toast.show('Informe o valor','err');return false;}
+        if(tipo==='resgatar'&&valor>DB.reservaNeg.saldo){Toast.show('Valor maior que o saldo','err');return false;}
+        DB.reservaNeg.movimentos.push({id:nid(),tipo,valor,data:hoje()});
+        DB.reservaNeg.saldo+=tipo==='guardar'?valor:-valor;
+        DB.caixaAvulso.push({id:nid(),tipo:tipo==='guardar'?'saida':'entrada',desc:`Reserva — ${tipo}`,valor,data:hoje()});
+        Toast.show(tipo==='guardar'?'Valor guardado na reserva':'Valor resgatado da reserva');
+        render();
+      },tipo==='guardar'?'Guardar':'Resgatar');
+  }
+
   /* ════════ 💵 CAIXA ════════ */
   const PERIODOS=[{k:'hoje',l:'Hoje'},{k:'7d',l:'7 dias'},{k:'30d',l:'30 dias'},{k:'mes',l:'Mês atual'},{k:'custom',l:'Custom'}];
   function periodoRange(p){
@@ -316,5 +566,6 @@ const Financeiro=(()=>{
     };
   }
 
-  return {render};
+  function renderAba(tab){aba=tab;render();}
+  return {render,renderAba};
 })();

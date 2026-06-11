@@ -14,3 +14,4 @@
 
 ## 📜 Histórico
 - **2026-06-10** (executor-20260610-002 · Etapa 25A): criado seed + motor + projeção + integrações (recebidoEm/criadaEm/Paguei). Validado com soma manual independente no smoke (538/2820/494,50).
+- **2026-06-10** (executor-20260610-003 · Etapa 25B): adicionados `DB.negocioFin` (config editável: meiLimite/dasValor/dasDia/dasnMes/proLaboreValor/proLaboreDia) · `DB.metasNeg` · `DB.dasPagos` · `DB.reservaNeg` · `DB.proLaboreReg`. Seed: meses jan-mai pagos, junho em aberto; 2 metas; reserva 800; pró-labore sem retirada no mês atual.

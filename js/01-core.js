@@ -185,16 +185,18 @@ document.querySelectorAll('.mood-pick').forEach(p=>p.querySelectorAll('.mood').f
 /* ─── ROUTER (navegação SPA) ─── */
 const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',salvos:'Salvos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',documentos:'Documentos',encomendas:'Encomendas',financeiro:'Financeiro',mentor:'Mentor',perfil:'Perfil'};
 function navigate(page){
-  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===page));
-  document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===page));
+  // rotas virtuais de sub-aba (financeiro-mei, etc.) mapeiam para 'financeiro'
+  const pageReal=page.startsWith('financeiro-')?'financeiro':page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===pageReal));
+  document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===pageReal));
   const h=document.getElementById('greet-h'), sp=document.getElementById('greet-p');
-  if(page==='dashboard'){
+  if(pageReal==='dashboard'){
     const hr=new Date().getHours();
     h.textContent=`${hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite'}, Léo`;
     if(sp) sp.style.display='';
     pintaBriefingDash();
   } else {
-    h.textContent=TITLES[page]||page;
+    h.textContent=TITLES[pageReal]||pageReal;
     if(sp) sp.style.display='none';
   }
   if(page==='financas') Contas.render();
@@ -221,6 +223,10 @@ function navigate(page){
   if(page==='documentos') Documentos.render();
   if(page==='encomendas') Encomendas.render();
   if(page==='financeiro') Financeiro.render();
+  if(page==='financeiro-mei') Financeiro.renderAba('mei');
+  if(page==='financeiro-metas') Financeiro.renderAba('metas');
+  if(page==='financeiro-caixa') Financeiro.renderAba('caixa');
+  if(page==='financeiro-despesas') Financeiro.renderAba('despesas');
   if(page==='mentor') Mentor.render();
   closeDrawer();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -491,6 +497,12 @@ const DB={
   encomendas:[],  // encomendas/pedidos (Etapa 24) — preenchido no SEED abaixo
   despesasNeg:[], // despesas do negócio (Etapa 25A) — preenchido no SEED abaixo
   caixaAvulso:[], // lançamentos manuais de caixa (Etapa 25A) — preenchido no SEED abaixo
+  // Etapa 25B — MEI, Metas, Pró-labore, Reserva
+  negocioFin:{ meiLimite:81000, dasValor:76.90, dasDia:20, dasnMes:'05-31', proLaboreValor:2500, proLaboreDia:5 },
+  metasNeg:[],    // metas do negócio {id,tipo:'faturamento'|'lucro',alvo,mesRef:'YYYY-MM',criadaEm}
+  dasPagos:[],    // controle DAS {ym:'YYYY-MM',pago,pagoEm}
+  reservaNeg:{ saldo:0, movimentos:[] }, // movimentos: {id,tipo:'guardar'|'resgatar',valor,data}
+  proLaboreReg:[], // retiradas do dono {id,valor,ym:'YYYY-MM',data}
 };
 
 // Seed movimentações com IDs corretos
@@ -670,6 +682,36 @@ const DB={
     {id:nid(),tipo:'saida',desc:'Combustível das entregas',valor:55,data:offset(-4)},
     {id:nid(),tipo:'saida',desc:'Retirada pro troco',valor:80,data:offset(-10)},
   ];
+})();
+
+// Seed Etapa 25B — MEI, Metas, Pró-labore, Reserva
+(function(){
+  const mesAtual=offset(0).slice(0,7); // 'YYYY-MM'
+  // meses pagos do ano até mês anterior (jan→mai 2026), atual (jun) em aberto
+  const ano=+mesAtual.slice(0,4), mesN=+mesAtual.slice(5,7);
+  for(let m=1;m<mesN;m++){
+    const ym=`${ano}-${String(m).padStart(2,'0')}`;
+    const pagoEm=ym+'-21'; // DAS pago logo após vencimento (dia 20)
+    DB.dasPagos.push({ym,pago:true,pagoEm});
+  }
+  DB.dasPagos.push({ym:mesAtual,pago:false,pagoEm:null}); // mês atual em aberto → Mentor dispara
+  // metas do negócio: 1 faturamento + 1 lucro no mês atual
+  DB.metasNeg=[
+    {id:nid(),tipo:'faturamento',alvo:12000,mesRef:mesAtual,criadaEm:addMonths(mesAtual+'-01',-1)},
+    {id:nid(),tipo:'lucro',alvo:4000,mesRef:mesAtual,criadaEm:addMonths(mesAtual+'-01',-1)},
+  ];
+  // reserva do negócio — ~3 movimentos; saldo final ~800
+  DB.reservaNeg.movimentos=[
+    {id:nid(),tipo:'guardar',valor:500,data:offset(-60)},
+    {id:nid(),tipo:'guardar',valor:400,data:offset(-30)},
+    {id:nid(),tipo:'resgatar',valor:100,data:offset(-10)},
+  ];
+  DB.reservaNeg.saldo=DB.reservaNeg.movimentos.reduce((s,m)=>s+(m.tipo==='guardar'?m.valor:-m.valor),0);
+  // pró-labore: retiradas dos meses anteriores do ano; mês atual em aberto → Mentor dispara
+  for(let m=1;m<mesN;m++){
+    const ym=`${ano}-${String(m).padStart(2,'0')}`;
+    DB.proLaboreReg.push({id:nid(),valor:DB.negocioFin.proLaboreValor,ym,data:ym+'-06'});
+  }
 })();
 
 // Perfil inicial reflete o modo atual (DB já definido aqui — sem TDZ) — Etapa 21
