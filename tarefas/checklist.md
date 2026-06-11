@@ -6,6 +6,13 @@
 
 ## 🔄 Pendente / Agora
 
+### Etapa 25B — Financeiro: MEI + Metas + Pró-labore + Mentor (executor-20260610-003)
+- [ ] 06 · DB — config MEI + metasNeg + proLabore + reservaNeg + seed → construtor · dep: —
+- [ ] 07 · Aba 🏛️ MEI — faturamento vs limite + projeção + DAS + DASN → construtor · dep: 06
+- [ ] 08 · Aba 🎯 Metas + Pró-labore (ponte PF/PJ) + Reserva → construtor · dep: 07
+- [ ] 09 · Mentor — 7 regras novas de Financeiro (mk + NUC 3 tons) → construtor · dep: 08
+- [ ] 10 · CSS .fin-* (MEI/Metas) + polish responsivo + tema → forge · dep: 09
+
 ## ✅ Concluído
 <!-- tarefas concluídas descem pra cá -->
 
