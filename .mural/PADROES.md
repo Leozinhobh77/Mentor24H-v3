@@ -15,3 +15,7 @@
 - (2026-06-10) Toda etapa fecha com smoke visual Playwright real (console limpo + sem overflow + mobile 360px) antes de marcar concluida
 
 - (2026-06-10) WhatsApp sempre via wa.me (texto formatado padrao Leo); Mentor ganha regras novas a cada modulo (3 tons + trava de empatia)
+
+- (2026-06-13) Tela Financas (Contas pessoal): resumo via componente proprio fin-resumo (NAO usar .page-kpis global); mobile = tira 3-em-linha cards-filtro (nao empilhar); hero 'Saldo previsto' = receber-pagar (tudo em aberto); lista agrupada por vencimento c/ subtotal; Pagas recolhida. [aprovado executor-20260613-001]
+
+- (2026-06-14) Tela Financas Pessoal — lista agrupada por SEMANAS DE CALENDARIO (segunda→domingo reais; nao mais buckets hoje/esta-semana/proximas): ordem Vencidas→Semana1..N→Pagas; header por semana com chip+subtotal+pilula(/dia adaptativa); denominador adaptativo: futura=dias-no-segmento, atual=dias-ate-domingo, passada=sem-pilula; CSS escopo #contas-root .fin-* (anti-colisao .fin-card l.1285 negocio). [aprovado executor-20260614-001]
