@@ -61,6 +61,7 @@ const ICONS={
   dice:'<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 8h.01M16 8h.01M8 16h.01M16 16h.01M12 12h.01"/>',
   file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/>',
   eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  'eye-off':'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>',
   copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
   package:'<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/>',
 };
@@ -126,6 +127,7 @@ function renderPerfil(mode){
 /* ─── MODO PESSOAL / NEGÓCIO (desktop — mode-switch na topbar) ─── */
 document.querySelectorAll('.mode-switch button').forEach(b=>{
   b.addEventListener('click',()=>{
+    navigate('dashboard');
     const mode=b.dataset.mode;
     document.documentElement.setAttribute('data-mode',mode);
     document.querySelectorAll('.mode-switch button').forEach(x=>x.classList.toggle('on',x===b));
@@ -169,6 +171,62 @@ document.querySelectorAll('.mode-switch button').forEach(b=>{
 
   // Pessoal (índice 1) ativo por padrão — reflete o modo inicial do app
   setBnActive(1);
+})();
+
+/* ─── ACCORDION DO SIDEBAR (Etapa 26) ─── */
+(function initSidebarAccordion(){
+  var sidebar=document.getElementById('sidebar');
+
+  function openGroup(group){
+    sidebar.querySelectorAll('.nav-group.open').forEach(function(g){ if(g!==group) g.classList.remove('open'); });
+    group.classList.add('open');
+  }
+
+  function syncActiveParent(){
+    sidebar.querySelectorAll('.nav-group').forEach(function(g){
+      g.classList.toggle('active-parent',!!g.querySelector('.nav-item.active'));
+    });
+  }
+
+  // delegação de eventos no sidebar
+  sidebar.addEventListener('click',function(e){
+    var hdr=e.target.closest('.nav-group-header');
+    if(!hdr||hdr.classList.contains('nav-group-header--static')) return;
+    var group=hdr.closest('.nav-group');
+    if(group.classList.contains('open')) group.classList.remove('open');
+    else openGroup(group);
+  });
+
+  // auto-abrir grupo do item ativo quando .active muda
+  var navObserver=new MutationObserver(function(){
+    var active=sidebar.querySelector('.nav-item.active:not(.nav-standalone)');
+    if(active){ var g=active.closest('.nav-group'); if(g) openGroup(g); }
+    syncActiveParent();
+  });
+  sidebar.querySelectorAll('.nav-item').forEach(function(item){
+    navObserver.observe(item,{attributes:true,attributeFilter:['class']});
+  });
+
+  // separador híbrido e re-abertura de grupo ao trocar modo
+  var modeObserver=new MutationObserver(function(){
+    var mode=document.documentElement.getAttribute('data-mode')||'pessoal';
+    var sep=sidebar.querySelector('.nav-mode-sep');
+    if(sep) sep.style.display=mode==='hibrido'?'':'none';
+    var active=sidebar.querySelector('.nav-item.active:not(.nav-standalone)');
+    if(active){ var g=active.closest('.nav-group'); if(g) openGroup(g); }
+    syncActiveParent();
+  });
+  modeObserver.observe(document.documentElement,{attributes:true,attributeFilter:['data-mode']});
+
+  // estado inicial
+  setTimeout(function(){
+    var active=sidebar.querySelector('.nav-item.active:not(.nav-standalone)');
+    if(active){ var g=active.closest('.nav-group'); if(g) openGroup(g); }
+    var mode=document.documentElement.getAttribute('data-mode')||'pessoal';
+    var sep=sidebar.querySelector('.nav-mode-sep');
+    if(sep) sep.style.display=mode==='hibrido'?'':'none';
+    syncActiveParent();
+  },50);
 })();
 
 /* ─── TAREFAS / REMÉDIOS (toggle visual) ─── */

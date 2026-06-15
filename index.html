@@ -32,44 +32,112 @@
     </div>
 
     <div class="side-scroll">
+    <div class="nav-item nav-standalone" data-nav="dashboard" data-ctx="pessoal">{i:home}<span>Painel Pessoal</span></div>
+
     <div class="nav-group" data-ctx="pessoal">
-      <div class="nav-label">Visão</div>
-      <div class="nav-item active" data-nav="dashboard">{i:home}<span>Início</span></div>
-      <div class="nav-item" data-nav="financas">{i:wallet}<span>Finanças</span><span class="badge">3</span></div>
-      <div class="nav-item" data-nav="transacoes">{i:repeat}<span>Transações</span></div>
-      <div class="nav-item" data-nav="metas">{i:target}<span>Metas</span></div>
-      <div class="nav-item" data-nav="relatorios-fin">{i:chart}<span>Relatórios</span></div>
-      <div class="nav-item" data-nav="categorias">{i:tag}<span>Categorias</span></div>
+      <div class="nav-group-header">
+        <svg class="nav-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.5-1.5"/></svg>
+        <span class="nav-label">Conexões</span>
+        <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="nav-items">
+        <div class="nav-item" data-nav="contatos">{i:users}<span>Contatos</span></div>
+        <div class="nav-item" data-nav="agenda">{i:calendar}<span>Agenda</span></div>
+        <div class="nav-item" data-nav="salvos">{i:bookmark}<span>Salvos</span></div>
+      </div>
     </div>
+
     <div class="nav-group" data-ctx="pessoal">
-      <div class="nav-label">Vida</div>
-      <div class="nav-item" data-nav="agenda">{i:calendar}<span>Agenda</span></div>
-      <div class="nav-item" data-nav="saude">{i:heart}<span>Saúde</span></div>
-      <div class="nav-item" data-nav="tarefas">{i:check}<span>Tarefas</span></div>
-      <div class="nav-item" data-nav="habitos">{i:flame}<span>Hábitos</span></div>
-      <div class="nav-item" data-nav="estudos">{i:book}<span>Estudos</span></div>
-      <div class="nav-item" data-nav="leitura">{i:book}<span>Leitura</span></div>
-      <div class="nav-item" data-nav="series">{i:tv}<span>Séries</span></div>
-      <div class="nav-item" data-nav="treinos">{i:dumbbell}<span>Treinos</span></div>
-      <div class="nav-item" data-nav="salvos">{i:bookmark}<span>Salvos</span></div>
-      <div class="nav-item" data-nav="metricas">{i:activity}<span>Métricas</span></div>
-      <div class="nav-item" data-nav="contatos">{i:users}<span>Contatos</span></div>
+      <div class="nav-group-header">
+        <svg class="nav-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/></svg>
+        <span class="nav-label">Dinheiro</span>
+        <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="nav-items">
+        <div class="nav-item" data-nav="financas">{i:wallet}<span>Finanças</span><span class="badge">3</span></div>
+        <div class="nav-item" data-nav="transacoes">{i:repeat}<span>Transações</span></div>
+        <div class="nav-item" data-nav="metas">{i:target}<span>Metas</span></div>
+        <div class="nav-item" data-nav="relatorios-fin">{i:chart}<span>Relatórios</span></div>
+        <div class="nav-item" data-nav="categorias">{i:tag}<span>Categorias</span></div>
+      </div>
     </div>
+
+    <div class="nav-group" data-ctx="pessoal">
+      <div class="nav-group-header">
+        <svg class="nav-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 13h6l-1 9 9-11h-6z"/></svg>
+        <span class="nav-label">Rotina</span>
+        <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="nav-items">
+        <div class="nav-item" data-nav="tarefas">{i:check}<span>Tarefas</span></div>
+        <div class="nav-item" data-nav="habitos">{i:flame}<span>Hábitos</span></div>
+        <div class="nav-item" data-nav="saude">{i:heart}<span>Saúde</span></div>
+        <div class="nav-item" data-nav="treinos">{i:dumbbell}<span>Treinos</span></div>
+        <div class="nav-item" data-nav="metricas">{i:activity}<span>Métricas</span></div>
+      </div>
+    </div>
+
+    <div class="nav-group" data-ctx="pessoal">
+      <div class="nav-group-header">
+        <svg class="nav-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 6.1 21.3l1.2-6.6L2.5 9.5l6.6-.9z"/></svg>
+        <span class="nav-label">Cultura</span>
+        <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="nav-items">
+        <div class="nav-item" data-nav="estudos">{i:book}<span>Estudos</span></div>
+        <div class="nav-item" data-nav="leitura">{i:book}<span>Leitura</span></div>
+        <div class="nav-item" data-nav="series">{i:tv}<span>Séries</span></div>
+      </div>
+    </div>
+
+    <div class="nav-mode-sep" style="display:none"><span>Negócio</span></div>
+
     <div class="nav-group" data-ctx="negocio" style="display:none">
-      <div class="nav-label">Negócio</div>
-      <div class="nav-item" data-nav="dashboard">{i:home}<span>Painel</span></div>
-      <div class="nav-item" data-nav="vendas">{i:cart}<span>Vendas</span></div>
-      <div class="nav-item" data-nav="produtos">{i:box}<span>Produtos</span></div>
-      <div class="nav-item" data-nav="estoque">{i:archive}<span>Estoque</span><span class="badge" id="badge-estoque" style="display:none"></span></div>
-      <div class="nav-item" data-nav="clientes">{i:users}<span>Clientes</span></div>
-      <div class="nav-item" data-nav="relatorios">{i:chart}<span>Relatórios</span></div>
-      <div class="nav-item" data-nav="financeiro">{i:wallet}<span>Financeiro</span></div>
-      <div class="nav-item" data-nav="documentos">{i:file}<span>Documentos</span></div>
-      <div class="nav-item" data-nav="encomendas">{i:package}<span>Encomendas</span></div>
+      <div class="nav-group-header">
+        <svg class="nav-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg>
+        <span class="nav-label">Operação</span>
+        <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="nav-items">
+        <div class="nav-item" data-nav="dashboard">{i:home}<span>Painel</span></div>
+        <div class="nav-item" data-nav="vendas">{i:cart}<span>Vendas</span></div>
+        <div class="nav-item" data-nav="encomendas">{i:package}<span>Encomendas</span></div>
+        <div class="nav-item" data-nav="estoque">{i:archive}<span>Estoque</span><span class="badge" id="badge-estoque" style="display:none"></span></div>
+      </div>
     </div>
+
+    <div class="nav-group" data-ctx="negocio" style="display:none">
+      <div class="nav-group-header">
+        <svg class="nav-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5"/></svg>
+        <span class="nav-label">Gestão</span>
+        <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="nav-items">
+        <div class="nav-item" data-nav="clientes">{i:users}<span>Clientes</span></div>
+        <div class="nav-item" data-nav="produtos">{i:box}<span>Produtos</span></div>
+        <div class="nav-item" data-nav="documentos">{i:file}<span>Documentos</span></div>
+      </div>
+    </div>
+
+    <div class="nav-group" data-ctx="negocio" style="display:none">
+      <div class="nav-group-header">
+        <svg class="nav-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 5-5 4 4 8-8"/><path d="M16 7h5v5"/></svg>
+        <span class="nav-label">Resultado</span>
+        <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="nav-items">
+        <div class="nav-item" data-nav="financeiro">{i:wallet}<span>Financeiro</span></div>
+        <div class="nav-item" data-nav="relatorios">{i:chart}<span>Relatórios</span></div>
+      </div>
+    </div>
+
     <div class="nav-group">
-      <div class="nav-label">Assistente</div>
-      <div class="nav-item" data-nav="mentor">{i:spark}<span>Mentor</span><span class="badge" id="badge-mentor" style="display:none"></span></div>
+      <div class="nav-group-header nav-group-header--static">
+        <span class="nav-label">Assistente</span>
+      </div>
+      <div class="nav-items nav-items--static">
+        <div class="nav-item" data-nav="mentor">{i:spark}<span>Mentor</span><span class="badge" id="badge-mentor" style="display:none"></span></div>
+      </div>
     </div>
     </div>
 
@@ -115,6 +183,8 @@
       <section class="mode-pane show" data-pane="pessoal">
         <div class="bento">
 
+          <!-- ── ZONA 1: Fold imediato ── -->
+
           <!-- HERO saldo -->
           <div class="card hero col-8">
             <span class="eyebrow">Saldo do mês · Maio</span>
@@ -147,26 +217,8 @@
             </div>
           </div>
 
-          <!-- Metas -->
-          <div class="card col-4">
-            <div class="card-head">
-              <div class="ico" style="background:var(--brand-soft);color:var(--brand-text)">{i:target}</div>
-              <h3>Metas</h3><a class="more">Tudo</a>
-            </div>
-            <div class="goal">
-              <div class="goal-top"><span class="goal-name"><span class="gd" style="background:var(--brand)"></span>Reserva de emergência</span><span class="goal-val"><b>72%</b></span></div>
-              <div class="bar"><i style="width:72%;background:var(--brand)"></i></div>
-              <div class="goal-val mono" style="margin-top:7px">R$ 7.200 de R$ 10.000 · R$ 47/dia</div>
-            </div>
-            <div class="goal">
-              <div class="goal-top"><span class="goal-name"><span class="gd" style="background:var(--info)"></span>Viagem fim de ano</span><span class="goal-val"><b>34%</b></span></div>
-              <div class="bar"><i style="width:34%;background:var(--info)"></i></div>
-              <div class="goal-val mono" style="margin-top:7px">R$ 1.700 de R$ 5.000 · R$ 22/dia</div>
-            </div>
-          </div>
-
           <!-- Tarefas -->
-          <div class="card col-4">
+          <div class="card col-12">
             <div class="card-head">
               <div class="ico" style="background:var(--info-soft);color:var(--info)">{i:check}</div>
               <h3>Tarefas de hoje</h3><a class="more">3/5</a>
@@ -177,6 +229,10 @@
             <div class="task done"><span class="check">{i:tick}</span><span class="tt">Conferir entregas</span><span class="prio" style="background:var(--text-4)"></span></div>
           </div>
 
+          <!-- Mentor · seu dia (Etapa 14 / Etapa 31) -->
+          <div class="card ai mentor-strip col-12" id="mtr-dash-pessoal"></div>
+
+          <!-- ── ZONA 2: Primeiro scroll ── -->
           <!-- Hábitos -->
           <div class="card col-4">
             <div class="card-head">
@@ -190,15 +246,23 @@
             </div>
           </div>
 
-          <!-- Saúde / remédios -->
-          <div class="card col-4">
+          <!-- Treino do dia -->
+          <div class="card card-treino col-8">
             <div class="card-head">
-              <div class="ico" style="background:var(--expense-soft);color:var(--expense)">{i:heart}</div>
-              <h3>Saúde · hoje</h3>
+              <div class="ico" style="background:var(--income-soft);color:var(--income)">{i:dumbbell}</div>
+              <h3>Treino de hoje</h3>
+              <span class="treino-badge">Ativo</span>
             </div>
-            <div class="pill-row"><span class="pill-time">08:00</span><div class="info"><div class="t" style="font-size:13px;font-weight:600">Vitamina D</div></div><button class="take done">Tomado</button></div>
-            <div class="pill-row"><span class="pill-time">14:00</span><div class="info"><div class="t" style="font-size:13px;font-weight:600">Dipirona</div></div><button class="take">Marcar</button></div>
-            <div class="pill-row"><span class="pill-time">21:00</span><div class="info"><div class="t" style="font-size:13px;font-weight:600">Ômega 3</div></div><button class="take">Marcar</button></div>
+            <div class="treino-ativ">💪 Peito + Tríceps</div>
+            <div class="treino-chips">
+              <span class="treino-chip">4 exercícios</span>
+              <span class="treino-chip">45 min estimado</span>
+            </div>
+            <div class="treino-progress">
+              <div class="treino-bar"><div class="treino-fill" style="width:65%"></div></div>
+              <span class="treino-prog-txt">3 / 4 exercícios · 65%</span>
+            </div>
+            <button class="btn-treino" data-nav="treinos">{i:play} Continuar treino</button>
           </div>
 
           <!-- Humor -->
@@ -219,7 +283,7 @@
           </div>
 
           <!-- Agenda -->
-          <div class="card col-4">
+          <div class="card col-8">
             <div class="card-head">
               <div class="ico" style="background:var(--info-soft);color:var(--info)">{i:calendar}</div>
               <h3>Próximos</h3><a class="more">Agenda</a>
@@ -231,16 +295,88 @@
             </div>
           </div>
 
-          <!-- Mentor · seu dia (briefing real — Etapa 14) -->
-          <div class="card ai col-12" id="mtr-dash-pessoal"></div>
+          <!-- ── ZONA 3: Segundo scroll ── -->
+          <!-- Card Cultura -->
+          <div class="card card-cultura col-12">
+            <div class="cult-header">Cultura &amp; Aprendizado</div>
+            <!-- Leitura -->
+            <div class="cult-row">
+              <div class="cult-ico" style="background:var(--warning-soft)">{i:book}</div>
+              <div class="cult-info">
+                <div class="cult-type">Leitura</div>
+                <div class="cult-name" id="cult-livro-nome">Atomic Habits</div>
+                <div class="cult-sub" id="cult-livro-sub">Cap. 8 de 12</div>
+              </div>
+              <div class="cult-right">
+                <span class="cult-pct" id="cult-livro-pct">67%</span>
+                <div class="cult-bar-wrap"><div class="cult-bar" id="cult-livro-bar" style="width:67%;background:var(--warning)"></div></div>
+              </div>
+            </div>
+            <!-- Série -->
+            <div class="cult-row">
+              <div class="cult-ico" style="background:var(--info-soft)">{i:tv}</div>
+              <div class="cult-info">
+                <div class="cult-type">Série</div>
+                <div class="cult-name" id="cult-serie-nome">The Bear</div>
+                <div class="cult-sub" id="cult-serie-sub">Próximo: S02E05</div>
+              </div>
+              <div class="cult-right">
+                <span class="cult-badge" id="cult-serie-ep" style="background:var(--info-soft);color:var(--info)">S02E04</span>
+              </div>
+            </div>
+            <!-- Estudos -->
+            <div class="cult-row">
+              <div class="cult-ico" style="background:rgba(139,92,246,.12)">{i:star}</div>
+              <div class="cult-info">
+                <div class="cult-type">Estudos</div>
+                <div class="cult-name" id="cult-estudo-nome">React Avançado</div>
+                <div class="cult-sub" id="cult-estudo-sub">Aula 9 de 20</div>
+              </div>
+              <div class="cult-right">
+                <span class="cult-pct" id="cult-estudo-pct">45%</span>
+                <div class="cult-bar-wrap"><div class="cult-bar" id="cult-estudo-bar" style="width:45%;background:#8B5CF6"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Saúde / remédios -->
+          <div class="card col-4">
+            <div class="card-head">
+              <div class="ico" style="background:var(--expense-soft);color:var(--expense)">{i:heart}</div>
+              <h3>Saúde · hoje</h3>
+            </div>
+            <div class="pill-row"><span class="pill-time">08:00</span><div class="info"><div class="t" style="font-size:13px;font-weight:600">Vitamina D</div></div><button class="take done">Tomado</button></div>
+            <div class="pill-row"><span class="pill-time">14:00</span><div class="info"><div class="t" style="font-size:13px;font-weight:600">Dipirona</div></div><button class="take">Marcar</button></div>
+            <div class="pill-row"><span class="pill-time">21:00</span><div class="info"><div class="t" style="font-size:13px;font-weight:600">Ômega 3</div></div><button class="take">Marcar</button></div>
+          </div>
+
+          <!-- Metas -->
+          <div class="card col-8">
+            <div class="card-head">
+              <div class="ico" style="background:var(--brand-soft);color:var(--brand-text)">{i:target}</div>
+              <h3>Metas</h3><a class="more">Tudo</a>
+            </div>
+            <div class="goal">
+              <div class="goal-top"><span class="goal-name"><span class="gd" style="background:var(--brand)"></span>Reserva de emergência</span><span class="goal-val"><b>72%</b></span></div>
+              <div class="bar"><i style="width:72%;background:var(--brand)"></i></div>
+              <div class="goal-val mono" style="margin-top:7px">R$ 7.200 de R$ 10.000 · R$ 47/dia</div>
+            </div>
+            <div class="goal">
+              <div class="goal-top"><span class="goal-name"><span class="gd" style="background:var(--info)"></span>Viagem fim de ano</span><span class="goal-val"><b>34%</b></span></div>
+              <div class="bar"><i style="width:34%;background:var(--info)"></i></div>
+              <div class="goal-val mono" style="margin-top:7px">R$ 1.700 de R$ 5.000 · R$ 22/dia</div>
+            </div>
+          </div>
 
         </div>
+        <button class="fab" id="fab-main" title="Ação rápida">{i:plus}</button>
       </section>
 
       <!-- ════ MODO NEGÓCIO ════ -->
       <section class="mode-pane" data-pane="negocio">
         <div class="bento">
 
+          <!-- ── ZONA 1: Fold imediato ── -->
           <div class="card hero col-8">
             <span class="eyebrow">Vendas de hoje · 26 mai</span>
             <div class="big mono">R$ 1.340<span style="font-size:24px;color:var(--text-3)">,00</span></div>
@@ -260,6 +396,7 @@
             </div>
           </div>
 
+          <!-- ── ZONA 2: Primeiro scroll ── -->
           <div class="card col-5">
             <div class="card-head"><div class="ico" style="background:var(--brand-soft);color:var(--brand-text)">{i:cart}</div><h3>Últimas vendas</h3><a class="more">Tudo</a></div>
             <div class="list">
@@ -276,9 +413,6 @@
             <div class="goal"><div class="goal-top"><span class="goal-name"><span class="gd" style="background:var(--warning)"></span>Bolo no pote</span><span class="goal-val mono">24 un.</span></div><div class="bar"><i style="width:38%;background:var(--warning)"></i></div></div>
           </div>
 
-          <!-- Mentor · seu dia (briefing real — Etapa 14) -->
-          <div class="card ai col-12" id="mtr-dash-negocio"></div>
-
         </div>
       </section>
 
@@ -286,6 +420,7 @@
       <section class="mode-pane" data-pane="hibrido">
         <div class="bento">
 
+          <!-- ── ZONA 1: Fold imediato ── -->
           <div class="card hero col-6">
             <span class="eyebrow">Saldo pessoal · Maio</span>
             <div class="big mono">R$ 4.280<span style="font-size:22px;color:var(--text-3)">,00</span></div>
@@ -321,6 +456,7 @@
             <div class="task"><span class="check">{i:tick}</span><span class="tt">Repor embalagens</span></div>
           </div>
 
+          <!-- ── ZONA 2: Primeiro scroll ── -->
           <div class="card col-4">
             <div class="card-head"><div class="ico" style="background:var(--brand-soft);color:var(--brand-text)">{i:target}</div><h3>Metas</h3></div>
             <div class="goal"><div class="goal-top"><span class="goal-name"><span class="gd" style="background:var(--brand)"></span>Reserva</span><span class="goal-val"><b>72%</b></span></div><div class="bar"><i style="width:72%;background:var(--brand)"></i></div></div>
@@ -346,9 +482,6 @@
               <div class="row"><div class="rico" style="background:var(--warning-soft);color:var(--warning)">{i:cart}</div><div class="info"><div class="t">Entrega encomenda</div><div class="s">Sáb · 14:00</div></div></div>
             </div>
           </div>
-
-          <!-- Mentor · seu dia (briefing real — Etapa 14) -->
-          <div class="card ai col-12" id="mtr-dash-hibrido"></div>
 
         </div>
       </section>

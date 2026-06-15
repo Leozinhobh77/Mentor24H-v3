@@ -134,6 +134,28 @@ svg{display:block}
 .nav-group.open .nav-items{max-height:280px;opacity:1}
 .nav-items--static{max-height:none!important;opacity:1!important}
 
+/* ─── SIDEBAR PREMIUM — Hierarquia 3 Níveis (Etapa 38) ─── */
+/* card base: borda-left reservada nos dois "gatilhos" de Nível 2 */
+.nav-standalone,.nav-group-header{border-left:3px solid transparent;transition:all .22s var(--ease)}
+/* ícone categoria */
+.nav-cat-icon{width:16px;height:16px;stroke-width:1.7;flex-shrink:0;color:var(--text-3);transition:color .22s var(--ease)}
+/* Nível 2 aceso — Painel Pessoal ativo (3 classes > .nav-item.active 2 classes) */
+.nav-item.nav-standalone.active{background:linear-gradient(105deg,var(--brand-soft),rgba(22,138,124,.04));border-left:3px solid var(--brand);box-shadow:0 0 14px rgba(22,138,124,.18),inset 0 0 0 1px rgba(22,138,124,.08)}
+[data-theme="dark"] .nav-item.nav-standalone.active{background:linear-gradient(105deg,rgba(22,138,124,.22),rgba(22,138,124,.04));box-shadow:0 0 14px rgba(22,138,124,.28),inset 0 0 0 1px rgba(22,138,124,.12)}
+/* Nível 2 aceso — categoria com sub ativa */
+.nav-group.active-parent>.nav-group-header{background:linear-gradient(105deg,var(--brand-soft),rgba(22,138,124,.04));border-left:3px solid var(--brand);box-shadow:0 0 14px rgba(22,138,124,.18),inset 0 0 0 1px rgba(22,138,124,.08)}
+[data-theme="dark"] .nav-group.active-parent>.nav-group-header{background:linear-gradient(105deg,rgba(22,138,124,.22),rgba(22,138,124,.04));box-shadow:0 0 14px rgba(22,138,124,.28),inset 0 0 0 1px rgba(22,138,124,.12)}
+.nav-group.active-parent>.nav-group-header .nav-label{color:var(--brand-text);opacity:1;font-weight:700}
+.nav-group.active-parent>.nav-group-header .nav-cat-icon{color:var(--brand);stroke-width:2}
+.nav-group.active-parent>.nav-group-header::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--brand);box-shadow:0 0 6px var(--brand);margin-left:auto;flex-shrink:0}
+/* Nível 1 — sub-item ativo: sobrescreve .nav-item.active global (especificidade maior) */
+.nav-group .nav-item.active{background:transparent;box-shadow:none;color:var(--brand-text);font-weight:600}
+.nav-group .nav-item.active svg{color:var(--brand);stroke-width:1.9}
+.nav-group .nav-item.active::before{content:'';position:absolute;left:6px;top:50%;transform:translateY(-50%);width:4px;height:4px;border-radius:50%;background:var(--brand)}
+/* divisórias finas entre grupos */
+.nav-standalone,.nav-group{border-bottom:1px solid var(--border)}
+.nav-group:last-of-type{border-bottom:none}
+
 /* ─── NAV ITEM ─── */
 .nav-item{display:flex;align-items:center;gap:11px;padding:9px var(--s-3);border-radius:var(--r-md);font-size:13.5px;font-weight:500;color:var(--text-1);opacity:.52;transition:opacity .16s var(--ease),background .16s var(--ease);position:relative;cursor:pointer}
 .nav-item svg{width:18px;height:18px;stroke-width:1.7;flex-shrink:0;color:var(--text-3);transition:transform .16s var(--ease),color .16s var(--ease),stroke-width .16s var(--ease)}
@@ -1616,4 +1638,159 @@ select.field{cursor:pointer}
   #contas-root .fin-card-label{font-size:9.5px}
   #contas-root .fin-card-icon{width:24px;height:24px}
   #contas-root .fin-filtros-panel .filtros-row{flex-direction:column}
+}
+
+/* ── T42: Modal seg-tipo + toggle rec ─────────────────── */
+.fin-seg-tipo{display:flex;gap:0;border-radius:var(--r-md);overflow:hidden;border:1.5px solid var(--border);width:100%}
+.fin-seg-t{flex:1;padding:var(--s-2) var(--s-1);font-size:13px;font-weight:600;color:var(--text-3);background:var(--surface-2);border:none;cursor:pointer;transition:background .15s,color .15s;min-height:44px}
+.fin-seg-t+.fin-seg-t{border-left:1.5px solid var(--border)}
+.fin-seg-t.on{background:var(--brand-soft);color:var(--brand-text);font-weight:700}
+.fin-seg-t:focus-visible{outline:2.5px solid var(--brand);outline-offset:-2px}
+.fin-modal-rec-toggle{display:flex;align-items:center;gap:var(--s-2);font-size:13px;color:var(--text-2);cursor:pointer;padding:var(--s-2) 0;margin-top:var(--s-1)}
+.fin-modal-rec-toggle input{accent-color:var(--expense);width:16px;height:16px;flex-shrink:0}
+
+/* ── T43: Card-dashboard direção A ────────────────────── */
+#contas-root .fin-hoje-btn{font-size:12px;font-weight:600;color:var(--brand-text);background:var(--brand-soft);border:none;border-radius:var(--r-full);padding:3px 10px;cursor:pointer;transition:background .15s;flex-shrink:0}
+#contas-root .fin-hoje-btn:hover{background:var(--brand);color:#fff}
+#contas-root .fin-totais{display:flex;align-items:center;gap:var(--s-3);margin:var(--s-4) 0 var(--s-3)}
+#contas-root .fin-total-col{flex:1;min-width:0}
+#contas-root .fin-total-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);margin-bottom:var(--s-1)}
+#contas-root .fin-total-val{font-family:var(--mono);font-size:clamp(16px,4.5vw,20px);font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+#contas-root .fin-total-div{width:1px;align-self:stretch;background:var(--border);flex-shrink:0;margin:4px 0}
+#contas-root .fin-saldo-hero{text-align:center;padding:var(--s-3) 0 var(--s-4);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:var(--s-4)}
+#contas-root .fin-saldo-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:var(--s-1)}
+#contas-root .fin-saldo-val{font-family:var(--mono);font-size:clamp(26px,7vw,36px);font-weight:700;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+#contas-root .fin-saldo-val.positivo{color:var(--income)}
+#contas-root .fin-saldo-val.negativo{color:var(--expense)}
+#contas-root .fin-chips{display:flex;gap:var(--s-2);margin-bottom:var(--s-3);flex-wrap:wrap}
+#contas-root .fin-chip{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;font-size:12px;font-weight:600;border-radius:var(--r-full);border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-3);cursor:pointer;transition:border-color .15s,background .15s,color .15s,box-shadow .15s;white-space:nowrap;min-height:34px}
+#contas-root .fin-chip:hover{border-color:var(--brand);color:var(--brand-text)}
+#contas-root .fin-chip.ativo{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+#contas-root .fin-chip:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px}
+#contas-root .fin-chip-n{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums;opacity:.75}
+#contas-root .fin-view-toggle{display:flex;border-radius:var(--r-md);overflow:hidden;border:1.5px solid var(--border);width:fit-content;margin-bottom:var(--s-2)}
+#contas-root .fin-vtab{padding:5px 18px;font-size:12.5px;font-weight:600;color:var(--text-3);background:var(--surface-2);border:none;cursor:pointer;transition:background .15s,color .15s;min-height:34px}
+#contas-root .fin-vtab+.fin-vtab{border-left:1.5px solid var(--border)}
+#contas-root .fin-vtab.on{background:var(--brand-soft);color:var(--brand-text);font-weight:700}
+#contas-root .fin-vtab:focus-visible{outline:2.5px solid var(--brand);outline-offset:-2px}
+#contas-root .fin-filtros-bar{display:flex;align-items:center;gap:var(--s-2);margin:var(--s-3) 0 var(--s-2)}
+#contas-root .fin-filtros-bar .fin-filtros-btn,
+#contas-root .fin-filtros-bar .btn{flex:1}
+@media(max-width:640px){
+  #contas-root .fin-totais{gap:var(--s-2)}
+  #contas-root .fin-total-val{font-size:16px}
+  #contas-root .fin-saldo-val{font-size:26px}
+  #contas-root .fin-chips{gap:var(--s-1)}
+  #contas-root .fin-chip{font-size:11px;padding:5px 10px}
+}
+
+/* ── T44: Pagas riscadas/opacas no accordion ────────────── */
+#contas-root .fin-pagas-body .lrow.paga .lt{text-decoration:line-through;opacity:.55}
+#contas-root .fin-pagas-body .lrow.paga{opacity:.6}
+
+/* ── T45: Blocos de semana ────────────────────────────────── */
+#contas-root .fin-sem-bloco{margin-bottom:var(--s-4);border:1.5px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+#contas-root .fin-sem-bloco.esta-semana{border-color:var(--brand)}
+#contas-root .fin-sem-hdr{display:flex;flex-direction:column;gap:3px;padding:var(--s-3) var(--s-4);background:var(--surface-2);border-bottom:1px solid var(--border)}
+#contas-root .fin-sem-bloco.esta-semana .fin-sem-hdr{background:var(--brand-soft)}
+#contas-root .fin-sem-nome{font-size:12.5px;font-weight:700;color:var(--text-1);display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap}
+#contas-root .fin-sem-meta{font-size:11.5px;color:var(--text-3);font-variant-numeric:tabular-nums}
+#contas-root .fin-sem-bloco .lrow{border-radius:0;border-left:none;border-right:none;border-top:none;border-bottom:1px solid var(--border)}
+#contas-root .fin-sem-bloco .lrow:last-child{border-bottom:none}
+#contas-root .fin-sem-vazio{padding:var(--s-4) var(--s-4);font-size:13px;color:var(--text-3);text-align:center}
+#contas-root .fin-mentor-sem{padding:var(--s-2) var(--s-4);font-size:12.5px;color:var(--text-3);background:var(--surface-2);border-top:1px solid var(--border);line-height:1.5}
+#contas-root .fin-mentor-sem strong{color:var(--brand-text)}
+@media(max-width:640px){
+  #contas-root .fin-sem-bloco{border-radius:var(--r-md)}
+  #contas-root .fin-sem-hdr{padding:var(--s-2) var(--s-3)}
+}
+
+/* ── T46: Card visual — lápis, selos, cor semântica ────── */
+#contas-root .fin-card-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+#contas-root .fin-lapis{color:var(--text-3);opacity:0;transition:opacity .15s;flex-shrink:0}
+#contas-root .lrow:hover .fin-lapis,
+#contas-root .lrow:focus-visible .fin-lapis{opacity:.55}
+#contas-root .fin-selo-rec{display:inline-flex;align-items:center;font-size:9.5px;font-weight:700;color:var(--brand-text);background:var(--brand-soft);border-radius:var(--r-full);padding:1px 6px;margin-left:4px;vertical-align:middle}
+#contas-root .fin-selo-parc{display:inline-flex;align-items:center;font-size:9.5px;font-weight:600;color:var(--text-3);background:var(--surface-3);border-radius:var(--r-full);padding:1px 6px;margin-left:4px;vertical-align:middle}
+
+/* ── T47/T61: Mentor rodapé — herda .mtr-card (limpo) ───── */
+
+/* ── T49: Chips → cards quadrados ────────────────────────── */
+#contas-root .fin-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-2);margin-bottom:var(--s-3)}
+#contas-root .fin-chip{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px 6px 8px;min-height:60px;gap:4px;border-radius:var(--r-md);border:1.5px solid var(--border);background:var(--surface-2);cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s;white-space:normal;text-align:center}
+#contas-root .fin-chip-label{font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;line-height:1.2}
+#contas-root .fin-chip-val{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--text-1);font-variant-numeric:tabular-nums;line-height:1.2}
+#contas-root .fin-chip[data-filtro="receber"] .fin-chip-val{color:var(--income)}
+#contas-root .fin-chip[data-filtro="pagar"] .fin-chip-val{color:var(--expense)}
+#contas-root .fin-chip:hover{border-color:var(--brand);box-shadow:0 1px 6px rgba(0,0,0,.07)}
+#contas-root .fin-chip[data-filtro="receber"]:hover{border-color:var(--income)}
+#contas-root .fin-chip[data-filtro="pagar"]:hover{border-color:var(--expense)}
+#contas-root .fin-chip.ativo{box-shadow:0 2px 8px rgba(0,0,0,.09)}
+#contas-root .fin-chip[data-filtro=""].ativo{border-color:var(--brand);background:var(--brand-soft)}
+#contas-root .fin-chip[data-filtro=""].ativo .fin-chip-label{color:var(--brand-text)}
+#contas-root .fin-chip[data-filtro=""].ativo .fin-chip-val{color:var(--brand-text)}
+#contas-root .fin-chip[data-filtro="receber"].ativo{border-color:var(--income);background:var(--income-soft)}
+#contas-root .fin-chip[data-filtro="receber"].ativo .fin-chip-label{color:var(--income)}
+#contas-root .fin-chip[data-filtro="pagar"].ativo{border-color:var(--expense);background:var(--expense-soft)}
+#contas-root .fin-chip[data-filtro="pagar"].ativo .fin-chip-label{color:var(--expense)}
+#contas-root .fin-chip:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px}
+@media(max-width:400px){
+  #contas-root .fin-chip{padding:8px 4px;min-height:52px}
+  #contas-root .fin-chip-val{font-size:11px}
+  #contas-root .fin-chip-label{font-size:9px}
+}
+
+/* ── T50: Toggle Mês/Semana — centralizado + maior ──────── */
+#contas-root .fin-view-toggle{margin:var(--s-2) auto var(--s-3)}
+#contas-root .fin-vtab{padding:8px 26px;font-size:13.5px;min-height:40px}
+
+/* ── T55/T61: Card Mentor — herda .mtr-card + tag flutuante */
+#contas-root .fin-mentor-rod.mtr-card{position:relative;margin-top:var(--s-4);align-items:flex-start;justify-content:flex-start}
+#contas-root .fin-mentor-sem.mtr-card{position:relative;padding:var(--s-3) var(--s-4)}
+#contas-root .fin-mentor-rod.fin-mentor-futuro,
+#contas-root .fin-mentor-rod.fin-mentor-passado{opacity:.65}
+.fin-mentor-hero-side{align-items:flex-end}
+.fin-mentor-hero-val{font-size:20px;font-weight:700;font-family:var(--mono,monospace);color:var(--brand-text);white-space:nowrap;line-height:1;font-variant-numeric:tabular-nums}
+.fin-mentor-hero-leg{font-size:11px;color:var(--text-3);margin-top:3px}
+@media(max-width:480px){.fin-mentor-hero-val{font-size:17px}}
+
+/* ── T64: Mentor Semanal — estados, densidade, acúmulo ─────── */
+/* Card compacto (Suave/Prévia/A Receber simples): 1 linha, sem hero */
+#contas-root .fin-mentor-sem.fin-sem-compacto{padding:10px 14px;gap:8px;align-items:center;margin-top:var(--s-3)}
+#contas-root .fin-mentor-sem.fin-sem-compacto .mtr-ico{width:24px;height:24px;border-radius:7px;flex-shrink:0}
+#contas-root .fin-mentor-sem.fin-sem-compacto .mtr-main .mtr-s{font-size:12px;color:var(--text-2);line-height:1.4}
+/* Card rico (Meta/Acúmulo/Vencidas): mtr-card padrão com hero */
+#contas-root .fin-mentor-sem:not(.fin-sem-compacto){margin-top:var(--s-3)}
+/* Cor da listra via --c (inline style já define; .mtr-card usa border-left:3px solid var(--c)) */
+/* Badge "+R$ X em atraso" no Acúmulo */
+#contas-root .fin-sem-atraso-badge{display:block;font-size:10.5px;font-weight:700;color:var(--c);background:var(--cs);border-radius:var(--r-full);padding:2px 8px;margin-top:4px;white-space:nowrap;text-align:right}
+/* Meta-teto side message */
+#contas-root .fin-sem-teto{font-size:11.5px;font-weight:600;color:var(--text-3);font-style:italic;flex-shrink:0;text-align:right;max-width:90px;line-height:1.3;padding-left:var(--s-2)}
+@media(max-width:400px){
+  #contas-root .fin-mentor-sem.fin-sem-compacto{padding:8px 12px}
+  #contas-root .fin-mentor-hero-val{font-size:17px}
+}
+
+/* ── T52: Accordion "Pagas" elegante ────────────────────── */
+#contas-root .fin-pagas-hdr{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-3) var(--s-4);margin-top:var(--s-4);transition:box-shadow .15s,border-color .15s}
+#contas-root .fin-pagas-hdr:hover{border-color:var(--income);box-shadow:0 1px 6px rgba(0,0,0,.06)}
+#contas-root .fin-pagas-ico{font-size:15px;flex-shrink:0}
+#contas-root .fin-pagas-nome{font-size:12px;font-weight:700;color:var(--income);text-transform:uppercase;letter-spacing:.05em;flex:1;min-width:0}
+#contas-root .fin-pagas-count{font-size:10.5px;font-weight:700;background:var(--income-soft);color:var(--income);border-radius:var(--r-full);padding:2px 8px;flex-shrink:0}
+#contas-root .fin-pagas-total{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--income);flex-shrink:0;font-variant-numeric:tabular-nums}
+#contas-root .fin-pagas-body.aberta{opacity:1}
+#contas-root .fin-pagas-body .lrow.paga{opacity:.55}
+
+/* T58 — 2 abas 50/50 encorpadas + barra de progresso 10/20 */
+#contas-root .fin-chips{grid-template-columns:repeat(2,1fr);gap:var(--s-3)}
+#contas-root .fin-chip{min-height:82px;padding:14px 12px 10px;gap:3px}
+#contas-root .fin-chip-label{font-size:11px}
+#contas-root .fin-chip-val{font-size:15px;margin-top:2px}
+#contas-root .fin-chip-prog-wrap{display:flex;align-items:center;gap:6px;width:100%;margin-top:6px}
+#contas-root .fin-chip-prog{flex:1;height:4px;background:var(--border);border-radius:9999px;overflow:hidden}
+#contas-root .fin-chip-bar{height:100%;border-radius:9999px;background:var(--income);transition:width .3s ease}
+#contas-root .fin-chip-frac{font-size:10px;font-family:var(--mono);color:var(--text-3);white-space:nowrap;font-variant-numeric:tabular-nums;flex-shrink:0}
+@media(max-width:400px){
+  #contas-root .fin-chip{min-height:72px;padding:12px 8px 8px}
+  #contas-root .fin-chip-val{font-size:13px}
 }
