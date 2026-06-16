@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Finanças · Mentor24h</title>
+  <link rel="stylesheet" href="../css/estilo.css">
+  <style>
+    /* contexto de página standalone */
+    body { background: var(--bg); min-height: 100vh; padding: var(--s-4); box-sizing: border-box; font-family: var(--font); color: var(--text-1); }
+    .mock-wrap { max-width: 480px; margin: 0 auto; }
+
+    /* toolbar de validação */
+    .mock-toolbar { display: flex; align-items: center; gap: var(--s-3); margin-bottom: var(--s-5); padding: var(--s-3) var(--s-4); background: var(--surface-1); border-radius: var(--r-md); border: 1px solid var(--border); }
+    .mock-title { font-size: 11.5px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .07em; flex: 1; }
+    .mock-btn { font-size: 11px; padding: 4px 12px; border-radius: var(--r-full); border: 1.5px solid var(--border); cursor: pointer; background: var(--surface-2); color: var(--text-2); font-weight: 600; transition: border-color .15s, color .15s; }
+    .mock-btn:hover { border-color: var(--brand); color: var(--brand); }
+    .mock-btn:focus-visible { outline: 2.5px solid var(--brand); outline-offset: 2px; }
+
+    /* ══ fin-resumo: bloco superior ══════════════════════════════════════ */
+    .fin-resumo { background: var(--surface-1); border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--shadow-sm); margin-bottom: var(--s-4); border: 1px solid var(--border); }
+
+    /* Hero */
+    .fin-hero { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-5); margin-bottom: var(--s-5); }
+    .fin-hero-left { flex: 1; min-width: 0; }
+    .fin-hero-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); margin-bottom: var(--s-1); }
+    .fin-hero-val { font-family: var(--mono); font-size: clamp(26px, 7vw, 34px); font-weight: 700; line-height: 1.1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+    .fin-hero-val.positivo { color: var(--income); }
+    .fin-hero-val.negativo { color: var(--expense); }
+    .fin-hero-sub { font-size: 12.5px; color: var(--text-3); margin-top: var(--s-2); line-height: 1.7; }
+    .fin-hero-sub strong { color: var(--text-2); font-weight: 600; }
+    .fin-donut { flex-shrink: 0; }
+
+    /* Barra de proporção slim — visível só no mobile */
+    .fin-prop-bar { display: none; height: 8px; border-radius: var(--r-full); overflow: hidden; margin-bottom: var(--s-5); background: var(--surface-3); }
+    .fin-prop-bar-income { height: 100%; border-radius: var(--r-full); background: var(--income); transition: width .3s var(--ease); }
+
+    /* Tira 3-em-linha */
+    .fin-tira { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-2); }
+    .fin-card { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: var(--s-3) var(--s-2); background: var(--surface-2); border-radius: var(--r-md); border: 1.5px solid transparent; cursor: pointer; transition: box-shadow .15s var(--ease), border-color .15s var(--ease), background .15s var(--ease); min-height: 80px; justify-content: center; }
+    .fin-card:hover { box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+    .fin-card:focus-visible { outline: 2.5px solid var(--brand); outline-offset: 2px; }
+    .fin-card.ativo { border-color: var(--brand); background: var(--brand-soft); }
+    .fin-card-icon { width: 28px; height: 28px; border-radius: var(--r-sm); display: grid; place-items: center; flex-shrink: 0; }
+    .fin-card-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); text-align: center; line-height: 1.2; }
+    .fin-card-val { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; }
+    .fin-card.neutro .fin-card-label,
+    .fin-card.neutro .fin-card-val { color: var(--text-3); }
+    .fin-card.neutro .fin-card-icon { opacity: .45; }
+
+    /* Lista agrupada */
+    .fin-grupos { transition: opacity .15s var(--ease); }
+    .fin-grupos.fade { opacity: 0; pointer-events: none; }
+
+    /* Cabeçalho de grupo (grupos não-collapse) */
+    .fin-grupo-hdr { display: flex; align-items: center; gap: var(--s-2); margin: var(--s-5) 0 var(--s-3); padding-left: 2px; }
+    .fin-grupo-hdr:first-child { margin-top: 0; }
+    .fin-grupo-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .fin-grupo-nome { font-size: 11.5px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; flex: 1; min-width: 0; }
+    .fin-grupo-chip { font-size: 10px; font-weight: 700; background: var(--surface-3); color: var(--text-3); border-radius: var(--r-full); padding: 1px 7px; flex-shrink: 0; }
+    .fin-grupo-sub { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--text-2); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
+    /* Collapse "Pagas" */
+    .fin-grupo-toggle { display: flex; align-items: center; gap: var(--s-2); width: 100%; background: none; border: none; padding: var(--s-2) 0 var(--s-2) 2px; cursor: pointer; margin-top: var(--s-5); }
+    .fin-grupo-toggle:first-child { margin-top: 0; }
+    .fin-grupo-toggle:focus-visible { outline: 2.5px solid var(--brand); outline-offset: 3px; border-radius: var(--r-sm); }
+    .fin-seta { flex-shrink: 0; color: var(--text-3); transition: transform .2s var(--ease); }
+    .fin-grupo-toggle[aria-expanded="true"] .fin-seta { transform: rotate(180deg); }
+    .fin-pagas-body { overflow: hidden; max-height: 0; opacity: 0; transition: max-height .28s var(--ease), opacity .2s var(--ease); }
+    .fin-pagas-body.aberta { max-height: 2000px; opacity: .75; padding-top: var(--s-3); }
+
+    /* Estado vazio */
+    .fin-empty { text-align: center; padding: var(--s-10) var(--s-4); color: var(--text-3); font-size: 14px; line-height: 1.7; }
+
+    /* ══ MOBILE ≤640px ══════════════════════════════════════════════════ */
+    @media (max-width: 640px) {
+      body { padding: var(--s-3) var(--s-3) var(--s-10); }
+      .fin-resumo { padding: var(--s-4); }
+      .fin-donut { display: none; }
+      .fin-prop-bar { display: block; }
+      .fin-hero-val { font-size: 28px; }
+      .fin-card { min-height: 72px; padding: var(--s-2) var(--s-1); gap: 4px; }
+      .fin-card-val { font-size: 11px; }
+      .fin-card-label { font-size: 9.5px; }
+      .fin-card-icon { width: 24px; height: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mock-wrap">
+
+    <!-- Toolbar de validação do mockup -->
+    <div class="mock-toolbar">
+      <span class="mock-title">Mockup · Finanças</span>
+      <button class="mock-btn" id="btn-tema" type="button" title="Alternar tema claro/escuro">☀ / ☾ tema</button>
+    </div>
+
+    <!-- Bloco fin-resumo ──────────────────────────────────────────────── -->
+    <div class="fin-resumo" aria-label="Resumo financeiro">
+
+      <!-- Hero: Saldo previsto -->
+      <div class="fin-hero">
+        <div class="fin-hero-left">
+          <div class="fin-hero-label">Saldo previsto</div>
+          <div id="fin-hero-val" class="fin-hero-val positivo">R$ 0,00</div>
+          <div id="fin-hero-sub" class="fin-hero-sub">
+            entra <strong>—</strong> · sai <strong>—</strong>
+          </div>
+        </div>
+        <!-- Donut (desktop) -->
+        <div class="fin-donut" id="fin-donut" aria-hidden="true"></div>
+      </div>
+
+      <!-- Barra de proporção (mobile) -->
+      <div class="fin-prop-bar" aria-hidden="true">
+        <div class="fin-prop-bar-income" id="fin-prop-fill" style="width:50%"></div>
+      </div>
+
+      <!-- Tira 3-em-linha: cards-filtro -->
+      <div class="fin-tira" role="group" aria-label="Filtrar por tipo de conta">
+        <button type="button" class="fin-card" data-filtro="pagar" aria-pressed="false">
+          <div class="fin-card-icon" style="background:var(--expense-soft);color:var(--expense)" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </div>
+          <span class="fin-card-label">A pagar</span>
+          <span class="fin-card-val" id="val-pagar">—</span>
+        </button>
+        <button type="button" class="fin-card" data-filtro="receber" aria-pressed="false">
+          <div class="fin-card-icon" style="background:var(--income-soft);color:var(--income)" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+          </div>
+          <span class="fin-card-label">A receber</span>
+          <span class="fin-card-val" id="val-receber">—</span>
+        </button>
+        <button type="button" class="fin-card" data-filtro="vencida" aria-pressed="false">
+          <div class="fin-card-icon" style="background:var(--warning-soft);color:var(--warning)" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <span class="fin-card-label">Vencidas</span>
+          <span class="fin-card-val" id="val-vencidas">—</span>
+        </button>
+      </div>
+    </div><!-- /fin-resumo -->
+
+    <!-- Lista agrupada ─────────────────────────────────────────────────── -->
+    <div id="fin-grupos" class="fin-grupos" role="list" aria-live="polite" aria-label="Lista de contas"></div>
+
+  </div><!-- /mock-wrap -->
+
+  <script>
+  'use strict';
+
+  /* ── Donut (copiado de js/02-ui.js) ──────────────────────────────────── */
+  function donut(items, size) {
+    size = size || 100;
+    const total = items.reduce((s, i) => s + i.value, 0) || 1;
+    const r = size / 2, R = r - 10, C = 2 * Math.PI * R;
+    let acc = 0;
+    const rings = items.filter(i => i.value > 0).map(it => {
+      const frac = it.value / total;
+      const seg = `<circle cx="${r}" cy="${r}" r="${R}" fill="none" stroke="${it.cor}"
+        stroke-width="${(size * 0.14).toFixed(1)}"
+        stroke-dasharray="${(frac * C).toFixed(2)} ${(C - frac * C).toFixed(2)}"
+        stroke-dashoffset="${(-acc * C).toFixed(2)}"
+        transform="rotate(-90 ${r} ${r})"/>`;
+      acc += frac;
+      return seg;
+    }).join('');
+    return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" style="flex-shrink:0">${rings}</svg>`;
+  }
+
+  /* ── Formatação ──────────────────────────────────────────────────────── */
+  function fmt(v) {
+    return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function fmtData(iso) {
+    return new Date(iso + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+  }
+
+  /* ── Dados fake (cobre todos os buckets) ─────────────────────────────── */
+  const HOJE = new Date();
+  HOJE.setHours(0, 0, 0, 0);
+
+  function isoOffset(n) {
+    const d = new Date(HOJE);
+    d.setDate(d.getDate() + n);
+    return d.toISOString().slice(0, 10);
+  }
+
+  const CONTAS = [
+    // vencidas
+    { id:1,  tipo:'pagar',   desc:'Conta de Luz',      valor:142.90, venc:isoOffset(-5), cat:'Moradia',  status:'pendente' },
+    { id:2,  tipo:'pagar',   desc:'Internet',           valor:99.90,  venc:isoOffset(-2), cat:'Moradia',  status:'pendente' },
+    // vence hoje
+    { id:3,  tipo:'pagar',   desc:'Aluguel',            valor:1200.00,venc:isoOffset(0),  cat:'Moradia',  status:'pendente' },
+    // esta semana (1–7 dias)
+    { id:4,  tipo:'receber', desc:'Freela Design',      valor:800.00, venc:isoOffset(3),  cat:'Renda',    status:'pendente' },
+    { id:5,  tipo:'pagar',   desc:'Cartão Nubank',      valor:540.00, venc:isoOffset(5),  cat:'Cartão',   status:'pendente' },
+    // próximas (>7 dias)
+    { id:6,  tipo:'pagar',   desc:'Academia',           valor:89.90,  venc:isoOffset(12), cat:'Saúde',    status:'pendente', recorrente:true },
+    { id:7,  tipo:'receber', desc:'Reembolso Empresa',  valor:230.00, venc:isoOffset(14), cat:'Renda',    status:'pendente' },
+    { id:8,  tipo:'pagar',   desc:'Streaming',          valor:39.90,  venc:isoOffset(15), cat:'Lazer',    status:'pendente', recorrente:true },
+    // pagas
+    { id:9,  tipo:'pagar',   desc:'Conta de Água',      valor:67.40,  venc:isoOffset(-8), cat:'Moradia',  status:'paga' },
+    { id:10, tipo:'receber', desc:'Venda Objeto Usado', valor:150.00, venc:isoOffset(-6), cat:'Renda',    status:'paga' },
+  ];
+
+  /* ── Lógica temporal ─────────────────────────────────────────────────── */
+  function diasAte(iso) {
+    return Math.round((new Date(iso + 'T00:00:00') - HOJE) / 86400000);
+  }
+
+  function bucketDe(c) {
+    if (c.status === 'paga') return 'paga';
+    const d = diasAte(c.venc);
+    if (d < 0)   return 'vencida';
+    if (d === 0) return 'hoje';
+    if (d <= 7)  return 'semana';
+    return 'proximas';
+  }
+
+  function calcSaldos() {
+    let receber = 0, pagar = 0, vencidas = 0;
+    CONTAS.forEach(c => {
+      if (c.status === 'paga') return;
+      if (c.tipo === 'receber') receber += c.valor;
+      if (c.tipo === 'pagar')   pagar   += c.valor;
+      if (bucketDe(c) === 'vencida') vencidas += c.valor;
+    });
+    return { receber, pagar, vencidas, saldo: receber - pagar };
+  }
+
+  /* ── Estado ──────────────────────────────────────────────────────────── */
+  let filtroAtivo = null;   // 'pagar' | 'receber' | 'vencida' | null
+  let pagasAberta = false;
+
+  function contasFiltradas() {
+    if (!filtroAtivo) return CONTAS;
+    if (filtroAtivo === 'vencida') return CONTAS.filter(c => bucketDe(c) === 'vencida');
+    return CONTAS.filter(c => c.tipo === filtroAtivo && c.status !== 'paga');
+  }
+
+  /* ── Render principal ────────────────────────────────────────────────── */
+  function render() {
+    const { receber, pagar, vencidas, saldo } = calcSaldos();
+
+    /* Hero */
+    const heroVal = document.getElementById('fin-hero-val');
+    heroVal.textContent = fmt(Math.abs(saldo));
+    heroVal.className = 'fin-hero-val ' + (saldo >= 0 ? 'positivo' : 'negativo');
+    document.getElementById('fin-hero-sub').innerHTML =
+      `entra <strong>${fmt(receber)}</strong> · sai <strong>${fmt(pagar)}</strong>`;
+
+    /* Donut */
+    const total = receber + pagar || 1;
+    document.getElementById('fin-donut').innerHTML = donut([
+      { value: receber, cor: 'var(--income)' },
+      { value: pagar,   cor: 'var(--expense)' }
+    ], 100);
+
+    /* Barra slim (mobile) */
+    document.getElementById('fin-prop-fill').style.width = (receber / total * 100) + '%';
+
+    /* Cards: valores + aria-label */
+    document.getElementById('val-pagar').textContent    = fmt(pagar);
+    document.getElementById('val-receber').textContent  = fmt(receber);
+    document.getElementById('val-vencidas').textContent = fmt(vencidas);
+    document.getElementById('val-pagar').setAttribute('aria-label',    'A pagar: '    + fmt(pagar));
+    document.getElementById('val-receber').setAttribute('aria-label',  'A receber: '  + fmt(receber));
+    document.getElementById('val-vencidas').setAttribute('aria-label', 'Vencidas: '   + fmt(vencidas));
+
+    /* Estado neutro Vencidas=0 */
+    const cardV = document.querySelector('[data-filtro="vencida"]');
+    cardV.classList.toggle('neutro', vencidas === 0);
+
+    /* Cards: ativo + aria-pressed */
+    document.querySelectorAll('.fin-card').forEach(btn => {
+      const ativo = filtroAtivo === btn.dataset.filtro;
+      btn.classList.toggle('ativo', ativo);
+      btn.setAttribute('aria-pressed', String(ativo));
+    });
+
+    renderLista();
+  }
+
+  /* ── Render lista (com micro-fade) ───────────────────────────────────── */
+  function renderLista() {
+    const grupos = document.getElementById('fin-grupos');
+    grupos.classList.add('fade');
+    setTimeout(() => {
+      grupos.innerHTML = buildLista();
+      bindCollapse();
+      grupos.classList.remove('fade');
+    }, 150);
+  }
+
+  /* ── Linha de conta ──────────────────────────────────────────────────── */
+  function rowHTML(c) {
+    const isPagar  = c.tipo === 'pagar';
+    const corSoft  = isPagar ? 'var(--expense-soft)' : 'var(--income-soft)';
+    const corIcon  = isPagar ? 'var(--expense)' : 'var(--income)';
+    const sinal    = isPagar ? '−' : '+';
+    const ariaLbl  = (isPagar ? 'A pagar' : 'A receber') + ': ' + fmt(c.valor);
+    const iconeArrow = isPagar
+      ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>`
+      : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>`;
+
+    return `<div class="lrow${c.status === 'paga' ? ' paga' : ''}" role="listitem">
+      <div class="li" style="background:${corSoft};color:${corIcon}">${iconeArrow}</div>
+      <div class="lt" style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-1)">${c.desc}</div>
+        <div style="font-size:11.5px;color:var(--text-3)">${c.cat}${c.recorrente ? ' · recorrente' : ''}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:var(--mono);font-size:13.5px;font-weight:700;color:${corIcon};font-variant-numeric:tabular-nums" aria-label="${ariaLbl}">${sinal} ${fmt(c.valor)}</div>
+        <div style="font-size:11px;color:var(--text-3)">${fmtData(c.venc)}</div>
+      </div>
+    </div>`;
+  }
+
+  /* ── Build lista agrupada ─────────────────────────────────────────────── */
+  const BUCKETS_META = {
+    vencida:  { label: 'Vencidas',    cor: 'var(--expense)' },
+    hoje:     { label: 'Vence hoje',  cor: 'var(--warning)' },
+    semana:   { label: 'Esta semana', cor: 'var(--warning)' },
+    proximas: { label: 'Próximas',    cor: 'var(--border-strong)' },
+    paga:     { label: 'Pagas',       cor: 'var(--income)' },
+  };
+
+  function buildLista() {
+    const contas = contasFiltradas();
+    const bkts = { vencida:[], hoje:[], semana:[], proximas:[], paga:[] };
+    contas.forEach(c => { const b = bucketDe(c); if (bkts[b]) bkts[b].push(c); });
+
+    /* Quando há filtro ativo, não mostrar grupo Pagas */
+    const ordem = ['vencida', 'hoje', 'semana', 'proximas'];
+    if (!filtroAtivo) ordem.push('paga');
+
+    let html = '';
+    let algum = false;
+
+    ordem.forEach(key => {
+      const items = bkts[key];
+      if (!items || items.length === 0) return;
+      algum = true;
+      const { label, cor } = BUCKETS_META[key];
+      const subtotal = items.reduce((s, c) => s + c.valor, 0);
+
+      if (key === 'paga') {
+        html += `
+          <button type="button" class="fin-grupo-toggle" aria-expanded="${pagasAberta}" aria-controls="fin-pagas-body">
+            <span class="fin-grupo-dot" style="background:${cor}"></span>
+            <span class="fin-grupo-nome">${label}</span>
+            <span class="fin-grupo-chip">${items.length}</span>
+            <span class="fin-grupo-sub">${fmt(subtotal)}</span>
+            <svg class="fin-seta" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div id="fin-pagas-body" class="fin-pagas-body${pagasAberta ? ' aberta' : ''}">
+            ${items.map(c => rowHTML(c)).join('')}
+          </div>`;
+      } else {
+        html += `
+          <div class="fin-grupo-hdr">
+            <span class="fin-grupo-dot" style="background:${cor}"></span>
+            <span class="fin-grupo-nome">${label}</span>
+            <span class="fin-grupo-chip">${items.length}</span>
+            <span class="fin-grupo-sub">${fmt(subtotal)}</span>
+          </div>
+          ${items.map(c => rowHTML(c)).join('')}`;
+      }
+    });
+
+    if (!algum) {
+      const msg = filtroAtivo === 'pagar'   ? 'Nada a pagar em aberto' :
+                  filtroAtivo === 'receber' ? 'Nada a receber em aberto' :
+                  filtroAtivo === 'vencida' ? 'Nenhuma conta vencida 🎉' :
+                  'Tá tudo em dia ✨';
+      html = `<div class="fin-empty">${msg}</div>`;
+    }
+
+    return html;
+  }
+
+  /* ── Bind collapse Pagas ─────────────────────────────────────────────── */
+  function bindCollapse() {
+    const toggle = document.querySelector('.fin-grupo-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', () => {
+      pagasAberta = !pagasAberta;
+      toggle.setAttribute('aria-expanded', String(pagasAberta));
+      const body = document.getElementById('fin-pagas-body');
+      if (body) body.classList.toggle('aberta', pagasAberta);
+    });
+  }
+
+  /* ── Init ────────────────────────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', () => {
+    /* Cards-filtro */
+    document.querySelectorAll('.fin-card').forEach(btn => {
+      btn.addEventListener('click', () => {
+        filtroAtivo = filtroAtivo === btn.dataset.filtro ? null : btn.dataset.filtro;
+        render();
+      });
+    });
+
+    /* Tema toggle */
+    document.getElementById('btn-tema').addEventListener('click', () => {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    });
+
+    render();
+  });
+  </script>
+</body>
+</html>

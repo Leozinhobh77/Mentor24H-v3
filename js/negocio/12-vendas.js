@@ -12,6 +12,7 @@ const Vendas=(()=>{
   // Catálogo
   let catAtiva='fixados', buscaQ='', gridExpandido=false;
   let parcelas=1;
+  let ocultarTotais=false;
 
   const PGTOS=[
     {k:'pix',l:'Pix'},
@@ -30,6 +31,8 @@ const Vendas=(()=>{
   }
   function descontoVal_pct(){return descontoTipo==='pct'?desconto:0;}
   function total(){return Math.max(0,subtotal()-descontoVal());}
+  function fmtV(v){return ocultarTotais?'••••':fmt(v);}
+  function eyeIcon(){return ocultarTotais?svg('eye-off',15):svg('eye',15);}
 
   function addAoCarrinho(prod){
     const ex=carrinho.find(i=>i.produtoId===prod.id);
@@ -93,10 +96,23 @@ const Vendas=(()=>{
         </div>
         <button class="btn btn-ghost btn-sm" id="btn-hist">${svg('clock',15)} Histórico</button>
       </div>
-      <div class="kpi-row" style="margin-bottom:var(--s-4)">
-        <div class="kpi-card"><span class="kpi-label">Hoje</span><span class="kpi-val" style="font-size:16px">${fmt(hojeVal)}</span></div>
-        <div class="kpi-card"><span class="kpi-label">7 dias</span><span class="kpi-val" style="font-size:16px">${fmt(semanaVal)}</span></div>
-        <div class="kpi-card"><span class="kpi-label">30 dias</span><span class="kpi-val" style="font-size:16px">${fmt(mesVal)}</span></div>
+      <div class="kpi-section-head">
+        <span class="kpi-section-label">Faturamento</span>
+        <button class="kpi-eye-btn" id="btn-eye-pdv" title="${ocultarTotais?'Mostrar valores':'Ocultar valores'}">${eyeIcon()}</button>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <span class="kpi-label">Hoje</span>
+          <span class="kpi-val${ocultarTotais?' masked':''}">${fmtV(hojeVal)}</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">7 dias</span>
+          <span class="kpi-val${ocultarTotais?' masked':''}">${fmtV(semanaVal)}</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">30 dias</span>
+          <span class="kpi-val${ocultarTotais?' masked':''}">${fmtV(mesVal)}</span>
+        </div>
       </div>
       <div class="pdv-layout">
         <div class="pdv-catalog">
@@ -166,6 +182,7 @@ const Vendas=(()=>{
     root.querySelectorAll('.cat-tab').forEach(b=>b.onclick=()=>{catAtiva=b.dataset.cat;buscaQ='';gridExpandido=false;render();});
     root.querySelector('#pdv-avulso').onclick=()=>avulso();
     root.querySelector('#btn-hist').onclick=()=>{view='historico';render();};
+    root.querySelector('#btn-eye-pdv').onclick=()=>{ocultarTotais=!ocultarTotais;render();};
     root.querySelector('#pdv-desc-val').oninput=e=>{desconto=+e.target.value||0;renderCarrinho();};
     root.querySelector('#pdv-desc-tipo').onchange=e=>{descontoTipo=e.target.value;renderCarrinho();};
     root.querySelector('#pdv-dividir-btn').onclick=()=>{dividir=!dividir;valor1=0;render();};
@@ -389,11 +406,24 @@ const Vendas=(()=>{
         </div>
         <button class="btn btn-primary btn-sm" id="btn-pdv">${svg('cart',15)} Nova Venda</button>
       </div>
-      ${pendentes>0?`<div style="background:#C8860B15;border:1px solid var(--warning);border-radius:var(--r-lg);padding:var(--s-3) var(--s-4);margin-bottom:var(--s-4);display:flex;align-items:center;gap:10px;font-size:13px"><span style="font-size:18px">⏳</span><span>Você tem <b style="color:var(--warning)">${fmt(pendentes)}</b> a receber (vendas a prazo)</span></div>`:''}
-      <div class="kpi-row" style="margin-bottom:var(--s-4)">
-        <div class="kpi-card"><span class="kpi-label">Hoje (pago)</span><span class="kpi-val" style="font-size:15px">${fmt(hoje)}</span></div>
-        <div class="kpi-card"><span class="kpi-label">7 dias (pago)</span><span class="kpi-val" style="font-size:15px">${fmt(semana)}</span></div>
-        <div class="kpi-card"><span class="kpi-label">A receber</span><span class="kpi-val" style="font-size:15px;color:var(--warning)">${fmt(pendentes)}</span></div>
+      ${pendentes>0?`<div style="background:#C8860B15;border:1px solid var(--warning);border-radius:var(--r-lg);padding:var(--s-3) var(--s-4);margin-bottom:var(--s-4);display:flex;align-items:center;gap:10px;font-size:13px"><span style="font-size:18px">⏳</span><span>Você tem <b style="color:var(--warning)">${ocultarTotais?'••••':fmt(pendentes)}</b> a receber (vendas a prazo)</span></div>`:''}
+      <div class="kpi-section-head">
+        <span class="kpi-section-label">Resumo</span>
+        <button class="kpi-eye-btn" id="btn-eye-hist" title="${ocultarTotais?'Mostrar valores':'Ocultar valores'}">${eyeIcon()}</button>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <span class="kpi-label">Hoje (pago)</span>
+          <span class="kpi-val${ocultarTotais?' masked':''}">${fmtV(hoje)}</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">7 dias (pago)</span>
+          <span class="kpi-val${ocultarTotais?' masked':''}">${fmtV(semana)}</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">A receber</span>
+          <span class="kpi-val kpi-warn${ocultarTotais?' masked':''}">${fmtV(pendentes)}</span>
+        </div>
       </div>
       <!-- Filtros de período -->
       <div style="margin-bottom:var(--s-3)">
@@ -440,6 +470,7 @@ const Vendas=(()=>{
     root.querySelector('#btn-pdv').onclick=()=>{view='pdv';render();};
     root.querySelectorAll('[data-fp]').forEach(b=>b.onclick=()=>{filtroPeriodo=b.dataset.fp;if(filtroPeriodo!=='custom'){periodoInicio='';periodoFim='';}renderHistorico();});
     root.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>{filtroStatus=b.dataset.fs;renderHistorico();});
+    root.querySelector('#btn-eye-hist').onclick=()=>{ocultarTotais=!ocultarTotais;renderHistorico();};
     if(root.querySelector('#fp-inicio'))root.querySelector('#fp-inicio').onchange=e=>{periodoInicio=e.target.value;renderHistorico();};
     if(root.querySelector('#fp-fim'))root.querySelector('#fp-fim').onchange=e=>{periodoFim=e.target.value;renderHistorico();};
     root.querySelectorAll('[data-receber]').forEach(b=>b.onclick=()=>{

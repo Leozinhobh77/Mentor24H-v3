@@ -6,6 +6,53 @@
 
 ## 🔄 Pendente / Agora
 
+### Etapa 38 — Sidebar redesign premium — hierarquia visual 3 níveis (card aceso/apagado, ícones categorias, divisórias, bug desktop) (executor-20260615-006)
+> Redesign completo da sidebar: todos os botões de categoria viram cards premium com 3 estados (Nível 2=categoria acesa/glow · Nível 1=subcategoria ativa/discreta · Nível 0=inativo). Ícones únicos nos headers (sem conflito). Divisórias finas entre categorias. Fix do bug desktop (trocar modo não navegava ao dashboard). Plano em `tarefas\plano\plano-sidebar-redesign-20260615.md`. Detalhe em `Tarefa-66..69.md`.
+- [ ] 66 · HTML — renomear "Início"→"Painel Pessoal" + ícones únicos nos headers de categoria → construtor/frontend-dev · dep: —
+- [ ] 67 · CSS — card premium (Painel Pessoal + categorias) + divisórias finas + hierarquia 3 níveis (aceso/sub-ativa/inativo) → forge/ui-visual-designer · dep: 66
+- [ ] 68 · JS — fix bug desktop navigate('dashboard') no mode-switch + active-parent para CSS do Nível 2 → construtor/frontend-dev · dep: 67
+- [ ] 69 · Smoke Playwright real + auditoria (3 níveis · ícones · bug fix · console 0 · overflow 0 · regressão) → sentinela/smoke-visual-tester · dep: 66, 67, 68
+
+### Etapa 37 — Finanças (Pessoal): R6 — Mentor Semanal com carry-over + correções do card Mentor (executor-20260615-005)
+> 6ª rodada. Upgrade grande: Mentor por semana com MEMÓRIA DE ATRASO (acúmulo), 6 estados, voz humana 3 tons (atraso gentil), + correções (accordion label, CSS .mtr-card, conteúdo da frase, rodapé só no Mês, tag MENTOR). 7 furos da Lente incorporados. Plano detalhado em `tarefas\plano\plano-mentor-semanal-carryover-20260615.md`. Detalhe em `Tarefa-60..65.md`.
+- [x] 60 · Correções de lógica — accordion Mês "Contas Pagas/Recebidas" + rodapé Mentor só no modo Mês → construtor/frontend-dev · dep: — ✅ acordeaoHdr usa ${nome}·chamada passa 'Contas Pagas'/'Contas Recebidas'·viewMode==='mes' guard no mentorRodHTML
+- [x] 61 · Card Mentor visual — limpar CSS legado (herdar .mtr-card / listra teal) + tag flutuante "MENTOR" → forge/ui-visual-designer · dep: — ✅ T47+T51 CSS morto removido·position:relative adicionado·_tag mtr-spot-tag em todos os 4 estados do rod + sem
+- [x] 62 · Voz do card Mentor (Mês) — frase amarra deve→prazo→meta + toque humano + pool ampliado anti-repetição → construtor/frontend-dev · dep: 61 ✅ fin-metadiaria: 5 frases/tom (15 total)·amarra deve→prazo→meta·legenda 'por dia'·anti-rep pick()
+- [x] 63 · Engenharia Mentor Semanal (carry-over) — modelo temporal + acúmulo + 6 estados + API fraseSemana + núcleos de voz → construtor/frontend-dev · dep: 62 ✅ buildListaSemana reescrito·carry-over sem dupla contagem·6 estados+A Receber adaptado·meta-teto·NUC_SEM+fraseSemana em 15-mentor.js
+- [x] 64 · Visual Mentor Semanal — card em todos os blocos · cor por estado · densidade · tag + hero → forge/ui-visual-designer · dep: 63, 61 ✅ fin-sem-compacto+fin-sem-atraso-badge+fin-sem-teto CSS·COR/COR_S por estado·RICO set (meta/acumulo/vencidas)
+- [x] 65 · Smoke Playwright real + auditoria R6 (carry-over · 6 estados · 3 tons · console 0 · overflow 0 · regressão) + ficha → sentinela/smoke-visual-tester · dep: 60–64 ✅ VERDE 0 erros · console 0 · overflow 0px · accordion labels OK · mtr-spot-tag OK · border-left 3px · legenda 'por dia' · carry-over badge '+R$432,70 em atraso' · 6 estados pagar+4 estados receber · RICO cards com tag · compacto cards corr · regressão Totais+Saldo+2abas+Mentor+Tx+Negócio · 2 screenshots
+
+### Etapa 36 — Finanças (Pessoal): R5 — abas A Receber/A Pagar (sem Todas) + progresso no card + bug accordion + terminologia contextual (executor-20260615-004)
+> 5ª rodada — remove "Todas" (2 cards 50/50, abas sempre-um-ativo, default A Pagar), adiciona progresso 10/20 no card, corrige bug do accordion "Pagas" que sumia ao filtrar, e aplica terminologia contextual (pago/Pagas × recebido/Recebidas). Premium, nada solto. Detalhe em `Tarefa-57..59.md`.
+- [x] 57 · Lógica — abas sempre-um-ativo (remove Todas, default A Pagar) · corrige filtered()+buildListaMes (bug accordion) · dados de progresso por tipo · terminologia contextual → construtor/frontend-dev · dep: — ✅ filtroCard='pagar' default·filtered() só por tipo (mantém pagas)·seloTxt contextual·accordion sempre presente·terminologia openQuick+selo+header semana·pagasN/totalN em data attrs
+- [x] 58 · Visual premium — 2 cards retangulares 50/50 centralizados · barra de progresso 10/20 · accordion label dinâmico (Pagas/Recebidas) · nada solto → forge/ui-visual-designer · dep: 57 ✅ grid 2col+min-height 82px+fin-chip-prog-wrap+fin-chip-bar(income)+fin-chip-frac(mono)+CSS aditivo T58+markup prog bar+frac em cada chip
+- [x] 59 · Smoke Playwright real + auditoria R5 (abas · bug accordion nos 2 modos · terminologia · console 0 · overflow 0 · regressão) + ficha → sentinela/smoke-visual-tester · dep: 57, 58 ✅ VERDE 0 erros · console 0 · overflow 0px · 2 abas+sem Todas+default A Pagar · switch funcional · prog bar+frac+role=progressbar · "Marcar como pago/recebido" · selos OK · regressão Totais+Saldo+Mentor R4+Tx+Negócio · 4 WARNs não-bloqueantes · 2 screenshots
+
+### Etapa 35 — Finanças (Pessoal): R4 — card Mentor repaginado (anatomia .mtr-card + frases por persona + valor-herói único) (executor-20260615-003)
+> 4ª rodada — o card do Mentor (rodapé + por semana) não casava com a aba Mentor e o valor "/dia" aparecia 2× (deformado por persona). Repagina com a anatomia `.mtr-card` + frases reescritas sem repetir o valor + 1 hero. Detalhe em `Tarefa-54..56.md`.
+- [x] 54 · Reescrever frases fin-metadiaria (3 personas) sem citar o "/dia" → construtor/frontend-dev · dep: — ✅ 6 frases (2×3 tons): d.devo+d.dias, plural/singular natural, zero /dia
+- [x] 55 · Repaginar card Mentor (rodapé + por semana) com anatomia .mtr-card + valor-herói único à direita → forge/ui-visual-designer · dep: 54 ✅ mtr-card+4 estados rodapé+semana com hero único+CSS override especificidade+tokens
+- [x] 56 · Smoke Playwright real + auditoria R4 (3 personas · console 0 · overflow 0 · regressão) + ficha → sentinela/smoke-visual-tester · dep: 54, 55 ✅ VERDE 0 erros · console 0 · overflow 0px · mtr-card+hero 1x+3 personas · estados futuro/passado sem hero · regressão OK · 2 screenshots
+
+### Etapa 34 — Finanças (Pessoal): polimento visual R3 (chips card, toggle, card Mentor, accordion Pagas) (executor-20260615-002)
+> 3ª rodada — ajustes finos de visual/UX na tela Finanças, **sem mexer na lógica da R2**. Detalhe em `Tarefa-49..53.md`.
+- [x] 49 · Chips → cards quadrados (rótulo topo/valor base · 3 col iguais · ordem A Receber·A Pagar·Todas · 360 sem overflow) → forge/ui-visual-designer · dep: — ✅ grid 3col+fin-chip-label/val+nova ordem+ativo por data-filtro+cores income/expense
+- [x] 50 · Toggle Mês/Semana — centralizar + um pouco maior (mesmo estilo) → forge/ui-visual-designer · dep: — ✅ margin:auto+padding 8px 26px+font 13.5px+min-height 40px
+- [x] 51 · Card Mentor (rodapé) com identidade do Mentor (badge + ícone + realce teal, reusa .ai/.mtr-spotlight) → forge/ui-visual-designer · dep: — ✅ .ai+ai-badge+mtr-ico+fin-mentor-rod-inner+4 estados+mentor-sem.ai
+- [x] 52 · Accordion "Pagas" elegante (✅ verde · contagem em chip · total verde/mono · seta giratória · cards concluídos) → forge/ui-visual-designer · dep: — ✅ fin-pagas-hdr+ico+nome+count(income-soft)+total(income/mono)+seta giratória
+- [x] 53 · Smoke Playwright real + auditoria R3 (console 0 · overflow 0 · 360/1280 · regressão) + ficha → sentinela/smoke-visual-tester · dep: 49–52 ✅ 63/63 VERDE · console 0 · overflow 0px · 1280+360 claro+escuro · T49-T52 confirmados · regressão tx+negócio OK · 2 screenshots
+
+### Etapa 33 — Finanças (Pessoal): ajustes finos (recorrência rolável, card-dashboard A, modos Mês/Semana, Mentor de meta diária) (executor-20260615-001)
+> 2ª rodada de ajustes na tela Finanças (`js/pessoal/03-contas.js`). Tira o Mentor do topo e cria o Mentor de **meta diária** no rodapé + por semana; redesenha o card-dashboard (direção A: totais fixos + saldo-resultado + 3 chips + toggle Mês/Semana); recorrência **rolável** (só nasce ao pagar, valor herdado, desativável); parcelado até 18×; campo Observação; cor semântica dos valores. PRESERVA o CRUD. Detalhe em `Tarefa-41..48.md`.
+- [x] 41 · Modelo + cálculo (totais fixos × pendente · recorrência rolável · parcelado 18× · obs · pagoEm) → construtor/frontend-dev · dep: — ✅ calcTotais()+calcSaldos()+pay() rool+addMonths()+form() seg-tipo
+- [x] 42 · Modal Add/Editar (UX · Recorrente/Parcelado exclusivos · Observação · desativar recorrência) → construtor/frontend-dev · dep: 41 ✅ seg-tipo Avulso/Recorrente/Parcelado+obs+toggle desativar rec
+- [x] 43 · Card-dashboard (A): topo+↩hoje · totais fixos · saldo-resultado · 3 chips · toggle Mês/Semana · barra ação 50/50 · −prop-bar → forge/ui-visual-designer · dep: 41 ✅ fin-totais+fin-saldo-hero+fin-chips+fin-view-toggle+viewMode state
+- [x] 44 · Modo Mês: grupos 🔴 Vencidas/🟡 Hoje/🟠 A vencer (contagem+soma) · Pagas accordion riscadas · selos+data venc → construtor/frontend-dev · dep: 43 ✅ buildListaMes()+grupoHdr()+acordeaoHdr()+seloTxt()
+- [x] 45 · Modo Semana: 1 bloco/semana (seg→dom, apara virada) · resumo · "esta semana" · Mentor por semana · vazio → construtor/frontend-dev · dep: 43, 44 ✅ buildListaSemana()+semanasMes()+esta-semana badge
+- [x] 46 · Cards de conta: lápis affordance · ♻️ recorrente · data de pagamento · cor semântica do valor → forge/ui-visual-designer · dep: 44 ✅ fin-card-right+fin-lapis+fin-selo-rec/parc+cor semântica rowHTML()
+- [x] 47 · Mentor adaptativo: −faixa do topo · meta diária (rodapé+semana) reusando motor de voz · estados → construtor/frontend-dev · dep: 41, 44, 45 ✅ NUC fin-metadiaria+fraseMeta()+mentorRodHTML 4 estados+buildListaSemana usa API
+- [x] 48 · Smoke Playwright real + auditoria (console 0 · overflow 0 · contraste · 360/1280) + ficha → sentinela/smoke-visual-tester · dep: 41–47 ✅ 50/50 VERDE · console 0 · overflow 0px · strip ausente · mentor-rod+semana · modo Mês+Semana · regressão negócio OK · 1280+360 claro+escuro
+
 ### Etapa 32 — Tela Finanças (Pessoal): mockup + ritmo mês/semana + filtros + extras (executor-20260614-001)
 > Aplica o mockup aprovado na tela real (`js/pessoal/03-contas.js`) PRESERVANDO o CRUD, + Reserva por dia (mês), Ritmo semanal (semanas de calendário), Navegação por mês, Tap=ação rápida, Filtros expansíveis, Faixa do Mentor. Detalhe em `Tarefa-32..40.md`.
 - [x] 32 · CSS componente fin-* (namespaced, resolve colisão .fin-card 1285) → forge/ui-visual-designer · dep: — ✅ escopo #contas-root .fin-*, zero colisão

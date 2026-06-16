@@ -1,6 +1,7 @@
 const Mentor=(()=>{
   const CAP=8;
-  const dispensados=new Set();                 // ids escondidos na sessão (sem persistência)
+  const DISP_KEY='mentor.dispensados';
+  const dispensados=new Set(JSON.parse(localStorage.getItem(DISP_KEY)||'[]'));
   const SEV={critico:{o:0,ic:'alert',cor:'expense'},atencao:{o:1,ic:'clock',cor:'warning'},
              oportunidade:{o:2,ic:'trendup',cor:'income'},info:{o:3,ic:'zap',cor:'info'}};
 
@@ -374,6 +375,30 @@ const Mentor=(()=>{
              d=>`o dono merece pagar — pró-labore de ${fmt(d.valor)} no aguardo 😄`],
       motivador:[d=>`bora retirar seu pró-labore de ${fmt(d.valor)} — separa PJ de PF e fortalece as duas partes! 💪`,
              d=>`retire o pró-labore (${fmt(d.valor)}) e fortaleça também sua vida pessoal 🎯`]
+    },
+    // ── FINANÇAS PESSOAL — meta diária (T47/T54/T62: deve→prazo→meta, pool 5/tom, anti-rep) ──
+    'fin-metadiaria':{
+      serio:[
+        d=>`Você tem ${fmt(d.devo)} a pagar e faltam ${d.dias} ${d.dias===1?'dia':'dias'} — separe a meta do dia e o mês fecha.`,
+        d=>`${fmt(d.devo)} em aberto, ${d.dias} ${d.dias===1?'dia restante':'dias restantes'} — mantendo a meta diária, você chega lá.`,
+        d=>`Faltam ${fmt(d.devo)} e ${d.dias} ${d.dias===1?'dia':'dias'} no mês — ao ritmo certo, dá pra fechar tudo.`,
+        d=>`Com ${fmt(d.devo)} a quitar e ${d.dias} ${d.dias===1?'dia':'dias'} no calendário, a meta de hoje dita o ritmo.`,
+        d=>`${d.dias} ${d.dias===1?'dia':'dias'} para organizar ${fmt(d.devo)} em contas — cada dia na meta conta.`
+      ],
+      descontraido:[
+        d=>`${fmt(d.devo)} a pagar e ${d.dias}d no relógio — guarda a meta do dia e tá resolvido 👀`,
+        d=>`Ainda tem ${fmt(d.devo)} em aberto! Com ${d.dias}d na conta e a meta do dia na mão, dá 😄`,
+        d=>`${d.dias} ${d.dias===1?'dia':'dias'} e ${fmt(d.devo)} pra organizar — separa a meta do dia e vai embora 👌`,
+        d=>`${fmt(d.devo)} pendentes e ${d.dias}d no relógio 👀 — a meta do dia é sua melhor amiga agora`,
+        d=>`Falta ${fmt(d.devo)} pra zerar o mês e ${d.dias}d pra correr — bora guardar a meta do dia! 💸`
+      ],
+      motivador:[
+        d=>`Você tem ${fmt(d.devo)} a fechar em ${d.dias} ${d.dias===1?'dia':'dias'} — foca na meta do dia e vai lá! 💪`,
+        d=>`${fmt(d.devo)} e ${d.dias} ${d.dias===1?'dia':'dias'} — quem mantém a meta diária fecha qualquer mês! 🎯`,
+        d=>`Com ${fmt(d.devo)} a pagar e ${d.dias}d, você tem tudo que precisa — a meta do dia é o seu ritmo 🚀`,
+        d=>`${d.dias} ${d.dias===1?'dia':'dias'} pra fechar ${fmt(d.devo)} em contas — cada meta do dia é um passo! 💪`,
+        d=>`Foca: ${fmt(d.devo)}, ${d.dias} ${d.dias===1?'dia':'dias'}, meta do dia no radar — você fecha tudo! 🎯`
+      ]
     }
   };
 
@@ -637,55 +662,342 @@ const Mentor=(()=>{
     return {spotlight:all[0]||null,contagem,resto:all.slice(1,limite),total:all.length};
   }
 
-  // ── RENDER (feed Quiet Premium) ──
-  function cardHTML(i){
+  // ── RENDER v2 — experiência por modo (Etapa 30) ──
+  function cardHTML(i,opts={}){
     const c=SEV[i.severidade];
+    const cls=opts.spotlight?'mtr-spotlight':'mtr-card';
+    const icoSz=opts.spotlight?20:17;
     const act=i.acao.href
       ?`<a class="mtr-btn" href="${i.acao.href}" target="_blank" rel="noopener">${i.acao.label}</a>`
       :`<button class="mtr-btn" data-go="${i.acao.navTo}">${i.acao.label}</button>`;
-    return `<div class="mtr-card" style="--c:var(--${c.cor});--cs:var(--${c.cor}-soft)">
-      <div class="mtr-ico">${svg(i.icone,17)}</div>
+    const tag=opts.tag?`<span class="mtr-spot-tag">${opts.tag}</span>`:'';
+    return `<div class="${cls}" style="--c:var(--${c.cor});--cs:var(--${c.cor}-soft)">
+      ${tag}<div class="mtr-ico">${svg(i.icone,icoSz)}</div>
       <div class="mtr-main"><div class="mtr-t">${i.titulo}</div><div class="mtr-s">${i.texto}</div></div>
       <div class="mtr-side">${act}<button class="mtr-x" data-x="${i.id}" title="Dispensar">dispensar</button></div>
     </div>`;
   }
+  function _grupoHTML(ic,label,items){
+    if(!items.length)return '';
+    return `<div class="mtr-grupo"><div class="mtr-grupo-head">
+      <span class="mtr-grupo-icon">${ic}</span>
+      <span class="mtr-grupo-label">${label}</span>
+      <span class="mtr-grupo-count">${items.length}</span>
+    </div><div class="mtr-feed">${items.map(i=>cardHTML(i)).join('')}</div></div>`;
+  }
+  function _expandirHTML(extras){
+    if(!extras.length)return '';
+    const n=extras.length,lbl=`+${n} aviso${n===1?'':'s'} menos urgente${n===1?'':'s'}`;
+    return `<div class="mtr-expandir"><button class="mtr-expandir-btn" aria-expanded="false" data-label="${lbl}">${svg('chevright',14)}<span class="mtr-xp-label">${lbl}</span></button>
+      <div class="mtr-feed-extra">${extras.map(i=>cardHTML(i)).join('')}</div></div>`;
+  }
+  function _vazioPremium(modo){
+    const v={
+      pessoal:{h:'Tudo em dia, Léo! ✨',p:'Aproveita pra focar no que importa hoje.',cta:''},
+      negocio:{h:'Negócio em dia!',p:'Nenhum alerta urgente. Bom momento pra revisar suas metas.',cta:`<button class="mtr-vazio-cta" data-go="financeiro">Ver Metas →</button>`},
+      hibrido:{h:'Tudo em dia nos dois mundos! ✨',p:'Quando algo precisar da sua atenção, aparece aqui.',cta:''}
+    }[modo]||{h:'Tudo em ordem ✨',p:'',cta:''};
+    return `<div class="mtr-vazio">${svg('spark',32)}<h4>${v.h}</h4><p>${v.p}</p>${v.cta}</div>`;
+  }
+  function _agruparMod(list,mapa){
+    const g={};Object.keys(mapa).forEach(k=>g[k]=[]);
+    const fb=Object.keys(mapa)[0];
+    list.forEach(i=>{
+      let ok=false;
+      for(const[k,mods]of Object.entries(mapa)){if(mods.includes(i.modulo)){g[k].push(i);ok=true;break;}}
+      if(!ok)g[fb].push(i);
+    });
+    return g;
+  }
+  function _headerHTML(ola,emoji,tCab,all){
+    const nC=all.filter(i=>i.severidade==='critico').length;
+    const nA=all.filter(i=>i.severidade==='atencao').length;
+    const av=all.length===1?'aviso':'avisos';
+    const det=[nC?`${nC} ${nC===1?'crítico':'críticos'}`:null,nA?`${nA} pedindo atenção`:null].filter(Boolean).join(' e ');
+    const res={
+      serio:`Você tem ${all.length} ${av}${det?', '+det:''}.`,
+      descontraido:`Bora ver o dia? ${all.length} ${av}${det?', '+det:''}.`,
+      motivador:`Vamo nessa! ${all.length} ${av}${det?', '+det:''} — dá pra organizar.`
+    }[tCab];
+    return `<div class="mtr-resumo"><h2>${ola}, Léo ${emoji}</h2><p>${res}</p></div>`;
+  }
+  function _renderPessoal(all,ola,emoji,tCab){
+    const[spot,...rest]=all;
+    const vis=rest.slice(0,CAP-1),extra=rest.slice(CAP-1);
+    const g=_agruparMod(vis,{saude:['Saúde'],habitos:['Produtividade','Treinos'],financeiro:['Finanças'],aprendizado:['Estudos','Leitura','Séries','Salvos']});
+    return _headerHTML(ola,emoji,tCab,all)+
+      cardHTML(spot,{spotlight:true})+
+      `<div class="mtr-grupos">`+
+        _grupoHTML('🏃','Saúde & Bem-estar',g.saude)+
+        _grupoHTML('✅','Hábitos & Rotina',g.habitos)+
+        _grupoHTML('💰','Finanças Pessoais',g.financeiro)+
+        _grupoHTML('📚','Aprendizado & Lazer',g.aprendizado)+
+      `</div>`+_expandirHTML(extra);
+  }
+  function _renderNegocio(all,ola,emoji,tCab){
+    const[spot,...rest]=all;
+    const vis=rest.slice(0,CAP-1),extra=rest.slice(CAP-1);
+    const g=_agruparMod(vis,{financeiro:['Finanças'],operacional:['Negócio','Encomendas']});
+    return _headerHTML(ola,emoji,tCab,all)+
+      cardHTML(spot,{spotlight:true})+
+      `<div class="mtr-grupos">`+
+        _grupoHTML('💸','Financeiro & MEI',g.financeiro)+
+        _grupoHTML('🏪','Operacional',g.operacional)+
+      `</div>`+_expandirHTML(extra);
+  }
+  function _renderHibrido(all,ola,emoji,tCab){
+    const neg=all.filter(i=>i.contexto==='negocio');
+    const pes=all.filter(i=>i.contexto!=='negocio');
+    const spot=neg[0]||pes[0];
+    const negRest=neg.filter(i=>i!==spot);
+    const pesRest=pes.filter(i=>i!==spot);
+    const negVis=negRest.slice(0,Math.ceil((CAP-1)/2));
+    const pesVis=pesRest.slice(0,Math.floor((CAP-1)/2));
+    const extra=[...negRest.slice(negVis.length),...pesRest.slice(pesVis.length)];
+    const spotTag=spot&&spot.contexto==='negocio'?'NEGÓCIO':'PESSOAL';
+    const negFeed=negVis.length?`<div class="mtr-sep"><span class="mtr-sep-label">💼 Negócio (${neg.length})</span></div><div class="mtr-feed">${negVis.map(i=>cardHTML(i)).join('')}</div>`:'';
+    const pesFeed=pesVis.length?`<div class="mtr-sep"><span class="mtr-sep-label">🏠 Pessoal (${pes.length})</span></div><div class="mtr-feed">${pesVis.map(i=>cardHTML(i)).join('')}</div>`:'';
+    return _headerHTML(ola,emoji,tCab,all)+cardHTML(spot,{spotlight:true,tag:spotTag})+negFeed+pesFeed+_expandirHTML(extra);
+  }
   function render(){
     const root=document.getElementById('mentor-root');if(!root)return;
+    const modo=document.documentElement.getAttribute('data-mode')||'pessoal';
+    root.dataset.mtrModo=modo;
     const all=filtraModo(rodarRegras());
-    const nCrit=all.filter(i=>i.severidade==='critico').length;
-    const nAtt=all.filter(i=>i.severidade==='atencao').length;
-    const critSaude=all.some(i=>i.id==='sau-dose');           // trava: crítico de saúde → saudação/resumo calmos
-    const vis=all.slice(0,CAP),resto=all.length-vis.length;
-    const hr=new Date().getHours(),ola=hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite';
+    const critSaude=all.some(i=>i.id==='sau-dose');
     const tCab=critSaude?'serio':tom;
     const emoji={serio:'👋',descontraido:'😎',motivador:'💪'}[tCab];
-    const av=all.length===1?'aviso':'avisos';
-    const det=`${nCrit?`, ${nCrit} ${nCrit===1?'crítico':'críticos'}`:''}${nAtt?` e ${nAtt} pedindo atenção`:''}`;
-    const resumo=all.length
-      ?({serio:`Você tem ${all.length} ${av}${det}.`,
-         descontraido:`Bora ver o dia? ${all.length} ${av}${det}.`,
-         motivador:`Vamo nessa! ${all.length} ${av}${det}${critSaude?'':' — dá pra organizar'}.`}[tCab])
-      :({serio:'Nenhum alerta agora — está tudo em ordem.',
-         descontraido:'Tá tudo tranquilo por aqui 😌',
-         motivador:'Tudo em ordem! Segue brilhando ✨'}[tom]);
+    const hr=new Date().getHours(),ola=hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite';
     const toggle=`<div class="mtr-tom seg">
       <button data-tom="serio" class="${tom==='serio'?'on':''}">🤝 Sério</button>
       <button data-tom="descontraido" class="${tom==='descontraido'?'on':''}">😎 Descontraído</button>
       <button data-tom="motivador" class="${tom==='motivador'?'on':''}">💪 Motivador</button>
     </div>`;
-    root.innerHTML=`
-      ${toggle}
-      <div class="mtr-resumo"><h2>${ola}, Léo ${emoji}</h2><p>${resumo}</p></div>
-      ${all.length
-        ?`<div class="mtr-feed">${vis.map(cardHTML).join('')}</div>${resto>0?`<div class="mtr-more">+${resto} ${resto===1?'aviso de menor prioridade':'avisos de menor prioridade'}</div>`:''}`
-        :`<div class="empty" style="padding:var(--s-6) 0"><div class="eico">${svg('spark',24)}</div><h4>Tudo em ordem por aqui ✨</h4><p>Quando algo precisar da sua atenção, aparece aqui.</p></div>`}`;
+    let body='';
+    if(!all.length) body=_vazioPremium(modo);
+    else if(modo==='negocio') body=_renderNegocio(all,ola,emoji,tCab);
+    else if(modo==='hibrido') body=_renderHibrido(all,ola,emoji,tCab);
+    else body=_renderPessoal(all,ola,emoji,tCab);
+    root.innerHTML=toggle+body;
     root.querySelectorAll('[data-tom]').forEach(b=>b.onclick=()=>{tom=b.dataset.tom;render();});
     root.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>navigate(b.dataset.go));
-    root.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{dispensados.add(b.dataset.x);render();});
+    root.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{
+      dispensados.add(b.dataset.x);
+      localStorage.setItem(DISP_KEY,JSON.stringify([...dispensados]));
+      render();
+    });
+    root.querySelectorAll('.mtr-expandir-btn').forEach(btn=>{
+      const extra=btn.nextElementSibling;
+      btn.onclick=()=>{
+        const open=extra.classList.toggle('open');
+        btn.setAttribute('aria-expanded',String(open));
+        btn.querySelector('.mtr-xp-label').textContent=open?'Recolher':btn.dataset.label;
+      };
+    });
     updateMentorBadge();
   }
   function feed(){return rodarRegras();}
-  return {render,contarCriticos,briefing,feed};
+  // API de meta diária — consome o motor de voz existente (T47)
+  function fraseMeta({devo,dias}){
+    if(!devo||!dias||dias<=0)return '';
+    return fraseDe('fin-metadiaria',{devo,dias,meta:Math.ceil(devo/dias)});
+  }
+
+  // ── MENTOR SEMANAL — núcleos + API (T63) ──────────────────────────────────
+  const SENS_SEM=new Set(['fin-sem-vencidas','fin-sem-rec-atraso']);
+  const NUC_SEM={
+    'fin-sem-meta':{
+      serio:[
+        d=>`${fmt(d.programado)} a pagar essa semana, com ${d.dias} ${d.dias===1?'dia':'dias'} — a meta do dia mantém o controle.`,
+        d=>`São ${fmt(d.programado)} em contas e ${d.dias} ${d.dias===1?'dia':'dias'} pela frente — no ritmo da meta, fecha.`,
+        d=>`${d.dias} ${d.dias===1?'dia':'dias'} para organizar ${fmt(d.programado)} em contas — meta do dia, sem surpresa.`
+      ],
+      descontraido:[
+        d=>`${fmt(d.programado)} pra pagar essa semana — guarda a meta do dia e fica tranquilo 👌`,
+        d=>`Semana com ${fmt(d.programado)} na fila! Com ${d.dias}d e a meta do dia, dá fácil 😄`,
+        d=>`${d.dias}d e ${fmt(d.programado)} em contas — meta do dia no bolso e tá feito 👍`
+      ],
+      motivador:[
+        d=>`${fmt(d.programado)} essa semana e você tem ${d.dias} ${d.dias===1?'dia':'dias'} pra resolver — vai lá! 💪`,
+        d=>`Meta da semana: fechar ${fmt(d.programado)} em ${d.dias} ${d.dias===1?'dia':'dias'}. Você consegue! 🎯`,
+        d=>`${fmt(d.programado)} em contas, ${d.dias}d no relógio — bora manter o ritmo! 🚀`
+      ]
+    },
+    'fin-sem-acumulo':{
+      serio:[
+        d=>`${fmt(d.programado)} desta semana mais ${fmt(d.atrasado)} que rolou — total de ${fmt(d.total)} a organizar.`,
+        d=>`Rolou ${fmt(d.atrasado)} em atraso pra cá, junto com ${fmt(d.programado)} da semana — a meta do dia cobre tudo.`,
+        d=>`${d.atrasadoN} conta${d.atrasadoN===1?'':'s'} de semanas passadas acumularam aqui — ${fmt(d.total)} no total.`
+      ],
+      descontraido:[
+        d=>`Chegaram ${fmt(d.atrasado)} de semanas passadas — junto com os ${fmt(d.programado)} de agora, são ${fmt(d.total)} 👀`,
+        d=>`${fmt(d.atrasado)} rolou pra essa semana — total de ${fmt(d.total)}, mas a meta do dia dá conta 😎`,
+        d=>`Acumulou ${fmt(d.atrasado)} aqui — com a meta do dia, você organiza os ${fmt(d.total)} 👌`
+      ],
+      motivador:[
+        d=>`${fmt(d.atrasado)} rolou pra cá — junto com os ${fmt(d.programado)}, você fecha ${fmt(d.total)} no ritmo! 💪`,
+        d=>`${fmt(d.total)} com o acúmulo incluído — foca na meta do dia e vira de trás pra frente! 🎯`,
+        d=>`Acumulou ${fmt(d.atrasado)}, mas você recupera — meta do dia nos ${fmt(d.total)} e fecha! 🚀`
+      ]
+    },
+    'fin-sem-vencidas':{
+      serio:[
+        d=>`${d.atrasadoN} conta${d.atrasadoN===1?'':'s'} ficou${d.atrasadoN===1?'':'m'} em aberto aqui (${fmt(d.programado)}) — incluído na semana atual.`,
+        d=>`Ficou ${fmt(d.programado)} em aberto nessa semana — a semana atual já está cuidando.`,
+        d=>`${d.atrasadoN} em aberto desta semana (${fmt(d.programado)}) — incluídos na meta atual.`,
+        d=>`${fmt(d.programado)} ainda não quitado aqui — já foi pra semana atual se organizar.`
+      ],
+      descontraido:[
+        d=>`${d.atrasadoN} conta${d.atrasadoN===1?'':'s'} ficou${d.atrasadoN===1?'':'m'} em aberto (${fmt(d.programado)}) — já foi pra essa semana se cuidar 😊`,
+        d=>`Ficou ${fmt(d.programado)} por aqui — tranquilo, a semana atual absorveu 👉`,
+        d=>`${fmt(d.programado)} rolou pra frente, sem drama — a semana atual tá cuidando 😌`,
+        d=>`Essas contas foram pra semana atual — ela já absorveu e você vai fechar 👍`
+      ],
+      motivador:[
+        d=>`${fmt(d.programado)} em aberto, mas você recupera — a semana atual já está no ritmo! 💪`,
+        d=>`Ficou ${d.atrasadoN} em aberto — a semana atual absorveu e vai fechar com você! 🎯`,
+        d=>`${fmt(d.programado)} ficou, mas a semana atual já está resolvendo — confia! 🙌`,
+        d=>`Vai na semana atual — ela pegou o ${fmt(d.programado)} que ficou aqui! 💪`
+      ]
+    },
+    'fin-sem-fechada':{
+      serio:[
+        ()=>'Semana fechada — tudo quitado por aqui.',
+        ()=>'Todas as contas desta semana estão pagas.',
+        ()=>'Tudo em dia por aqui. Semana encerrada.'
+      ],
+      descontraido:[
+        ()=>'Semana fechada! Tudo pago por aqui 🙌',
+        ()=>'Zerou essa semana — arrasou! 😄',
+        ()=>'Tudo certo por aqui ✅ Semana resolvida!'
+      ],
+      motivador:[
+        ()=>'Semana fechada — missão cumprida! 💪',
+        ()=>'Tudo pago e na conta — você arrasoou! 🎯',
+        ()=>'Semana encerrada no verde. Assim se faz! 🚀'
+      ]
+    },
+    'fin-sem-suave':{
+      serio:[
+        ()=>'Nada a pagar nessa semana — semana tranquila.',
+        ()=>'Sem vencimentos aqui. Aproveite a folga.',
+        ()=>'Esta semana está livre de contas.'
+      ],
+      descontraido:[
+        ()=>'Nada a pagar aqui — semana tranquila 🍃',
+        ()=>'Essa semana tá no verde — zero contas 👍',
+        ()=>'Semana livre! Aproveite 😎'
+      ],
+      motivador:[
+        ()=>'Semana livre de contas — energia toda pra outras metas! 💪',
+        ()=>'Zero contas essa semana — foco total no que importa! 🎯',
+        ()=>'Nada vencendo aqui — semana no verde! 🚀'
+      ]
+    },
+    'fin-sem-previa':{
+      serio:[
+        d=>`${fmt(d.programado)} programados para essa semana — chegará na sua vez.`,
+        d=>`${fmt(d.programado)} já agendados aqui — organizando com antecedência.`,
+        d=>`Tem ${fmt(d.programado)} vindo nessa semana — ainda dá tempo de se preparar.`
+      ],
+      descontraido:[
+        d=>`${fmt(d.programado)} já estão na agenda pra essa semana 👀`,
+        d=>`${fmt(d.programado)} programados aqui — chega na sua vez 😉`,
+        d=>`Tem ${fmt(d.programado)} vindo por aí — ainda dá tempo! 👍`
+      ],
+      motivador:[
+        d=>`${fmt(d.programado)} na agenda — prepare a meta quando chegar a semana! 💪`,
+        d=>`${fmt(d.programado)} programados — você vai estar pronto! 🎯`,
+        d=>`${fmt(d.programado)} chegando nessa semana — foco quando chegar a hora! 🚀`
+      ]
+    },
+    'fin-sem-rec-previsto':{
+      serio:[
+        d=>`${fmt(d.programado)} previstos para entrar — fique de olho se não cair.`,
+        d=>`${fmt(d.programado)} a receber — confirme o recebimento quando cair.`,
+        d=>`${fmt(d.programado)} esperados essa semana — pronto para registrar.`
+      ],
+      descontraido:[
+        d=>`${fmt(d.programado)} pra entrar — boa! 👍`,
+        d=>`${fmt(d.programado)} chegando essa semana — tá de bom tamanho 💸`,
+        d=>`${fmt(d.programado)} a receber — bora conferir! 😄`
+      ],
+      motivador:[
+        d=>`${fmt(d.programado)} vindo aí — confirma e registra! 💪`,
+        d=>`${fmt(d.programado)} na entrada essa semana — marque quando cair! 🎯`,
+        d=>`${fmt(d.programado)} esperados — vai entrar! 🚀`
+      ]
+    },
+    'fin-sem-rec-recebido':{
+      serio:[
+        ()=>'Tudo recebido nessa semana — em dia.',
+        ()=>'Todas as entradas desta semana confirmadas.',
+        ()=>'Recebimentos da semana: tudo conferido.'
+      ],
+      descontraido:[
+        ()=>'Tudo recebido! Ótimo 👏',
+        ()=>'Entrou tudo essa semana 😄',
+        ()=>'Semana de recebimentos fechada ✅'
+      ],
+      motivador:[
+        ()=>'Tudo recebido — semana excelente! 💪',
+        ()=>'Entrou tudo no prazo — arrasou! 🎯',
+        ()=>'Recebimentos em dia — foco no próximo! 🚀'
+      ]
+    },
+    'fin-sem-rec-atraso':{
+      serio:[
+        d=>`${fmt(d.programado)} era esperado e ainda não entrou — vale cobrar com gentileza.`,
+        d=>`${fmt(d.programado)} não confirmado ainda — um lembrete pode ajudar.`,
+        d=>`${fmt(d.programado)} em aberto — verifique se precisa enviar um lembrete.`,
+        d=>`O valor de ${fmt(d.programado)} ainda não foi confirmado — vale checar.`
+      ],
+      descontraido:[
+        d=>`${fmt(d.programado)} ainda não entrou — um toque gentil pode resolver 😊`,
+        d=>`Ficou ${fmt(d.programado)} em aberto — vale mandar um lembrete tranquilo 👉`,
+        d=>`${fmt(d.programado)} não confirmado — um recadinho não custa nada 😌`,
+        d=>`${fmt(d.programado)} por receber — quando puder, manda um oi 😄`
+      ],
+      motivador:[
+        d=>`${fmt(d.programado)} em aberto — um lembrete gentil e você recupera! 💪`,
+        d=>`Ainda há ${fmt(d.programado)} pra entrar — vale cobrar com confiança! 🎯`,
+        d=>`${fmt(d.programado)} não chegou — manda um lembrete e vai que entra! 🙌`,
+        d=>`${fmt(d.programado)} em aberto — você tem direito de cobrar! 💪`
+      ]
+    },
+    'fin-sem-rec-suave':{
+      serio:[
+        ()=>'Nada a receber nessa semana.',
+        ()=>'Sem entradas previstas aqui.',
+        ()=>'Semana sem recebimentos previstos.'
+      ],
+      descontraido:[
+        ()=>'Nada a receber aqui — semana tranquila 😌',
+        ()=>'Sem entradas essa semana — tudo bem 👍',
+        ()=>'Semana livre de recebimentos 🍃'
+      ],
+      motivador:[
+        ()=>'Sem entradas essa semana — foco em outras metas! 💪',
+        ()=>'Nada a receber aqui — semana de planejamento! 🎯',
+        ()=>'Zero recebimentos, zero distrações — foco total! 🚀'
+      ]
+    }
+  };
+
+  function fraseSemana({estado,programado,atrasado,atrasadoN,total,dias,meta,tipo}){
+    const nid='fin-sem-'+estado;
+    const blk=NUC_SEM[nid];if(!blk)return '';
+    const tomNuc=blk[tom]?tom:'serio';
+    const poolKey=SENS_SEM.has(nid)?'calmo':tom;
+    const ab=pick(AB[poolKey]||AB.serio,`${nid}|${poolKey}|ab`);
+    const fn=pick(blk[tomNuc],`${nid}|${tomNuc}|nuc`);
+    const fe=pick(FE[poolKey]||FE.serio,`${nid}|${poolKey}|fe`);
+    const nuc=fn?fn({programado,atrasado,atrasadoN,total,dias,meta}):'';
+    const core=nuc?(nuc.charAt(0).toUpperCase()+nuc.slice(1)).replace(/[.!?…]+$/,'')+'.':'';
+    return [ab,core,fe].filter(Boolean).join(' ').replace(/\s+/g,' ').trim();
+  }
+
+  return {render,contarCriticos,briefing,feed,fraseMeta,fraseSemana};
 })();
 
 /* ═══ Briefing "Mentor · seu dia" no dashboard (consome Mentor.briefing — Etapa 14) ═══ */

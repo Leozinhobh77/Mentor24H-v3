@@ -1,24 +1,19 @@
-# EXECUTION-PLAN - executor-20260614-001  (auto-gerado na FASE 01)
+# EXECUTION-PLAN - executor-20260615-006  (auto-gerado na FASE 01)
 
 > Fonte unica: tarefas\checklist.md (secao deste ID). Regenerado a cada run pelo Initialize-ExecutorRun.
-modo_execucao: sequencial - gerado: 2026-06-14 11:51
-objetivo: Tela Finanças
+modo_execucao: sequencial - gerado: 2026-06-15 19:57
+objetivo: Sidebar redesign premium — hierarquia visual 3 níveis
 
 ## Etapas
 | # | Tarefa | Modo/Expert | Dep | Status |
 |---|--------|-------------|-----|--------|
-| 32 | CSS componente fin-* (namespaced, resolve colisão .fin-card 1285) | forge/ui-visual-designer | — | todo |
-| 33 | Render base (mockup) + cards-filtro, preservando CRUD (pay/edit/del) | forge/frontend-dev | 32 | todo |
-| 34 | Reserva por dia (mês) — sub-linha no fin-resumo | construtor/frontend-dev | 33 | todo |
-| 35 | Ritmo semanal — semanas de calendário (Vencidas→Semanas→Pagas, por-dia adaptativo) + atualiza PADROES | construtor/frontend-dev | 33, | todo |
-| 36 | Navegação por mês (‹ mês › recalcula semanas/reserva) | construtor/frontend-dev | 35 | todo |
-| 37 | Tap na linha = ação rápida (paga/editar/excluir) | construtor/frontend-dev | 33 | todo |
-| 38 | Filtros expansíveis (busca + categoria) atrás de botão | construtor/frontend-dev | 33 | todo |
-| 39 | Faixa do Mentor (consome Mentor.feed domínio Finanças) | construtor/frontend-dev | 33 | todo |
-| 40 | Smoke Playwright real + ficha do componente | sentinela/smoke-visual-tester | 32–39 | todo |
+| 66 | HTML — renomear "Início"→"Painel Pessoal" + ícones únicos nos headers de categoria | construtor/frontend-dev | — | todo |
+| 67 | CSS — card premium (Painel Pessoal + categorias) + divisórias finas + hierarquia 3 níveis (aceso/sub-ativa/inativo) | forge/ui-visual-designer | 66 | todo |
+| 68 | JS — fix bug desktop navigate('dashboard') no mode-switch + active-parent para CSS do Nível 2 | construtor/frontend-dev | 67 | todo |
+| 69 | Smoke Playwright real + auditoria (3 níveis · ícones · bug fix · console 0 · overflow 0 · regressão) | sentinela/smoke-visual-tester | 66, | todo |
 
 ## Ordem
-32 -> 33 -> 34 -> 35 -> 36 -> 37 -> 38 -> 39 -> 40   (sequencial)
+66 -> 67 -> 68 -> 69   (sequencial)
 
 ## Gates
 3 tentativas - grave/irreversivel/fora-escopo - decisao
