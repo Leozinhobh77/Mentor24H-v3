@@ -127,13 +127,13 @@ function renderPerfil(mode){
 /* ─── MODO PESSOAL / NEGÓCIO (desktop — mode-switch na topbar) ─── */
 document.querySelectorAll('.mode-switch button').forEach(b=>{
   b.addEventListener('click',()=>{
-    navigate('dashboard');
     const mode=b.dataset.mode;
     document.documentElement.setAttribute('data-mode',mode);
     document.querySelectorAll('.mode-switch button').forEach(x=>x.classList.toggle('on',x===b));
     document.querySelectorAll('.mode-pane').forEach(p=>p.classList.toggle('show',p.dataset.pane===mode));
     document.querySelectorAll('[data-ctx]').forEach(g=>g.style.display=(mode==='hibrido'||g.dataset.ctx===mode)?'':'none');
     renderPerfil(mode);
+    navigate('dashboard');
     pintaBriefingDash();
   });
 });
@@ -246,7 +246,12 @@ function navigate(page){
   // rotas virtuais de sub-aba (financeiro-mei, etc.) mapeiam para 'financeiro'
   const pageReal=page.startsWith('financeiro-')?'financeiro':page;
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show',p.dataset.page===pageReal));
-  document.querySelectorAll('[data-nav]').forEach(n=>n.classList.toggle('active',n.dataset.nav===pageReal));
+  const modeAtual=document.documentElement.getAttribute('data-mode')||'pessoal';
+  document.querySelectorAll('[data-nav]').forEach(n=>{
+    const ctx=n.dataset.ctx;
+    const ctxMatch=!ctx||ctx===modeAtual||(modeAtual==='hibrido'&&ctx==='pessoal');
+    n.classList.toggle('active',n.dataset.nav===pageReal&&ctxMatch);
+  });
   const h=document.getElementById('greet-h'), sp=document.getElementById('greet-p');
   if(pageReal==='dashboard'){
     const hr=new Date().getHours();

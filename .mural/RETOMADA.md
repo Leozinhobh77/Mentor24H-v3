@@ -1,8 +1,8 @@
 ﻿# RETOMADA  (onde paramos)
 
-> Atualizado: 2026-06-15 20:14:04
+> Atualizado: 2026-06-16 07:45:45
 
-- OBJETIVO: Sidebar redesign premium — hierarquia visual 3 niveis (card aceso/apagado, icones nas categorias, divisorias, bug desktop)
+- OBJETIVO: Sidebar R2 — Painel Negocios standalone + hierarquia CSS (cat > sub) + remover FAB + fix active duplo
 - ESTADO: run CONCLUIDA (completed)
 - PROXIMO PASSO: run fechada - nada pendente
 - CHECKPOINT: run-finish

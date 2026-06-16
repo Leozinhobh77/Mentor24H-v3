@@ -120,13 +120,14 @@ svg{display:block}
 
 /* ─── NAV GROUP ─── */
 .nav-group{margin-bottom:2px}
-.nav-group-header{display:flex;align-items:center;gap:6px;padding:6px var(--s-3);border-radius:var(--r-md);cursor:pointer;transition:background .15s var(--ease);user-select:none}
+.nav-group-header{display:flex;align-items:center;gap:8px;padding:10px var(--s-3);border-radius:var(--r-md);cursor:pointer;background:rgba(0,0,0,.02);transition:background .15s var(--ease);user-select:none}
+[data-theme="dark"] .nav-group-header{background:rgba(255,255,255,.02)}
 .nav-group-header:hover{background:var(--surface-2)}
 [data-theme="dark"] .nav-group-header:hover{background:rgba(255,255,255,.04)}
 .nav-group-header--static{cursor:default;pointer-events:none}
-.nav-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-1);opacity:.38;flex:1;transition:opacity .15s var(--ease)}
-.nav-group.open .nav-label{opacity:.56}
-.nav-group-header:hover .nav-label{opacity:.58}
+.nav-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-1);opacity:.55;flex:1;transition:opacity .15s var(--ease)}
+.nav-group.open .nav-label{opacity:.72}
+.nav-group-header:hover .nav-label{opacity:.72}
 .nav-chevron{width:14px;height:14px;flex-shrink:0;color:var(--text-3);opacity:.38;transition:transform .22s var(--ease),opacity .15s var(--ease)}
 .nav-chevron polyline{stroke-width:2}
 .nav-group.open .nav-chevron{transform:rotate(180deg);opacity:.6}
@@ -138,7 +139,7 @@ svg{display:block}
 /* card base: borda-left reservada nos dois "gatilhos" de Nível 2 */
 .nav-standalone,.nav-group-header{border-left:3px solid transparent;transition:all .22s var(--ease)}
 /* ícone categoria */
-.nav-cat-icon{width:16px;height:16px;stroke-width:1.7;flex-shrink:0;color:var(--text-3);transition:color .22s var(--ease)}
+.nav-cat-icon{width:18px;height:18px;stroke-width:1.7;flex-shrink:0;color:var(--text-3);transition:color .22s var(--ease)}
 /* Nível 2 aceso — Painel Pessoal ativo (3 classes > .nav-item.active 2 classes) */
 .nav-item.nav-standalone.active{background:linear-gradient(105deg,var(--brand-soft),rgba(22,138,124,.04));border-left:3px solid var(--brand);box-shadow:0 0 14px rgba(22,138,124,.18),inset 0 0 0 1px rgba(22,138,124,.08)}
 [data-theme="dark"] .nav-item.nav-standalone.active{background:linear-gradient(105deg,rgba(22,138,124,.22),rgba(22,138,124,.04));box-shadow:0 0 14px rgba(22,138,124,.28),inset 0 0 0 1px rgba(22,138,124,.12)}
@@ -149,9 +150,12 @@ svg{display:block}
 .nav-group.active-parent>.nav-group-header .nav-cat-icon{color:var(--brand);stroke-width:2}
 .nav-group.active-parent>.nav-group-header::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--brand);box-shadow:0 0 6px var(--brand);margin-left:auto;flex-shrink:0}
 /* Nível 1 — sub-item ativo: sobrescreve .nav-item.active global (especificidade maior) */
-.nav-group .nav-item.active{background:transparent;box-shadow:none;color:var(--brand-text);font-weight:600}
+.nav-group .nav-item.active{background:transparent;box-shadow:none;color:var(--brand-text);font-weight:500;opacity:.82}
 .nav-group .nav-item.active svg{color:var(--brand);stroke-width:1.9}
-.nav-group .nav-item.active::before{content:'';position:absolute;left:6px;top:50%;transform:translateY(-50%);width:4px;height:4px;border-radius:50%;background:var(--brand)}
+.nav-group .nav-item.active::before{content:'';position:absolute;left:6px;top:50%;transform:translateY(-50%);width:3px;height:3px;border-radius:50%;background:var(--brand)}
+/* Subcategorias escopadas — mais finas que a categoria */
+.nav-group .nav-item{padding:7px var(--s-3);font-size:13px;font-weight:400;opacity:.42}
+.nav-group .nav-item svg{width:16px;height:16px;stroke-width:1.5}
 /* divisórias finas entre grupos */
 .nav-standalone,.nav-group{border-bottom:1px solid var(--border)}
 .nav-group:last-of-type{border-bottom:none}
@@ -1416,24 +1420,11 @@ select.field{cursor:pointer}
 .cult-bar{height:100%;border-radius:var(--r-full);transition:width .6s var(--ease);}
 .cult-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--r-full);}
 
-/* ── FAB (botão flutuante) ── */
-.fab{
-  position:fixed;bottom:28px;right:24px;
-  width:50px;height:50px;
-  background:var(--brand);border-radius:50%;border:none;cursor:pointer;
-  display:grid;place-items:center;
-  box-shadow:0 4px 20px rgba(0,168,150,.45),0 2px 8px rgba(0,0,0,.12);
-  transition:transform .15s var(--ease),box-shadow .15s var(--ease);
-  z-index:200;
-}
-.fab:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(0,168,150,.55);}
-.fab svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;}
 
 /* ── RESPONSIVO DASHBOARD ── */
 @media(max-width:768px){
   .dash-ctx{flex-direction:column;align-items:flex-start;gap:var(--s-3);}
   .day-ring{position:absolute;top:var(--s-4);right:var(--s-4);}
-  .fab{bottom:80px;right:16px;}
 }
 @media(max-width:560px){
   .ctx-chip{font-size:11px;}
@@ -1514,7 +1505,8 @@ select.field{cursor:pointer}
 /* ─── TIPOGRAFIA MOBILE (Etapa 26) ─── */
 @media(max-width:560px){
   .nav-item{font-size:15px;padding:11px var(--s-3)}
-  .nav-label{font-size:11.5px}
+  .nav-group .nav-item{font-size:14px;padding:9px var(--s-3)}
+  .nav-label{font-size:12.5px}
   .nav-chevron{width:15px;height:15px}
   .greet h1{font-size:20px}
   .greet p{font-size:14px}

@@ -6,6 +6,13 @@
 
 ## 🔄 Pendente / Agora
 
+### Etapa 39 — Sidebar R2 — Painel Negócios standalone + hierarquia CSS (cat > sub) + remover FAB (executor-20260616-001)
+> Rodada 2 do redesign da sidebar: cria "Painel Negócios" como item standalone (espelho do Painel Pessoal, fora do grupo Operação), corrige hierarquia visual invertida (categoria estava mais fina que subcategoria — padding 6px vs 9px), remove FAB órfão sem funcionalidade, e corrige bug active duplo (2 painéis com data-nav="dashboard"). Plano em `tarefas\plano\plano-sidebar-r2-20260616.md`. Detalhe em `Tarefa-70..73.md`.
+- [ ] 70 · HTML — criar "Painel Negócios" standalone logo após separador "Negócio" + remover "Painel" do grupo Operação → construtor/frontend-dev · dep: —
+- [ ] 71 · JS — fix active duplo: navigate() filtra .active por data-ctx vs modo atual (evita 2 painéis acesos) → construtor/frontend-dev · dep: 70
+- [ ] 72 · CSS — hierarquia categoria > subcategoria (padding/font/ícone/opacity corretos) + remover .fab do CSS e HTML → forge/ui-visual-designer · dep: 70, 71
+- [ ] 73 · Smoke Playwright real + auditoria R2 (Painel Negócios · active duplo · hierarquia · FAB · console 0 · overflow 0 · regressão) → sentinela/smoke-visual-tester · dep: 70, 71, 72
+
 ### Etapa 38 — Sidebar redesign premium — hierarquia visual 3 níveis (card aceso/apagado, ícones categorias, divisórias, bug desktop) (executor-20260615-006)
 > Redesign completo da sidebar: todos os botões de categoria viram cards premium com 3 estados (Nível 2=categoria acesa/glow · Nível 1=subcategoria ativa/discreta · Nível 0=inativo). Ícones únicos nos headers (sem conflito). Divisórias finas entre categorias. Fix do bug desktop (trocar modo não navegava ao dashboard). Plano em `tarefas\plano\plano-sidebar-redesign-20260615.md`. Detalhe em `Tarefa-66..69.md`.
 - [ ] 66 · HTML — renomear "Início"→"Painel Pessoal" + ícones únicos nos headers de categoria → construtor/frontend-dev · dep: —
