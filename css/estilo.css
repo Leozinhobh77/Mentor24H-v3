@@ -150,7 +150,7 @@ svg{display:block}
 .nav-group.active-parent>.nav-group-header .nav-cat-icon{color:var(--brand);stroke-width:2}
 .nav-group.active-parent>.nav-group-header::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--brand);box-shadow:0 0 6px var(--brand);margin-left:auto;flex-shrink:0}
 /* Nível 1 — sub-item ativo: sobrescreve .nav-item.active global (especificidade maior) */
-.nav-group .nav-item.active{background:transparent;box-shadow:none;color:var(--brand-text);font-weight:500;opacity:.82}
+.nav-group .nav-item.active{background:transparent;box-shadow:none;color:var(--brand-text);font-weight:500;opacity:.82;padding-top:4px;padding-bottom:4px}
 .nav-group .nav-item.active svg{color:var(--brand);stroke-width:1.9}
 .nav-group .nav-item.active::before{content:'';position:absolute;left:6px;top:50%;transform:translateY(-50%);width:3px;height:3px;border-radius:50%;background:var(--brand)}
 /* Subcategorias escopadas — mais finas que a categoria */
