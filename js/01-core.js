@@ -67,9 +67,7 @@ const ICONS={
 };
 
 /* ─── PÁGINAS PLACEHOLDER (preenchidas a cada etapa do checklist) ─── */
-const PAGES=[
-  ['perfil','user','Perfil','Etapa 16','Conta, preferências e configurações do Mentor24h.'],
-];
+const PAGES=[];
 (function(){
   const content=document.querySelector('.content');
   PAGES.forEach(([id,ic,title,etapa,desc])=>{
@@ -291,6 +289,7 @@ function navigate(page){
   if(page==='financeiro-caixa') Financeiro.renderAba('caixa');
   if(page==='financeiro-despesas') Financeiro.renderAba('despesas');
   if(page==='mentor') Mentor.render();
+  if(page==='perfil') Perfil.render();
   closeDrawer();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -540,8 +539,8 @@ const DB={
   ],
   movimentacoes:[],
   // Fichas demo (edição definitiva = Perfil/Etapa 27; usadas no cabeçalho dos documentos na Etapa 23)
-  usuario:{ nome:'Léo Silva', plano:'Pró', logo:'L' },               // logo = monograma (inicial)
-  negocio:{ nome:'Pizza e Cia BH', segmento:'Salgados', slogan:'Salgados Artesanais', cidade:'Belo Horizonte', whatsapp:'31999990000', plano:'Pró', logo:'🍕' },
+  usuario:{ nome:'Léo Silva', plano:'Pró', logo:'L', email:'', telefone:'' },
+  negocio:{ nome:'Pizza e Cia BH', segmento:'Salgados', slogan:'Salgados Artesanais', cidade:'Belo Horizonte', whatsapp:'31999990000', plano:'Pró', logo:'🍕', cnpj:'', razaoSocial:'', cnae:'' },
   salvos:[   // {id,titulo,url,rede,categoria,criador,tags:[],nota,favorito,status:'ver'|'visto',data}
     {id:nid(),titulo:'Bolo de cenoura fofinho',url:'https://www.youtube.com/watch?v=abc123',rede:'youtube',categoria:'Receitas',criador:'Cozinha da Tia',tags:['bolo','doce'],nota:'cobertura de brigadeiro',favorito:true,status:'visto',data:offset(-1)},
     {id:nid(),titulo:'Macarrão de 10 minutos',url:'https://www.tiktok.com/@chefrapido/video/789',rede:'tiktok',categoria:'Receitas',criador:'@chefrapido',tags:['rápido','almoço'],nota:'',favorito:false,status:'ver',data:offset(-2)},
