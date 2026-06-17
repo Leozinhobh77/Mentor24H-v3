@@ -20,13 +20,13 @@ const Contatos=(()=>{
     });
   }
   function itemHTML(c){
-    const tel=(c.telefone||'').replace(/\D/g,'');const da=diasAniv(c.aniversario);
+    const tel=(c.telefone||'').replace(/\D/g,'');const da=diasAniv(c.aniversario);const score=relScore(c);
     return `<div class="ct-item">
       <div class="ct-click" data-open="${c.id}">
       <div class="ct-av" style="background:${avCor(c.nome)}">${ini(c.nome)}</div>
       <div class="ct-main">
-        <div class="ct-nm">${c.favorito?svg('star',12):''}${c.nome}<span style="font-size:10px;font-weight:600;color:var(--text-4)">· ${CTX[c.contexto]||''}</span></div>
-        <div class="ct-tags">${(c.tags||[]).map(t=>`<span class="ct-tag" style="background:${avCor(t)}22;color:${avCor(t)}">${t}</span>`).join('')}${da!=null&&da<=30?`<span class="ct-tag" style="background:var(--warning-soft);color:var(--warning)">🎂 ${da===0?'hoje':da+'d'}</span>`:''}</div>
+        <div class="ct-l1">${c.favorito?`<svg class="ct-star" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .9-5 4.8 1.3 7L12 18l-6.6 3.2L6.7 14l-5-4.8 7-.9z"/></svg>`:''}<span class="ct-nm">${c.nome}</span></div>
+        <div class="ct-l2">${score?`<span class="ct-score" style="background:${score.cor}22;color:${score.cor}">${score.e} ${score.l}</span><span class="ct-dotsep"></span>`:''}<span class="ct-ctx">${CTX[c.contexto]||''}</span>${(c.tags||[]).map(t=>`<span class="ct-tag" style="background:${avCor(t)}22;color:${avCor(t)}">${t}</span>`).join('')}${da!=null&&da<=30?`<span class="ct-tag" style="background:var(--warning-soft);color:var(--warning)">🎂 ${da===0?'hoje':da+'d'}</span>`:''}</div>
       </div>
       </div>
       <div class="ct-acts">
@@ -47,23 +47,26 @@ const Contatos=(()=>{
     let groups='',curL='';rest.forEach(c=>{const L=(c.nome.trim()[0]||'#').toUpperCase();if(L!==curL){curL=L;groups+=`<div class="ct-group-label">${L}</div>`;}groups+=itemHTML(c);});
     const tags=allTags();
     const aniv=DB.contatos.filter(c=>{const d=diasAniv(c.aniversario);return d!=null&&d<=30;}).length;
+    const reconectar=DB.contatos.filter(c=>{if(c.manterContato==null)return false;const dd=c.ultimoContato?-diasAte(c.ultimoContato):null;return dd==null||dd>=c.manterContato;}).length;
     root.innerHTML=`
-      <div class="page-kpis">
-        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--brand-soft);color:var(--brand-text)">${svg('users',14)}</span>Contatos</div><div class="kv">${DB.contatos.length}</div></div>
-        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--warning-soft);color:var(--warning)">${svg('smile',14)}</span>Aniversários (30d)</div><div class="kv">${aniv}</div></div>
-        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--info-soft);color:var(--info)">${svg('clock',14)}</span>Para reconectar</div><div class="kv">${DB.contatos.filter(c=>{if(c.manterContato==null)return false;const dd=c.ultimoContato?-diasAte(c.ultimoContato):null;return dd==null||dd>=c.manterContato;}).length}</div></div>
+      <div class="ct-page">
+      <div class="ct-kpis">
+        <div class="ct-kpi"><div class="ct-kpi-l"><span class="dot" style="background:var(--brand-soft);color:var(--brand-text)">${svg('users',11)}</span>Contatos</div><div class="ct-kpi-v">${DB.contatos.length}</div></div>
+        <div class="ct-kpi"><div class="ct-kpi-l"><span class="dot" style="background:var(--warning-soft);color:var(--warning)">🎂</span>Aniversários</div><div class="ct-kpi-v">${aniv}</div></div>
+        <div class="ct-kpi"><div class="ct-kpi-l"><span class="dot" style="background:var(--info-soft);color:var(--info)">${svg('clock',11)}</span>Reconectar</div><div class="ct-kpi-v">${reconectar}</div></div>
       </div>
-      <div class="toolbar">
-        <div class="seg">${['todos','pessoal','negocio'].map(x=>`<button class="${f.ctx===x?'on':''}" data-ctx="${x}">${x==='todos'?'Todos':CTX[x]}</button>`).join('')}</div>
-        <select class="field" data-tag><option value="todas">Todas as tags</option>${tags.map(t=>`<option value="${t}"${f.tag===t?' selected':''}>${t}</option>`).join('')}</select>
-        <input class="field grow" placeholder="Buscar contato…" data-q value="${f.q}">
-        <button class="btn btn-primary" data-add>${svg('plus',16)} Novo contato</button>
+      <div class="ct-toolbar">
+        <div class="ct-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--text-4)" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><input placeholder="Buscar contato…" data-q value="${f.q}"></div>
+        <div class="ct-seg">${['todos','pessoal','negocio'].map(x=>`<button class="${f.ctx===x?'on':''}" data-ctx="${x}">${x==='todos'?'Todos':CTX[x]}</button>`).join('')}</div>
+        <div class="ct-chips"><button class="ct-chip${f.tag==='todas'?' on':''}" data-tag="todas">Todas</button>${tags.map(t=>`<button class="ct-chip${f.tag===t?' on':''}" data-tag="${t}">${t}</button>`).join('')}</div>
       </div>
-      <div class="card">
-        ${list.length?`${favs.length?`<div class="ct-group-label">★ Favoritos</div>${favs.map(itemHTML).join('')}`:''}${groups}`:`<div class="empty" style="padding:var(--s-6) 0"><div class="eico">${svg('users',24)}</div><h4>Nenhum contato encontrado</h4><p>Adicione seus contatos pessoais e clientes.</p></div>`}
+      <button class="ct-newbtn" data-add>${svg('plus',16)} Novo contato</button>
+      <div class="ct-list">
+        ${list.length?`${favs.length?`<div class="ct-group-label fav">★ Favoritos</div>${favs.map(itemHTML).join('')}`:''}${groups}`:`<div class="empty" style="padding:var(--s-6) var(--s-4)"><div class="eico">${svg('users',24)}</div><h4>Nenhum contato encontrado</h4><p>Adicione seus contatos pessoais e clientes.</p></div>`}
+      </div>
       </div>`;
     root.querySelectorAll('[data-ctx]').forEach(b=>b.onclick=()=>{f.ctx=b.dataset.ctx;render();});
-    root.querySelector('[data-tag]').onchange=e=>{f.tag=e.target.value;render();};
+    root.querySelectorAll('[data-tag]').forEach(b=>b.onclick=()=>{f.tag=b.dataset.tag;render();});
     const q=root.querySelector('[data-q]');q.oninput=e=>{f.q=e.target.value;render();const nq=document.querySelector('[data-q]');if(nq){nq.focus();nq.setSelectionRange(f.q.length,f.q.length);}};
     root.querySelector('[data-add]').onclick=()=>form();
     root.querySelectorAll('[data-fav]').forEach(b=>b.onclick=()=>{const c=DB.contatos.find(x=>x.id===+b.dataset.fav);c.favorito=!c.favorito;Toast.show(c.favorito?'Adicionado aos favoritos':'Removido dos favoritos');render();});
