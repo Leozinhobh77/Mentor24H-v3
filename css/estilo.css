@@ -817,134 +817,19 @@ select.field{cursor:pointer}
 .qty .qv{font-size:19px;font-weight:800;font-family:var(--mono)}
 .heat{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:11px}
 .heat span{aspect-ratio:1;border-radius:4px;background:var(--surface-3)}
-/* ── CONTATOS REDESIGN (Etapa 42) ─────────────────────── */
-/* KPIs enxutos */
-.ct-kpis{display:flex;gap:var(--s-3);flex-wrap:wrap;margin-bottom:var(--s-4)}
-.ct-kpi-pill{display:flex;align-items:center;gap:7px;padding:7px 12px;background:var(--surface-2);border-radius:var(--r-full);font-size:12.5px}
-.ct-kpi-ico{width:26px;height:26px;border-radius:var(--r-full);display:grid;place-items:center;font-size:12px;flex-shrink:0}
-.ct-kpi-val{font-size:15px;font-weight:800;font-family:var(--mono);color:var(--text-1)}
-.ct-kpi-lbl{font-weight:600;color:var(--text-3)}
-.ct-kpi-zero .ct-kpi-val{color:var(--text-4)}
-/* Faixa de destaque */
-.ct-faixa{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-bottom:var(--s-4)}
-.ct-faixa-item{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--r-md);font-size:12.5px;font-weight:600}
-.ct-faixa-rec{background:var(--info-soft);color:var(--info)}
-.ct-faixa-aniv{background:var(--warning-soft);color:var(--warning)}
-/* Toolbar */
-.ct-toolbar{display:flex;flex-direction:column;gap:var(--s-3);margin-bottom:var(--s-4)}
-.ct-search-wrap{display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1.5px solid var(--surface-3);border-radius:var(--r-lg);padding:9px 12px;transition:.15s var(--ease)}
-.ct-search-wrap:focus-within{border-color:var(--brand);background:var(--surface-1)}
-.ct-search-ico{color:var(--text-4);flex-shrink:0}
-.ct-search-inp{flex:1;background:none;border:none;outline:none;font-size:14px;color:var(--text-1);min-width:0}
-.ct-search-clr{background:none;border:none;cursor:pointer;color:var(--text-4);font-size:13px;padding:2px 4px;border-radius:var(--r-sm);transition:.15s var(--ease)}
-.ct-search-clr:hover{color:var(--text-2);background:var(--surface-3)}
-.ct-toolbar-row{display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap}
-.ct-seg{display:flex;gap:2px;background:var(--surface-2);border-radius:var(--r-full);padding:3px}
-.ct-seg button{padding:5px 14px;border:none;border-radius:var(--r-full);font-size:12.5px;font-weight:600;color:var(--text-3);background:none;cursor:pointer;transition:.15s var(--ease)}
-.ct-seg button.on{background:var(--surface-1);color:var(--text-1);box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.ct-btn-add{margin-left:auto;font-size:13px!important;padding:7px 14px!important}
-/* Chips de filtro de tags */
-.ct-tag-filter-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
-.ct-tag-chips{display:flex;gap:6px;padding-bottom:2px}
-.ct-tag-fc{padding:5px 13px;border:1.5px solid var(--surface-3);border-radius:var(--r-full);font-size:12px;font-weight:600;color:var(--text-3);background:none;cursor:pointer;white-space:nowrap;transition:.15s var(--ease)}
-.ct-tag-fc.on,.ct-tag-fc:hover{background:var(--brand-soft);color:var(--brand-text);border-color:var(--brand-soft)}
-/* Group labels + lista */
-.ct-list-card{padding:var(--s-3) 0!important;overflow:hidden}
-.ct-group-label{font-size:11px;font-weight:800;color:var(--text-4);text-transform:uppercase;letter-spacing:.08em;margin:var(--s-4) var(--s-4) 4px;padding:0}
-.ct-group-label:first-child{margin-top:var(--s-2)}
-/* Linha de contato */
-.ct-item{display:flex;align-items:center;gap:10px;padding:9px var(--s-4);border-radius:0;transition:.12s var(--ease)}
+.ct-group-label{font-size:11px;font-weight:800;color:var(--text-4);text-transform:uppercase;letter-spacing:.08em;margin:var(--s-4) 0 6px;padding-left:4px}
+.ct-group-label:first-child{margin-top:0}
+.ct-item{display:flex;align-items:center;gap:12px;padding:10px;border-radius:var(--r-md);transition:.15s var(--ease)}
 .ct-item:hover{background:var(--surface-2)}
-.ct-item:focus-within{background:var(--surface-2)}
-.ct-click{display:flex;align-items:center;gap:11px;flex:1;min-width:0;cursor:pointer;padding:2px 0}
-.ct-click:focus{outline:none}
-.ct-av{width:40px;height:40px;border-radius:var(--r-full);display:grid;place-items:center;font-weight:700;font-size:14px;color:#fff;flex-shrink:0}
-.ct-av-lg{width:64px;height:64px;font-size:22px;flex-shrink:0}
+.ct-click{display:flex;align-items:center;gap:12px;flex:1;min-width:0;cursor:pointer}
+.ct-av{width:42px;height:42px;border-radius:var(--r-full);display:grid;place-items:center;font-weight:700;font-size:15px;color:#fff;flex-shrink:0}
 .ct-main{flex:1;min-width:0}
-.ct-nm{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:5px;flex-wrap:wrap;min-width:0}
-.ct-nm-txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ct-fav-ico svg{width:11px;height:11px;color:var(--warning)}
-.ct-ctx{font-size:11px;font-weight:600;color:var(--text-4);white-space:nowrap}
+.ct-nm{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ct-nm svg{width:12px;height:12px;color:var(--warning)}
 .ct-tags{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap}
 .ct-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:var(--r-full)}
-.ct-tag-aniv{background:var(--warning-soft);color:var(--warning)}
-/* E4 Badge de score */
-.ct-score-badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:var(--r-full);white-space:nowrap}
-.ct-score-hot{background:rgba(31,157,85,.12);color:var(--income)}
-.ct-score-ok{background:rgba(31,157,85,.1);color:var(--income)}
-.ct-score-warn{background:rgba(200,134,11,.12);color:var(--warning)}
-.ct-score-cold{background:rgba(0,0,0,.06);color:var(--text-3)}
-/* Ações da linha */
-.ct-acts{display:flex;gap:3px;flex-shrink:0}
-.ct-acts .docbtn{min-width:40px;min-height:40px;display:grid;place-items:center}
-/* Estado vazio */
-.ct-empty{padding:var(--s-6) var(--s-4);text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--s-3)}
-.ct-empty-ico{color:var(--text-4)}
-.ct-empty h4{font-size:15px;font-weight:700;color:var(--text-2);margin:0}
-.ct-empty p{font-size:13px;color:var(--text-3);margin:0}
-/* E1 Campo padrão */
-.ct-field{position:relative}
-.ct-err{font-size:11.5px;font-weight:600;color:var(--expense);min-height:14px;margin-top:3px;transition:.15s var(--ease)}
-.ct-req{color:var(--expense)}
-.ct-field-err.field{border-color:var(--expense)!important}
-/* E2 Telefone */
-.ct-tel-wrap{display:flex;gap:8px}
-.ct-tel-ddi{flex:0 0 auto;width:90px!important}
-.ct-tel-num{flex:1;min-width:0}
-/* E3 Chip input de tags */
-.ct-chip-wrap{display:flex;flex-direction:column;gap:6px;border:1.5px solid var(--surface-3);border-radius:var(--r-md);padding:8px 10px;cursor:text;transition:.15s var(--ease);min-height:44px}
-.ct-chip-wrap:focus-within{border-color:var(--brand)}
-.ct-chips{display:flex;flex-wrap:wrap;gap:5px}
-.ct-chip-tag{display:flex;align-items:center;gap:5px;background:var(--brand-soft);color:var(--brand-text);font-size:11.5px;font-weight:600;padding:3px 9px 3px 10px;border-radius:var(--r-full)}
-.ct-chip-rm{background:none;border:none;cursor:pointer;color:var(--brand-text);font-size:11px;line-height:1;padding:0;opacity:.7;transition:.1s var(--ease)}
-.ct-chip-rm:hover{opacity:1}
-.ct-chip-in{border:none;outline:none;background:none;font-size:13px;color:var(--text-1);min-width:120px;flex:1}
-/* E5 Pílulas de ação */
-.ct-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:var(--s-3)}
-.ct-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:none;border-radius:var(--r-full);font-size:12.5px;font-weight:600;color:var(--text-2);background:var(--surface-2);cursor:pointer;text-decoration:none;transition:.15s var(--ease)}
-.ct-pill:hover{background:var(--surface-3);color:var(--text-1)}
-.ct-pill-wa{background:#25D36615;color:#128C7E}
-.ct-pill-wa:hover{background:#25D36625}
-/* D7 Chips de canal */
-.ct-tipo-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
-.ct-tipo-chip{display:flex;align-items:center;gap:6px;padding:7px 13px;border:1.5px solid var(--surface-3);border-radius:var(--r-full);font-size:12.5px;font-weight:600;color:var(--text-2);background:none;cursor:pointer;transition:.15s var(--ease)}
-.ct-tipo-chip.on{border-color:var(--chip-c,var(--brand));background:var(--chip-c,var(--brand));color:#fff}
-.ct-tipo-chip:hover:not(.on){background:var(--surface-2)}
-/* FICHA — hero */
-.ct-ficha-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s-4)}
-.ct-ficha-hdr-acts{display:flex;gap:6px}
-.ct-back-btn{font-size:13px!important;padding:7px 13px!important}
-.ct-fav-on{color:var(--warning)!important}
-.ct-del-btn{color:var(--expense)!important}
-.ct-hero{display:flex;align-items:flex-start;gap:var(--s-4);background:var(--surface-2);border-radius:var(--r-xl);padding:var(--s-5);margin-bottom:var(--s-4)}
-.ct-hero-body{flex:1;min-width:0}
-.ct-hero-nome{font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:3px}
-.ct-hero-ctx{font-size:12.5px;color:var(--text-3);font-weight:600;margin-bottom:var(--s-2)}
-.ct-hero-tags{margin-top:5px!important}
-.ct-hero-score{margin-top:var(--s-2)}
-/* FICHA — cards */
-.ct-ult-contato{font-size:13px;color:var(--text-2);font-weight:600}
-.ct-reconectar-alerta{color:var(--expense);font-weight:700;font-size:12px;margin-top:5px;display:flex;align-items:center;gap:5px}
-.ct-prox-acao{display:flex;align-items:center;gap:7px;background:var(--info-soft);border-radius:var(--r-md);padding:8px 10px;margin-top:var(--s-3);font-size:12.5px}
-.ct-prox-txt{flex:1;min-width:0}
-.ct-prox-dt{font-size:11px;color:var(--info);font-weight:700;white-space:nowrap}
-.ct-acao-btns{display:flex;gap:8px;margin-top:var(--s-4)}
-.ct-acao-btns .btn{flex:1;font-size:13px!important;padding:9px 10px!important}
-.ct-add-btn{width:100%;margin-top:9px;font-size:13px!important}
-.ct-reg-btn{margin-left:auto;font-size:12px!important;padding:6px 11px!important}
-.ct-empty-txt{font-size:12.5px;color:var(--text-4);margin:var(--s-2) 0 0}
-.ct-anot-txt{font-size:13.5px;color:var(--text-2);line-height:1.55;margin:0}
-.ct-int-tipo{font-size:11px}
-/* overscroll em lista e modais */
-.ct-list-card,.ct-tag-filter-wrap{overscroll-behavior:contain}
-@media(max-width:560px){
-  .ct-hidem{display:none!important}
-  .ct-hero{flex-direction:column;align-items:center;text-align:center}
-  .ct-hero-tags,.ct-pills{justify-content:center}
-  .ct-kpis{gap:var(--s-2)}
-  .ct-kpi-pill{padding:6px 10px}
-  .ct-kpi-lbl{display:none}
-}
+.ct-acts{display:flex;gap:4px;flex-shrink:0}
+@media(max-width:560px){.ct-hidem{display:none!important}}
 
 @media(max-width:640px){
   .page-kpis{grid-template-columns:1fr;gap:var(--s-3)}
