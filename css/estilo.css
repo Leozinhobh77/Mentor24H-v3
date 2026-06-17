@@ -906,6 +906,41 @@ select.field{cursor:pointer}
   .ctf-hero .ctf-chips,.ctf-hero .ctf-pills{justify-content:flex-start}
 }
 
+/* ── FORM CONTATO — Fatia 3 (múltiplos telefones + chips + toggle) ── */
+.ct-form-sec{display:flex;flex-direction:column}
+.ct-form-sec-t{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;color:var(--brand-text);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.ct-tel{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:11px;margin-bottom:9px}
+.ct-tel:last-of-type{margin-bottom:0}
+.ct-tel-top{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.ct-tel-tipo{flex:1;background:var(--surface-3);border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-family:var(--font);font-size:12.5px;font-weight:700;color:var(--text-1);cursor:pointer;min-width:0}
+.ct-tel-star,.ct-tel-del{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;border:1px solid var(--border);cursor:pointer;flex-shrink:0;transition:.15s var(--ease)}
+.ct-tel-star{background:var(--surface-3);color:var(--text-4)}
+.ct-tel-star.on{background:var(--warning-soft);border-color:transparent;color:var(--warning)}
+.ct-tel-del{background:var(--surface-3);color:var(--text-3)}
+.ct-tel-del:hover{color:var(--expense);border-color:var(--expense)}
+.ct-tel-num{display:flex;align-items:center;gap:8px}
+.ct-tel-cc{background:var(--surface-3);border:1px solid var(--border);border-radius:9px;padding:9px 10px;font-family:var(--font);font-size:13px;font-weight:700;color:var(--text-1);white-space:nowrap;cursor:pointer;flex-shrink:0}
+.ct-tel-input{flex:1;background:var(--surface-3);border:1px solid var(--border);border-radius:9px;padding:9px 11px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--text-1);width:0}
+.ct-tel-tipo:focus,.ct-tel-cc:focus,.ct-tel-input:focus{outline:none;border-color:var(--brand)}
+.ct-addtel{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:none;border:1.5px dashed var(--border-strong);border-radius:var(--r-md);padding:11px;font-family:var(--font);font-size:13px;font-weight:700;color:var(--brand-text);cursor:pointer;transition:.15s var(--ease);margin-top:2px}
+.ct-addtel:hover{background:var(--brand-soft)}
+.ct-email-wrap{position:relative}
+.ct-email-ok{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--income);pointer-events:none}
+.ct-field-err{font-size:11.5px;color:var(--expense);font-weight:700;margin-top:4px}
+.ct-tagbox{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;cursor:text;transition:.15s var(--ease)}
+.ct-tagbox:focus-within{border-color:var(--brand)}
+.ct-form-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:5px 9px;border-radius:var(--r-full)}
+.ct-chip-x{background:none;border:none;cursor:pointer;color:inherit;opacity:.65;font-weight:800;font-size:13px;padding:0 0 0 2px;line-height:1}
+.ct-chip-x:hover{opacity:1}
+.ct-taginput{flex:1;min-width:80px;background:none;border:none;outline:none;color:var(--text-1);font-family:var(--font);font-size:13px;font-weight:600;padding:4px 2px}
+.ct-taginput::placeholder{color:var(--text-4)}
+.ct-fav-row{display:flex;align-items:center;gap:10px;padding:12px 13px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);cursor:pointer;user-select:none}
+.ct-fav-lab{flex:1;font-size:13.5px;font-weight:700;color:var(--text-1)}
+.ct-tog{width:44px;height:26px;border-radius:var(--r-full);background:var(--surface-3);border:1px solid var(--border);position:relative;flex-shrink:0;transition:.2s var(--ease)}
+.ct-tog::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:var(--text-4);top:2px;left:2px;transition:.2s var(--ease)}
+.ct-tog.on{background:var(--brand);border-color:transparent}
+.ct-tog.on::after{background:#fff;left:calc(100% - 22px)}
+
 @media(max-width:640px){
   .page-kpis{grid-template-columns:1fr;gap:var(--s-3)}
   .lrow .badge-st{display:none}

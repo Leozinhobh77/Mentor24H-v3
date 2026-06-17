@@ -7,6 +7,11 @@ const Contatos=(()=>{
   const avCor=n=>AVCOR[hash(n)%AVCOR.length];
   const ini=n=>n.trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
   const CTX={pessoal:'Pessoal',negocio:'Negócio',ambos:'Ambos'};
+  const PAISES=[{f:'🇧🇷',d:'+55'},{f:'🇺🇸',d:'+1'},{f:'🇵🇹',d:'+351'},{f:'🇦🇷',d:'+54'},{f:'🇪🇸',d:'+34'},{f:'🇲🇽',d:'+52'},{f:'🇬🇧',d:'+44'}];
+  const TIPOS_TEL=['Celular','WhatsApp','Fixo','Trabalho','Outro'];
+  const TIPO_ICO={Celular:'📱',WhatsApp:'💬',Fixo:'📞',Trabalho:'💼',Outro:'📟'};
+  function ensureTelefones(c){if(!c.telefones){const d=(c.telefone||'').replace(/\D/g,'');c.telefones=d?[{tipo:'Celular',ddi:'+55',numero:d,principal:true}]:[];}}
+  function maskBR(raw){const d=raw.replace(/\D/g,'').slice(0,11);if(!d)return'';if(d.length<=2)return'('+d;if(d.length<=6)return'('+d.slice(0,2)+') '+d.slice(2);if(d.length<=10)return'('+d.slice(0,2)+') '+d.slice(2,6)+'-'+d.slice(6);return'('+d.slice(0,2)+') '+d.slice(2,7)+'-'+d.slice(7);}
   let f={q:'',ctx:'todos',tag:'todas'};
   let viewing=null;
   function diasAniv(av){if(!av)return null;const p=av.split('-');const mm=+p[1],dd=+p[2];const h=new Date();h.setHours(0,0,0,0);let nx=new Date(h.getFullYear(),mm-1,dd);if(nx<h)nx=new Date(h.getFullYear()+1,mm-1,dd);return Math.round((nx-h)/86400000);}
@@ -158,20 +163,145 @@ const Contatos=(()=>{
   }
   function form(id){
     const c=id?DB.contatos.find(x=>x.id===id):null;
+    if(c)ensureTelefones(c);
+    let tels=c&&c.telefones.length?JSON.parse(JSON.stringify(c.telefones)):[{tipo:'Celular',ddi:'+55',numero:'',principal:true}];
+    let tags=c?[...(c.tags||[])]:[];
+    function telRowHTML(t,i){
+      return`<div class="ct-tel" data-ti="${i}"><div class="ct-tel-top">
+        <select class="ct-tel-tipo" data-tipo="${i}">${TIPOS_TEL.map(tp=>`<option value="${tp}"${t.tipo===tp?' selected':''}>${TIPO_ICO[tp]} ${tp}</option>`).join('')}</select>
+        <button type="button" class="ct-tel-star${t.principal?' on':''}" data-star="${i}" title="${t.principal?'Principal':'Tornar principal'}">${svg('star',15)}</button>
+        <button type="button" class="ct-tel-del" data-tdel="${i}" title="Remover">${svg('trash',14)}</button>
+      </div><div class="ct-tel-num">
+        <select class="ct-tel-cc" data-cc="${i}">${PAISES.map(p=>`<option value="${p.d}"${t.ddi===p.d?' selected':''}>${p.f} ${p.d}</option>`).join('')}</select>
+        <input class="ct-tel-input" data-num="${i}" type="tel" inputmode="tel" value="${t.ddi==='+55'?maskBR(t.numero):t.numero}" placeholder="${t.ddi==='+55'?'(XX) 9XXXX-XXXX':'número'}">
+      </div></div>`;
+    }
     const body=`
-      <div class="fg"><label>Nome</label><input class="field" id="c-nome" value="${c?c.nome.replace(/"/g,'&quot;'):''}" placeholder="Nome completo"></div>
-      <div class="frow"><div class="fg"><label>Telefone / WhatsApp</label><input class="field" id="c-tel" value="${c?c.telefone||'':''}" placeholder="(31) 98888-7777"></div><div class="fg"><label>E-mail</label><input class="field" id="c-email" value="${c&&c.email?c.email.replace(/"/g,'&quot;'):''}" placeholder="email@exemplo.com"></div></div>
-      <div class="frow"><div class="fg"><label>Contexto</label><select class="field" id="c-ctx"><option value="pessoal"${!c||c.contexto==='pessoal'?' selected':''}>Pessoal</option><option value="negocio"${c&&c.contexto==='negocio'?' selected':''}>Negócio</option><option value="ambos"${c&&c.contexto==='ambos'?' selected':''}>Ambos</option></select></div><div class="fg"><label>Aniversário</label><input class="field" id="c-aniv" type="date" value="${c&&c.aniversario?c.aniversario:''}"></div></div>
-      <div class="fg"><label>Tags (vírgula)</label><input class="field" id="c-tags" value="${c&&c.tags?c.tags.join(', '):''}" placeholder="Família, Cliente, Fornecedor"></div>
-      <div class="fg"><label>Como conheci (opcional)</label><input class="field" id="c-como" value="${c&&c.comoConheci?c.comoConheci.replace(/"/g,'&quot;'):''}" placeholder="Indicação, Instagram…"></div>
-      <div class="fg"><label>Anotações</label><input class="field" id="c-obs" value="${c&&c.anotacoes?c.anotacoes.replace(/"/g,'&quot;'):''}" placeholder="Preferências, observações…"></div>
-      <label class="fg" style="flex-direction:row;align-items:center;gap:9px;cursor:pointer"><input type="checkbox" id="c-fav" ${c&&c.favorito?'checked':''} style="width:18px;height:18px;accent-color:var(--brand)"><span style="font-size:13px;color:var(--text-2);font-weight:600">Marcar como favorito</span></label>`;
-    Modal.open(id?'Editar contato':'Novo contato',body,(b)=>{
-      const nome=b.querySelector('#c-nome').value.trim();if(!nome){Toast.show('Informe o nome','err');return false;}
-      const dd={nome,telefone:b.querySelector('#c-tel').value.trim(),email:b.querySelector('#c-email').value.trim(),contexto:b.querySelector('#c-ctx').value,aniversario:b.querySelector('#c-aniv').value||'',tags:b.querySelector('#c-tags').value.split(',').map(x=>x.trim()).filter(Boolean),comoConheci:b.querySelector('#c-como').value.trim(),anotacoes:b.querySelector('#c-obs').value.trim(),favorito:b.querySelector('#c-fav').checked};
-      if(c){Object.assign(c,dd);Toast.show('Contato atualizado');}else{DB.contatos.push(Object.assign({id:nid(),ultimoContato:'',manterContato:null,interacoes:[],datas:[]},dd));Toast.show('Contato adicionado');}
+      <div class="ct-form-sec">
+        <div class="ct-form-sec-t">${svg('users',13)} Identidade</div>
+        <div class="fg"><label>Nome *</label><input class="field" id="cf-nome" value="${c?c.nome.replace(/"/g,'&quot;'):''}" placeholder="Nome completo" autocomplete="off"></div>
+      </div>
+      <div class="ct-form-sec">
+        <div class="ct-form-sec-t">${svg('phone',13)} Telefones</div>
+        <div id="ct-tel-list">${tels.map((t,i)=>telRowHTML(t,i)).join('')}</div>
+        <button type="button" class="ct-addtel" id="ct-addtel">${svg('plus',14)} Adicionar telefone</button>
+      </div>
+      <div class="ct-form-sec">
+        <div class="ct-form-sec-t">${svg('book',13)} Sobre</div>
+        <div class="fg"><label>E-mail</label>
+          <div class="ct-email-wrap"><input class="field" id="cf-email" type="email" inputmode="email" value="${c&&c.email?c.email.replace(/"/g,'&quot;'):''}" placeholder="email@exemplo.com"><span class="ct-email-ok" id="ct-email-ok" style="display:none">${svg('tick',16)}</span></div>
+          <div class="ct-field-err" id="ct-email-err" style="display:none">E-mail inválido</div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label>Contexto</label><select class="field" id="cf-ctx"><option value="pessoal"${!c||c.contexto==='pessoal'?' selected':''}>Pessoal</option><option value="negocio"${c&&c.contexto==='negocio'?' selected':''}>Negócio</option><option value="ambos"${c&&c.contexto==='ambos'?' selected':''}>Ambos</option></select></div>
+          <div class="fg"><label>Aniversário</label><input class="field" id="cf-aniv" type="date" value="${c&&c.aniversario?c.aniversario:''}"></div>
+        </div>
+        <div class="fg"><label>Tags</label>
+          <div class="ct-tagbox" id="ct-tagbox"><input class="ct-taginput" id="ct-taginput" placeholder="+ tag, Enter"></div>
+        </div>
+        <div class="fg"><label>Como conheci (opcional)</label><input class="field" id="cf-como" value="${c&&c.comoConheci?c.comoConheci.replace(/"/g,'&quot;'):''}" placeholder="Indicação, Instagram…"></div>
+        <div class="fg"><label>Anotações</label><input class="field" id="cf-obs" value="${c&&c.anotacoes?c.anotacoes.replace(/"/g,'&quot;'):''}" placeholder="Preferências, observações…"></div>
+        <div class="ct-fav-row" id="cf-fav-row">
+          <span class="ct-fav-lab">⭐ Marcar como favorito</span>
+          <input type="checkbox" id="cf-fav" ${c&&c.favorito?'checked':''} style="display:none">
+          <span class="ct-tog${c&&c.favorito?' on':''}" id="cf-fav-tog"></span>
+        </div>
+      </div>`;
+    const back=Modal.open(id?'Editar contato':'Novo contato',body,bk=>{
+      const nome=bk.querySelector('#cf-nome').value.trim();
+      if(!nome){Toast.show('Informe o nome','err');return false;}
+      const email=bk.querySelector('#cf-email').value.trim().toLowerCase();
+      if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){Toast.show('E-mail inválido','err');return false;}
+      const telefones=tels.filter(t=>t.numero.trim());
+      if(telefones.length&&!telefones.some(t=>t.principal))telefones[0].principal=true;
+      const pri=telefones.find(t=>t.principal)||telefones[0];
+      const telefone=pri?pri.numero.replace(/\D/g,''):'';
+      const dd={nome,telefone,telefones,email,contexto:bk.querySelector('#cf-ctx').value,aniversario:bk.querySelector('#cf-aniv').value||'',tags:[...tags],comoConheci:bk.querySelector('#cf-como').value.trim(),anotacoes:bk.querySelector('#cf-obs').value.trim(),favorito:bk.querySelector('#cf-fav').checked};
+      if(c){Object.assign(c,dd);Toast.show('Contato atualizado');}
+      else{DB.contatos.push(Object.assign({id:nid(),ultimoContato:'',manterContato:null,interacoes:[],datas:[]},dd));Toast.show('Contato adicionado');}
       render();
     },id?'Salvar':'Adicionar');
+    // ── Bind phone rows ──────────────────────────────────────
+    function bindTels(){
+      const tl=back.querySelector('#ct-tel-list');
+      tl.querySelectorAll('[data-tipo]').forEach(s=>s.onchange=()=>tels[+s.dataset.tipo].tipo=s.value);
+      tl.querySelectorAll('[data-cc]').forEach(s=>s.onchange=()=>{
+        const i=+s.dataset.cc;tels[i].ddi=s.value;
+        const inp=tl.querySelector(`[data-num="${i}"]`);
+        if(inp)inp.placeholder=tels[i].ddi==='+55'?'(XX) 9XXXX-XXXX':'número';
+      });
+      tl.querySelectorAll('[data-num]').forEach(inp=>inp.addEventListener('input',()=>{
+        const i=+inp.dataset.num;
+        if(tels[i].ddi==='+55'){
+          const pos=inp.selectionStart;
+          const dBefore=(inp.value.slice(0,pos).match(/\d/g)||[]).length;
+          const masked=maskBR(inp.value);
+          inp.value=masked;
+          let cnt=0,np=masked.length;
+          for(let j=0;j<masked.length;j++){if(/\d/.test(masked[j]))cnt++;if(cnt===dBefore){np=j+1;break;}}
+          inp.setSelectionRange(np,np);
+          tels[i].numero=masked.replace(/\D/g,'');
+        }else{tels[i].numero=inp.value;}
+      }));
+      tl.querySelectorAll('[data-star]').forEach(btn=>btn.onclick=()=>{
+        const i=+btn.dataset.star;tels.forEach((t,j)=>t.principal=j===i);rerenderTels();
+      });
+      tl.querySelectorAll('[data-tdel]').forEach(btn=>btn.onclick=()=>{
+        const i=+btn.dataset.tdel;
+        if(tels.length<=1){Toast.show('Ao menos 1 telefone','err');return;}
+        const wasPri=tels[i].principal;tels.splice(i,1);
+        if(wasPri&&tels.length)tels[0].principal=true;
+        rerenderTels();
+      });
+    }
+    function rerenderTels(){
+      back.querySelector('#ct-tel-list').innerHTML=tels.map((t,i)=>telRowHTML(t,i)).join('');
+      bindTels();
+    }
+    bindTels();
+    back.querySelector('#ct-addtel').onclick=()=>{
+      tels.push({tipo:'Celular',ddi:'+55',numero:'',principal:false});
+      rerenderTels();
+      const ins=back.querySelectorAll('.ct-tel-input');
+      if(ins.length)ins[ins.length-1].focus();
+    };
+    // ── E-mail ───────────────────────────────────────────────
+    const emi=back.querySelector('#cf-email');
+    const emOk=back.querySelector('#ct-email-ok');
+    const emEr=back.querySelector('#ct-email-err');
+    function chkEmail(){const v=emi.value.trim();const ok=!v||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);emOk.style.display=v&&ok?'':'none';emEr.style.display=v&&!ok?'':'none';return ok;}
+    emi.onblur=chkEmail;emi.oninput=()=>{if(emEr.style.display!=='none')chkEmail();};
+    // ── Tags chips ───────────────────────────────────────────
+    const tagBox=back.querySelector('#ct-tagbox');
+    const tagInp=back.querySelector('#ct-taginput');
+    function rerenderTags(){
+      tagBox.querySelectorAll('.ct-form-chip').forEach(e=>e.remove());
+      tags.forEach(t=>{
+        const sp=document.createElement('span');sp.className='ct-form-chip';
+        sp.style.cssText=`background:${avCor(t)}22;color:${avCor(t)}`;
+        sp.innerHTML=`${t}<button type="button" class="ct-chip-x">×</button>`;
+        sp.querySelector('.ct-chip-x').onclick=()=>{tags=tags.filter(x=>x!==t);rerenderTags();};
+        tagBox.insertBefore(sp,tagInp);
+      });
+    }
+    rerenderTags();
+    tagInp.onkeydown=e=>{
+      if(e.key==='Enter'||e.key===','){e.preventDefault();const v=tagInp.value.replace(/,/g,'').trim();if(v&&!tags.includes(v)){tags.push(v);rerenderTags();}tagInp.value='';}
+      else if(e.key==='Backspace'&&!tagInp.value&&tags.length){tags.pop();rerenderTags();}
+    };
+    // ── Favorito toggle ──────────────────────────────────────
+    const favTog=back.querySelector('#cf-fav-tog');
+    const favInp=back.querySelector('#cf-fav');
+    back.querySelector('#cf-fav-row').onclick=()=>{favInp.checked=!favInp.checked;favTog.classList.toggle('on',favInp.checked);};
+    // ── Discard confirmation (novo contato) ──────────────────
+    if(!id){
+      const closeFn=back.querySelector('[data-close]').onclick;
+      back.querySelectorAll('[data-close]').forEach(btn=>btn.onclick=()=>{
+        const dirty=back.querySelector('#cf-nome').value.trim()||tels.some(t=>t.numero)||tags.length;
+        if(dirty&&!confirm('Descartar contato?'))return;
+        closeFn?.();
+      });
+    }
   }
   return {render};
 })();
