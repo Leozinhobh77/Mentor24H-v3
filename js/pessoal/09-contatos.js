@@ -86,50 +86,60 @@ const Contatos=(()=>{
     const fmtD=s=>{const p=s.split('-');return `${p[2]}/${p[1]}/${p[0].slice(2)}`;};
     const diasProx=av=>{const p=av.split('-');const mm=+p[1],d2=+p[2];const h=new Date();h.setHours(0,0,0,0);let nx=new Date(h.getFullYear(),mm-1,d2);if(nx<h)nx=new Date(h.getFullYear()+1,mm-1,d2);return Math.round((nx-h)/86400000);};
     root.innerHTML=`
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:var(--s-5)">
-        <button class="btn btn-soft" data-back>${svg('chevleft',16)} Voltar</button>
+      <div class="ctf-head">
+        <button class="ctf-back" data-back>${svg('chevleft',16)} Voltar</button>
         <div style="flex:1"></div>
-        <button class="icon-mini-btn" data-favf title="Favorito" style="${c.favorito?'color:var(--warning)':''}">${svg('star',16)}</button>
-        <button class="icon-mini-btn" data-editf title="Editar">${svg('pencil',16)}</button>
-        <button class="icon-mini-btn" data-delf title="Excluir">${svg('trash',16)}</button>
+        <button class="ctf-ic" data-favf title="Favorito" style="${c.favorito?'color:var(--warning)':''}">${svg('star',16)}</button>
+        <button class="ctf-ic" data-editf title="Editar">${svg('pencil',15)}</button>
+        <button class="ctf-ic" data-delf title="Excluir">${svg('trash',15)}</button>
       </div>
-      <div class="bento">
-        <div class="card col-12" style="display:flex;align-items:center;gap:var(--s-5);flex-wrap:wrap">
-          <div class="ct-av" style="width:64px;height:64px;font-size:22px;background:${avCor(c.nome)}">${ini(c.nome)}</div>
-          <div style="flex:1;min-width:160px">
-            <div style="font-size:20px;font-weight:800;letter-spacing:-.02em">${c.nome}</div>
-            <div style="font-size:12.5px;color:var(--text-3);font-weight:600;margin-top:2px">${CTX[c.contexto]||''}${c.comoConheci?` · conheci por ${c.comoConheci}`:''}</div>
-            <div class="ct-tags" style="margin-top:7px">${(c.tags||[]).map(t=>`<span class="ct-tag" style="background:${avCor(t)}22;color:${avCor(t)}">${t}</span>`).join('')}</div>
-            ${score?`<span class="rel-score" style="color:${score.cor}">${score.e} ${score.l}</span>`:''}
-          </div>
-          <div style="display:flex;gap:8px">
-            ${tel?`<a class="docbtn wa" href="https://wa.me/55${tel}" target="_blank" rel="noopener" title="WhatsApp">${svg('chat',18)}</a><a class="docbtn" href="tel:+55${tel}" title="Ligar">${svg('phone',18)}</a>`:''}
-            ${c.email?`<a class="docbtn" href="mailto:${c.email}" title="E-mail">${svg('mail',18)}</a>`:''}
-          </div>
+      <div class="ctf-hero">
+        <div class="ct-av" style="width:74px;height:74px;font-size:26px;background:${avCor(c.nome)};margin:0 auto 12px">${ini(c.nome)}</div>
+        <div class="ctf-nm">${c.nome}</div>
+        <div class="ctf-sub">${CTX[c.contexto]||''}${c.comoConheci?` · conheci por ${c.comoConheci}`:''}</div>
+        ${(c.tags||[]).length?`<div class="ctf-chips">${(c.tags||[]).map(t=>`<span class="ct-tag" style="background:${avCor(t)}22;color:${avCor(t)}">${t}</span>`).join('')}</div>`:''}
+        ${score?`<div><span class="ctf-score" style="background:${score.cor}22;color:${score.cor}">${score.e} ${score.l}</span></div>`:''}
+        ${tel||c.email?`<div class="ctf-pills">
+          ${tel?`<a class="ctf-pill ctf-pill-wa" href="https://wa.me/55${tel}" target="_blank" rel="noopener">${svg('chat',16)} WhatsApp</a>`:''}
+          ${tel?`<a class="ctf-pill" href="tel:+55${tel}">${svg('phone',15)} Ligar</a>`:''}
+          ${c.email?`<a class="ctf-pill" href="mailto:${c.email}">${svg('mail',15)} E-mail</a>`:''}
+        </div>`:''}
+      </div>
+      <div class="ctf-card">
+        <div class="ctf-chead">
+          <div class="ctf-cico" style="background:${precisa?'var(--expense-soft)':'var(--brand-soft)'};color:${precisa?'var(--expense)':'var(--brand-text)'}">${svg('clock',16)}</div>
+          <h3>Manter contato</h3>
         </div>
-        <div class="card col-6">
-          <div class="card-head"><div class="ico" style="background:${precisa?'var(--expense-soft)':'var(--brand-soft)'};color:${precisa?'var(--expense)':'var(--brand-text)'}">${svg('clock',17)}</div><h3>Manter contato</h3></div>
-          <div style="font-size:13px;color:var(--text-2);font-weight:600">Último contato: <b style="color:${precisa?'var(--expense)':'var(--text-1)'}">${ultTxt}</b></div>
-          ${precisa?`<div style="color:var(--expense);font-weight:700;font-size:12px;margin-top:6px;display:flex;align-items:center;gap:5px">${svg('alert',12)} Hora de reconectar!</div>`:''}
-          <div class="fg" style="margin-top:var(--s-4)"><label>Lembrar de falar a cada</label><select class="field" data-freq><option value="">Não lembrar</option>${[7,15,30,60,90].map(n=>`<option value="${n}"${c.manterContato===n?' selected':''}>${n} dias</option>`).join('')}</select></div>
-          ${c.proximaAcao?`<div class="prox-acao">${svg('zap',13)} <span style="flex:1"><b>Próxima ação:</b> ${c.proximaAcao.nota}</span><span style="font-size:11px;color:var(--info);font-weight:700;white-space:nowrap">${fmtD(c.proximaAcao.data)}</span><button class="icon-mini-btn" data-rmprox style="width:24px;height:24px">${svg('x',12)}</button></div>`:''}
-          <div style="display:flex;gap:8px;margin-top:var(--s-4)">
-            <button class="btn btn-primary" data-falei style="flex:1">${svg('tick',15)} Falei hoje</button>
-            <button class="btn btn-soft" data-addprox style="flex:1">${svg('zap',14)} ${c.proximaAcao?'Editar ação':'+ Próxima ação'}</button>
-          </div>
+        <div class="ctf-kv">Último contato: <b style="color:${precisa?'var(--expense)':'var(--text-1)'}">${ultTxt}</b></div>
+        ${precisa?`<div class="ctf-alert">${svg('alert',13)} Hora de reconectar!</div>`:''}
+        <div class="ctf-fld">
+          <label>Lembrar de falar a cada</label>
+          <select class="field" data-freq><option value="">Não lembrar</option>${[7,15,30,60,90].map(n=>`<option value="${n}"${c.manterContato===n?' selected':''}>${n} dias</option>`).join('')}</select>
         </div>
-        <div class="card col-6">
-          <div class="card-head"><div class="ico" style="background:var(--warning-soft);color:var(--warning)">${svg('cake',17)}</div><h3>Datas importantes</h3></div>
-          ${c.aniversario?`<div class="ev-item"><div class="ev-bar" style="background:var(--warning)"></div><div class="ev-main"><div class="et">🎂 Aniversário</div><div class="es">${fmtD(c.aniversario)} · em ${diasProx(c.aniversario)}d</div></div></div>`:''}
-          ${datas.map((d,i)=>`<div class="ev-item"><div class="ev-bar" style="background:var(--brand)"></div><div class="ev-main"><div class="et">${d.label}</div><div class="es">${fmtD(d.data)} · em ${diasProx(d.data)}d</div></div><button class="icon-mini-btn" data-rmdata="${i}">${svg('x',14)}</button></div>`).join('')}
-          ${!c.aniversario&&!datas.length?`<p style="font-size:12.5px;color:var(--text-4)">Nenhuma data ainda.</p>`:''}
-          <button class="btn btn-soft" data-adddata style="margin-top:10px;width:100%">${svg('plus',14)} Adicionar data</button>
+        ${c.proximaAcao?`<div class="ctf-prox">${svg('zap',13)} <span><b>Próxima ação:</b> ${c.proximaAcao.nota} · <span style="color:var(--info);font-weight:700">${fmtD(c.proximaAcao.data)}</span></span><button class="ctf-mini" data-rmprox title="Remover">${svg('x',12)}</button></div>`:''}
+        <div class="ctf-btns">
+          <button class="ctf-btn ctf-btn-pri" data-falei>${svg('tick',14)} Falei hoje</button>
+          <button class="ctf-btn ctf-btn-soft" data-addprox>${svg('zap',14)} ${c.proximaAcao?'Editar ação':'Próxima ação'}</button>
         </div>
-        ${c.anotacoes?`<div class="card col-12"><div class="card-head"><div class="ico" style="background:var(--surface-3);color:var(--text-2)">${svg('book',17)}</div><h3>Anotações</h3></div><p style="font-size:13.5px;color:var(--text-2);line-height:1.5">${c.anotacoes}</p></div>`:''}
-        <div class="card col-12">
-          <div class="card-head"><div class="ico" style="background:var(--info-soft);color:var(--info)">${svg('repeat',17)}</div><h3>Histórico de interações</h3><button class="btn btn-primary" data-addint style="font-size:12px;padding:7px 12px">${svg('plus',14)} Registrar</button></div>
-          ${ints.length?ints.map((it,i)=>{const tp=INT_TIPOS[it.tipo]||{l:'Contato',e:'💬',c:'var(--info)'};return`<div class="ev-item"><div class="ev-time">${it.data.slice(8,10)}/${it.data.slice(5,7)}</div><div class="ev-bar" style="background:${tp.c}"></div><div class="ev-main"><div class="et"><span style="font-size:13px">${tp.e}</span> ${it.nota||tp.l}</div><div class="es"><span class="int-tipo" style="color:${tp.c}">${tp.l}</span></div></div><button class="icon-mini-btn" data-rmint="${i}">${svg('x',14)}</button></div>`;}).join(''):`<p style="font-size:12.5px;color:var(--text-4)">Nenhuma interação registrada. Use "Registrar" pra começar a timeline.</p>`}
+      </div>
+      <div class="ctf-card">
+        <div class="ctf-chead">
+          <div class="ctf-cico" style="background:var(--warning-soft);color:var(--warning)">${svg('cake',16)}</div>
+          <h3>Datas importantes</h3>
         </div>
+        ${c.aniversario?`<div class="ctf-ev"><div class="ctf-ev-bar" style="background:var(--warning)"></div><div class="ctf-ev-em">🎂</div><div class="ctf-ev-mn"><div class="ctf-ev-et">Aniversário</div><div class="ctf-ev-es">${fmtD(c.aniversario)} · em ${diasProx(c.aniversario)}d</div></div></div>`:''}
+        ${datas.map((d,i)=>`<div class="ctf-ev"><div class="ctf-ev-bar" style="background:var(--brand)"></div><div class="ctf-ev-em">📅</div><div class="ctf-ev-mn"><div class="ctf-ev-et">${d.label}</div><div class="ctf-ev-es">${fmtD(d.data)} · em ${diasProx(d.data)}d</div></div><button class="ctf-mini" data-rmdata="${i}" title="Remover">${svg('x',12)}</button></div>`).join('')}
+        ${!c.aniversario&&!datas.length?`<p style="font-size:12.5px;color:var(--text-4);margin-bottom:10px">Nenhuma data ainda.</p>`:''}
+        <button class="ctf-btn ctf-btn-soft ctf-btn-full" data-adddata>${svg('plus',14)} Adicionar data</button>
+      </div>
+      ${c.anotacoes?`<div class="ctf-card"><div class="ctf-chead"><div class="ctf-cico" style="background:var(--surface-3);color:var(--text-2)">${svg('book',15)}</div><h3>Anotações</h3></div><p class="ctf-notetxt">${c.anotacoes}</p></div>`:''}
+      <div class="ctf-card">
+        <div class="ctf-chead">
+          <div class="ctf-cico" style="background:var(--info-soft);color:var(--info)">${svg('repeat',15)}</div>
+          <h3>Histórico de interações</h3>
+          <button class="ctf-mini" data-addint title="Registrar">+</button>
+        </div>
+        ${ints.length?ints.map((it,i)=>{const tp=INT_TIPOS[it.tipo]||{l:'Contato',e:'💬',c:'var(--info)'};return`<div class="ctf-ev"><div class="ctf-ev-dt">${it.data.slice(8,10)}/${it.data.slice(5,7)}</div><div class="ctf-ev-bar" style="background:${tp.c}"></div><div class="ctf-ev-mn"><div class="ctf-ev-et">${tp.e} ${it.nota||tp.l}</div><div class="ctf-ev-es" style="color:${tp.c}">${tp.l}</div></div><button class="ctf-mini" data-rmint="${i}" title="Remover">${svg('x',12)}</button></div>`;}).join(''):`<p style="font-size:12.5px;color:var(--text-4)">Nenhuma interação. Use "+" pra começar.</p>`}
       </div>`;
     root.querySelector('[data-back]').onclick=()=>{viewing=null;render();};
     root.querySelector('[data-favf]').onclick=()=>{c.favorito=!c.favorito;renderFicha(c);};

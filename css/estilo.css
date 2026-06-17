@@ -858,6 +858,45 @@ select.field{cursor:pointer}
 .ct-tags{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap}
 .ct-acts{display:flex;align-items:center;gap:4px;flex-shrink:0}
 @media(max-width:560px){.ct-hidem{display:none!important}}
+/* ── Contatos · Ficha ── */
+.ctf-head{display:flex;align-items:center;gap:8px;padding:14px 0 10px;position:sticky;top:0;background:linear-gradient(180deg,var(--bg) 75%,transparent);z-index:5}
+.ctf-back{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);font-family:var(--font);font-size:13px;font-weight:700;padding:8px 13px 8px 10px;border-radius:var(--r-md);cursor:pointer}
+.ctf-ic{width:38px;height:38px;border-radius:var(--r-md);display:grid;place-items:center;background:var(--surface-2);color:var(--text-2);border:1px solid var(--border);cursor:pointer;flex-shrink:0}
+.ctf-hero{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-xl);padding:var(--s-5);margin-bottom:12px;text-align:center}
+.ctf-nm{font-size:21px;font-weight:800;letter-spacing:-.02em}
+.ctf-sub{font-size:12.5px;color:var(--text-3);font-weight:700;margin-top:3px}
+.ctf-chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.ctf-score{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;padding:5px 12px;border-radius:var(--r-full);margin-top:11px}
+.ctf-pills{display:flex;gap:8px;margin-top:15px;text-decoration:none}
+.ctf-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;border-radius:var(--r-md);font-family:var(--font);font-size:13px;font-weight:800;border:1px solid var(--border);background:var(--surface-2);color:var(--text-1);cursor:pointer;text-decoration:none}
+.ctf-pill-wa{background:var(--income-soft);color:var(--income);border-color:transparent}
+.ctf-card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-4);margin-bottom:12px}
+.ctf-chead{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.ctf-cico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex-shrink:0}
+.ctf-chead h3{font-size:14px;font-weight:800;letter-spacing:-.01em;flex:1;margin:0}
+.ctf-mini{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--surface-2);color:var(--text-3);border:1px solid var(--border);font-size:14px;font-weight:800;cursor:pointer;flex-shrink:0;line-height:1}
+.ctf-kv{font-size:13px;color:var(--text-2);font-weight:600}
+.ctf-kv b{color:var(--text-1)}
+.ctf-alert{display:flex;align-items:center;gap:6px;color:var(--expense);font-weight:800;font-size:12px;margin-top:7px}
+.ctf-fld{margin-top:13px}
+.ctf-fld label{display:block;font-size:11px;font-weight:800;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.ctf-prox{display:flex;align-items:center;gap:8px;background:var(--info-soft);border-radius:var(--r-md);padding:9px 11px;margin-top:10px;font-size:12.5px;color:var(--info);font-weight:700}
+.ctf-prox span{flex:1;min-width:0}
+.ctf-btns{display:flex;gap:8px;margin-top:13px}
+.ctf-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;border-radius:var(--r-md);font-family:var(--font);font-size:13px;font-weight:800;border:none;cursor:pointer}
+.ctf-btns .ctf-btn{flex:1}
+.ctf-btn-pri{background:var(--brand);color:#04211e}
+.ctf-btn-soft{background:var(--surface-2);color:var(--text-1);border:1px solid var(--border)}
+.ctf-btn-full{width:100%;margin-top:12px}
+.ctf-ev{display:flex;align-items:center;gap:11px;padding:9px 0}
+.ctf-ev+.ctf-ev{border-top:1px solid var(--border)}
+.ctf-ev-bar{width:3px;align-self:stretch;border-radius:2px;flex-shrink:0;min-height:20px}
+.ctf-ev-em{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--surface-2);font-size:14px;flex-shrink:0}
+.ctf-ev-mn{flex:1;min-width:0}
+.ctf-ev-et{font-size:13px;font-weight:700}
+.ctf-ev-es{font-size:11.5px;color:var(--text-3);font-weight:600;margin-top:1px}
+.ctf-ev-dt{font-size:11px;color:var(--text-4);font-weight:700;white-space:nowrap;flex-shrink:0}
+.ctf-notetxt{font-size:13.5px;color:var(--text-2);line-height:1.55}
 
 @media(max-width:640px){
   .page-kpis{grid-template-columns:1fr;gap:var(--s-3)}
