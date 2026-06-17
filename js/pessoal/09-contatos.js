@@ -105,6 +105,7 @@ const Contatos=(()=>{
           ${c.email?`<a class="ctf-pill" href="mailto:${c.email}">${svg('mail',15)} E-mail</a>`:''}
         </div>`:''}
       </div>
+      <div class="ctf-cards">
       <div class="ctf-card">
         <div class="ctf-chead">
           <div class="ctf-cico" style="background:${precisa?'var(--expense-soft)':'var(--brand-soft)'};color:${precisa?'var(--expense)':'var(--brand-text)'}">${svg('clock',16)}</div>
@@ -132,14 +133,15 @@ const Contatos=(()=>{
         ${!c.aniversario&&!datas.length?`<p style="font-size:12.5px;color:var(--text-4);margin-bottom:10px">Nenhuma data ainda.</p>`:''}
         <button class="ctf-btn ctf-btn-soft ctf-btn-full" data-adddata>${svg('plus',14)} Adicionar data</button>
       </div>
-      ${c.anotacoes?`<div class="ctf-card"><div class="ctf-chead"><div class="ctf-cico" style="background:var(--surface-3);color:var(--text-2)">${svg('book',15)}</div><h3>Anotações</h3></div><p class="ctf-notetxt">${c.anotacoes}</p></div>`:''}
-      <div class="ctf-card">
+      ${c.anotacoes?`<div class="ctf-card ctf-card--full"><div class="ctf-chead"><div class="ctf-cico" style="background:var(--surface-3);color:var(--text-2)">${svg('book',15)}</div><h3>Anotações</h3></div><p class="ctf-notetxt">${c.anotacoes}</p></div>`:''}
+      <div class="ctf-card ctf-card--full">
         <div class="ctf-chead">
           <div class="ctf-cico" style="background:var(--info-soft);color:var(--info)">${svg('repeat',15)}</div>
           <h3>Histórico de interações</h3>
           <button class="ctf-mini" data-addint title="Registrar">+</button>
         </div>
         ${ints.length?ints.map((it,i)=>{const tp=INT_TIPOS[it.tipo]||{l:'Contato',e:'💬',c:'var(--info)'};return`<div class="ctf-ev"><div class="ctf-ev-dt">${it.data.slice(8,10)}/${it.data.slice(5,7)}</div><div class="ctf-ev-bar" style="background:${tp.c}"></div><div class="ctf-ev-mn"><div class="ctf-ev-et">${tp.e} ${it.nota||tp.l}</div><div class="ctf-ev-es" style="color:${tp.c}">${tp.l}</div></div><button class="ctf-mini" data-rmint="${i}" title="Remover">${svg('x',12)}</button></div>`;}).join(''):`<p style="font-size:12.5px;color:var(--text-4)">Nenhuma interação. Use "+" pra começar.</p>`}
+      </div>
       </div>`;
     root.querySelector('[data-back]').onclick=()=>{viewing=null;render();};
     root.querySelector('[data-favf]').onclick=()=>{c.favorito=!c.favorito;renderFicha(c);};

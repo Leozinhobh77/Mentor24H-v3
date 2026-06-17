@@ -897,6 +897,14 @@ select.field{cursor:pointer}
 .ctf-ev-es{font-size:11.5px;color:var(--text-3);font-weight:600;margin-top:1px}
 .ctf-ev-dt{font-size:11px;color:var(--text-4);font-weight:700;white-space:nowrap;flex-shrink:0}
 .ctf-notetxt{font-size:13.5px;color:var(--text-2);line-height:1.55}
+@media(min-width:720px){
+  .ctf-cards{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
+  .ctf-cards .ctf-card{margin-bottom:0}
+  .ctf-card--full{grid-column:1/-1}
+  .ctf-hero{display:grid;grid-template-columns:90px 1fr;column-gap:var(--s-4);text-align:left;align-items:start}
+  .ctf-hero .ct-av{grid-column:1;grid-row:1/10;align-self:center}
+  .ctf-hero .ctf-chips,.ctf-hero .ctf-pills{justify-content:flex-start}
+}
 
 @media(max-width:640px){
   .page-kpis{grid-template-columns:1fr;gap:var(--s-3)}
