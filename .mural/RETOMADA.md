@@ -1,8 +1,8 @@
 ﻿# RETOMADA  (onde paramos)
 
-> Atualizado: 2026-06-16 12:19:54
+> Atualizado: 2026-06-17 08:48:53
 
-- OBJETIVO: Página Perfil — 5 blocos (Identidade, Negócio/MEI c/ barra faturamento, Stats, Preferências, Backup export/import CSV/JSON) — 4 tarefas (75-78)
+- OBJETIVO: Redesign tela Contatos (modo Pessoal) + inputs padronizados (telefone intl BR, e-mail validado) + todas as ramificacoes/modais
 - ESTADO: run CONCLUIDA (completed)
 - PROXIMO PASSO: run fechada - nada pendente
 - CHECKPOINT: run-finish

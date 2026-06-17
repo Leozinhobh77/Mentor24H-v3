@@ -6,6 +6,26 @@
 
 ## 🔄 Pendente / Agora
 
+### Etapa 42 — Redesign tela Contatos (Pessoal): visual+layout+inputs premium + todas as ramificações (executor-20260617-001)
+> Repaginar visual+layout da tela Contatos (foco Pessoal), CRUD 100% intacto. Inputs nível mundial: telefone intl 🇧🇷+55 com máscara (cel/fixo)+E.164+parse legado, e-mail validado, chip de tags. Mapa exaustivo: lista (KPIs/filtros/faixa reconectar/linha c/ score/estados) + ficha (hero+pílulas+bento compacto) + os 6 modais + componentes-base. Não regredir modo Negócio/Clientes. Pesquisa: intl-tel-input · Material 3 · Dex. Plano em `tarefas\plano\plano-redesign-contatos-pessoal-20260617.md`. Detalhe em `Tarefa-79..84.md`.
+- [x] 79 · Componentes-base (campo padrão · telefone intl BR · chip tags · badge score · pílula) → construtor/frontend-dev · dep: — ✅
+- [x] 80 · Os 6 modais padronizados (Novo/Editar · Excluir · Falei hoje · Próxima ação · Nova data · Registrar + chips canal) → construtor/frontend-dev · dep: 79 ✅
+- [x] 81 · Redesign da LISTA (KPIs enxutos · filtros · faixa reconectar · linha c/ score · estados) → forge/ui-visual-designer · dep: 79 ✅
+- [x] 82 · Redesign da FICHA (hero+score · ações em pílula · 4 cards compactados · bento responsivo) → forge/ui-visual-designer · dep: 79 ✅
+- [x] 83 · CSS premium (tokens · .ct-* upgrade · microinterações · touch 44px · overscroll · responsivo) → forge/design-system · dep: 79, 80, 81, 82 ✅
+- [x] 84 · Smoke Playwright real + QA (regressão CRUD · máscaras · validações · estados · modo Negócio · 360/1280) → sentinela/smoke-visual-tester · dep: 79, 80, 81, 82, 83 ✅ 41/41 VERDE
+
+### Etapa 41 — Página Perfil — 5 blocos (Identidade · Negócio/MEI · Stats · Preferências · Backup) (executor-20260616-003)
+> Construção do zero da página Perfil: remove placeholder, cria section real, módulo JS com stats/export/import/tema, CSS premium `.prf-*`, smoke Playwright. Plano em `tarefas\plano\plano-perfil-20260616.md`. Detalhe em `Tarefa-75..78.md`.
+- [x] 75 · Prep — section HTML + script tag + PAGES=[] + extend DB.usuario/negocio + router hook → construtor/frontend-dev · dep: — ✅
+- [x] 76 · JS — novo módulo js/pessoal/perfil.js (render + stats + export JSON/CSV + import + tema + modo) → construtor/frontend-dev · dep: 75 ✅ (+importCSV +fix tema _setTema)
+- [x] 77 · CSS — estilos .prf-* (seção card · avatar · barra MEI · stat-grid · prefs · action buttons · responsivo) → forge/ui-visual-designer · dep: 75, 76 ✅
+- [x] 78 · Smoke Playwright real + auditoria Perfil (5 blocos · stats · export · tema toggle · console 0 · overflow 0 · regressão) → sentinela/smoke-visual-tester · dep: 75, 76, 77 ✅ 17/17 VERDE
+
+### Etapa 40 — Sidebar R3 — subcategoria ativa comprimida em altura (executor-20260616-002)
+> Micro-ajuste: padding-top/bottom da subcategoria ATIVA reduz de 7px → 4px, deixando-a ~22px de altura vs ~38px da categoria. Só o estado ativo muda — inativo, fonte e categoria ficam iguais. Detalhe em `Tarefa-74.md`.
+- [ ] 74 · CSS — padding-top/bottom:4px em .nav-group .nav-item.active (era herdado 7px) → forge/ui-visual-designer · dep: —
+
 ### Etapa 39 — Sidebar R2 — Painel Negócios standalone + hierarquia CSS (cat > sub) + remover FAB (executor-20260616-001)
 > Rodada 2 do redesign da sidebar: cria "Painel Negócios" como item standalone (espelho do Painel Pessoal, fora do grupo Operação), corrige hierarquia visual invertida (categoria estava mais fina que subcategoria — padding 6px vs 9px), remove FAB órfão sem funcionalidade, e corrige bug active duplo (2 painéis com data-nav="dashboard"). Plano em `tarefas\plano\plano-sidebar-r2-20260616.md`. Detalhe em `Tarefa-70..73.md`.
 - [ ] 70 · HTML — criar "Painel Negócios" standalone logo após separador "Negócio" + remover "Painel" do grupo Operação → construtor/frontend-dev · dep: —

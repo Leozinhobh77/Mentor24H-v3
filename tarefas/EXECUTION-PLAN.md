@@ -1,19 +1,21 @@
-# EXECUTION-PLAN - executor-20260616-001  (auto-gerado na FASE 01)
+# EXECUTION-PLAN - executor-20260617-001  (auto-gerado na FASE 01)
 
 > Fonte unica: tarefas\checklist.md (secao deste ID). Regenerado a cada run pelo Initialize-ExecutorRun.
-modo_execucao: sequencial - gerado: 2026-06-16 07:35
-objetivo: Sidebar R2 — Painel Negócios standalone + hierarquia CSS
+modo_execucao: sequencial - gerado: 2026-06-17 08:23
+objetivo: Redesign tela Contatos
 
 ## Etapas
 | # | Tarefa | Modo/Expert | Dep | Status |
 |---|--------|-------------|-----|--------|
-| 70 | HTML — criar "Painel Negócios" standalone logo após separador "Negócio" + remover "Painel" do grupo Operação | construtor/frontend-dev | — | todo |
-| 71 | JS — fix active duplo: navigate() filtra .active por data-ctx vs modo atual (evita 2 painéis acesos) | construtor/frontend-dev | 70 | todo |
-| 72 | CSS — hierarquia categoria > subcategoria (padding/font/ícone/opacity corretos) + remover .fab do CSS e HTML | forge/ui-visual-designer | 70, | todo |
-| 73 | Smoke Playwright real + auditoria R2 (Painel Negócios · active duplo · hierarquia · FAB · console 0 · overflow 0 · regressão) | sentinela/smoke-visual-tester | 70, | todo |
+| 79 | Componentes-base (campo padrão · telefone intl BR · chip tags · badge score · pílula) | construtor/frontend-dev | — | todo |
+| 80 | Os 6 modais padronizados (Novo/Editar · Excluir · Falei hoje · Próxima ação · Nova data · Registrar + chips canal) | construtor/frontend-dev | 79 | todo |
+| 81 | Redesign da LISTA (KPIs enxutos · filtros · faixa reconectar · linha c/ score · estados) | forge/ui-visual-designer | 79 | todo |
+| 82 | Redesign da FICHA (hero+score · ações em pílula · 4 cards compactados · bento responsivo) | forge/ui-visual-designer | 79 | todo |
+| 83 | CSS premium (tokens · .ct-* upgrade · microinterações · touch 44px · overscroll · responsivo) | forge/design-system | 79, | todo |
+| 84 | Smoke Playwright real + QA (regressão CRUD · máscaras · validações · estados · modo Negócio · 360/1280) | sentinela/smoke-visual-tester | 79, | todo |
 
 ## Ordem
-70 -> 71 -> 72 -> 73   (sequencial)
+79 -> 80 -> 81 -> 82 -> 83 -> 84   (sequencial)
 
 ## Gates
 3 tentativas - grave/irreversivel/fora-escopo - decisao

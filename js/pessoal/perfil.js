@@ -34,23 +34,30 @@ const Perfil=(()=>{
     setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
 
+  function _parseCSVLine(line){
+    const result=[]; let cur=''; let inQ=false;
+    for(let i=0;i<line.length;i++){
+      const c=line[i];
+      if(c==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;} else inQ=!inQ; }
+      else if(c===','&&!inQ){ result.push(cur); cur=''; }
+      else cur+=c;
+    }
+    result.push(cur); return result;
+  }
+
   function _exportarCSV(){
-    const BOM='﻿';
-    const cols=['tipo','descricao','valor','cat','metodo','data'];
-    const rows=[(BOM+'Tipo,Descricao,Valor,Categoria,Metodo,Data,Contato,Nome,Tags')];
-    (DB.transacoes||[]).forEach(t=>{
-      rows.push([t.tipo,`"${(t.descricao||'').replace(/"/g,'""')}"`,
-        (t.valor||0).toFixed(2),(t.cat||''),(t.metodo||''),(t.data||''),'','',''].join(','));
-    });
-    (DB.contatos||[]).forEach(c=>{
-      rows.push(['contato','','','','','',c.id,`"${(c.nome||'').replace(/"/g,'""')}"`,
-        `"${(c.tags||[]).join(';').replace(/"/g,'""')}"`].join(','));
-    });
-    const blob=new Blob([rows.join('\r\n')],{type:'text/csv;charset=utf-8'});
+    const hdrs=['Nome','Telefone','Email','Contexto','Tags','Aniversário','Favorito','Como Conheci','Anotações'];
+    const rows=(DB.contatos||[]).map(c=>[
+      c.nome||'', c.telefone||'', c.email||'', c.contexto||'',
+      (c.tags||[]).join(';'), c.aniversario||'',
+      c.favorito?'Sim':'Não', c.comoConheci||'', c.anotacoes||''
+    ]);
+    const csv=[hdrs,...rows].map(r=>r.map(f=>`"${String(f).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
-    a.href=url; a.download='mentor24h-dados.csv'; a.click();
-    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    a.href=url; a.download=`mentor24h-contatos-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
 
   function _importarJSON(){
@@ -72,6 +79,40 @@ const Perfil=(()=>{
     input.click();
   }
 
+  function _importarCSV(){
+    const inp=document.createElement('input');
+    inp.type='file'; inp.accept='.csv';
+    inp.onchange=e=>{
+      const f=e.target.files[0]; if(!f) return;
+      const r=new FileReader();
+      r.onload=ev=>{
+        try{
+          const linhas=ev.target.result.replace(/^﻿/,'').split(/\r?\n/).filter(l=>l.trim());
+          if(linhas.length<2){ alert('Arquivo vazio ou sem contatos.'); return; }
+          const novos=[];
+          for(let i=1;i<linhas.length;i++){
+            const c=_parseCSVLine(linhas[i]);
+            if(!c[0]) continue;
+            novos.push({
+              id:nid(), nome:c[0]||'', telefone:c[1]||'', email:c[2]||'',
+              contexto:c[3]||'pessoal', tags:c[4]?c[4].split(';').filter(Boolean):[],
+              aniversario:c[5]||'', favorito:c[6]==='Sim',
+              comoConheci:c[7]||'', anotacoes:c[8]||'',
+              ultimoContato:'', manterContato:null, proximaAcao:null, interacoes:[], datas:[]
+            });
+          }
+          DB.contatos.push(...novos);
+          alert(`${novos.length} contato(s) importado(s) com sucesso!`);
+          Perfil.render();
+        }catch(err){ alert('Erro ao ler o arquivo CSV. Verifique o formato.'); }
+      };
+      r.readAsText(f,'UTF-8');
+    };
+    document.body.appendChild(inp);
+    inp.click();
+    document.body.removeChild(inp);
+  }
+
   const MODULOS={
     contatos:{label:'Contatos',chave:'contatos'},
     financas:{label:'Finanças',chaves:['contas','transacoes']},
@@ -87,12 +128,10 @@ const Perfil=(()=>{
     Perfil.render();
   }
 
-  function _toggleTema(){
-    const dark=document.documentElement.getAttribute('data-theme')==='dark';
-    const next=dark?'light':'dark';
+  function _setTema(next){
     document.documentElement.setAttribute('data-theme',next);
     const btn=document.getElementById('theme-btn');
-    if(btn) btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${dark?ICONS.sun:ICONS.moon}</svg>`;
+    if(btn) btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${next==='dark'?ICONS.moon:ICONS.sun}</svg>`;
     document.querySelectorAll('.prf-theme-btn').forEach(b=>{
       b.classList.toggle('on',b.dataset.theme===next);
     });
@@ -129,9 +168,9 @@ const Perfil=(()=>{
       Perfil.render();
     });
 
-    // Tema
+    // Tema — botão define o tema diretamente (não toggle)
     r.querySelectorAll('.prf-theme-btn').forEach(b=>{
-      b.addEventListener('click',()=>_toggleTema());
+      b.addEventListener('click',()=>_setTema(b.dataset.theme));
     });
 
     // Modo padrão
@@ -143,6 +182,7 @@ const Perfil=(()=>{
     r.querySelector('#prf-export-json')?.addEventListener('click',_exportarJSON);
     r.querySelector('#prf-export-csv')?.addEventListener('click',_exportarCSV);
     r.querySelector('#prf-import-json')?.addEventListener('click',_importarJSON);
+    r.querySelector('#prf-import-csv')?.addEventListener('click',_importarCSV);
     r.querySelectorAll('[data-limpar]').forEach(b=>{
       b.addEventListener('click',()=>_limpar(b.dataset.limpar));
     });
@@ -262,6 +302,7 @@ const Perfil=(()=>{
           <button id="prf-export-json" class="prf-action-btn">${ico('file')} Exportar JSON</button>
           <button id="prf-export-csv" class="prf-action-btn">${ico('chart')} Exportar CSV</button>
           <button id="prf-import-json" class="prf-action-btn">${ico('repeat')} Importar JSON</button>
+          <button id="prf-import-csv" class="prf-action-btn">${ico('repeat')} Importar CSV</button>
         </div>
         <div class="prf-divider"></div>
         <div class="prf-section-sub prf-danger-label">Limpar módulo (irreversível)</div>
