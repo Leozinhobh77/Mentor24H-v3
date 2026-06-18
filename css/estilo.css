@@ -847,7 +847,7 @@ select.field{cursor:pointer}
 .ct-click{display:flex;align-items:center;gap:12px;flex:1;min-width:0;cursor:pointer}
 .ct-av{width:46px;height:46px;border-radius:var(--r-full);display:grid;place-items:center;font-weight:800;font-size:15px;color:#fff;flex-shrink:0}
 .ct-main{flex:1;min-width:0}
-.ct-l1{display:flex;align-items:center;gap:6px}
+.ct-l1{display:flex;align-items:center;gap:6px;min-width:0}
 .ct-star{color:var(--warning);flex-shrink:0}
 .ct-nm{font-size:14.5px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .ct-l2{display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap}
@@ -857,7 +857,7 @@ select.field{cursor:pointer}
 .ct-tag{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:var(--r-full)}
 .ct-tags{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap}
 .ct-acts{display:flex;align-items:center;gap:4px;flex-shrink:0}
-@media(max-width:560px){.ct-hidem{display:none!important}}
+@media(max-width:560px){.ct-hidem{display:none!important}.ct-acts [data-edit],.ct-acts [data-del]{display:none!important}}
 /* ── Contatos · Ficha ── */
 .ctf-head{display:flex;align-items:center;gap:8px;padding:14px 0 10px;position:sticky;top:0;background:linear-gradient(180deg,var(--bg) 75%,transparent);z-index:5}
 .ctf-back{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);font-family:var(--font);font-size:13px;font-weight:700;padding:8px 13px 8px 10px;border-radius:var(--r-md);cursor:pointer}
@@ -940,6 +940,15 @@ select.field{cursor:pointer}
 .ct-tog::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:var(--text-4);top:2px;left:2px;transition:.2s var(--ease)}
 .ct-tog.on{background:var(--brand);border-color:transparent}
 .ct-tog.on::after{background:#fff;left:calc(100% - 22px)}
+
+/* ── CANAL CHIPS — Fatia 4 (modais de interação/addint) ── */
+.ct-canal-chips{display:flex;gap:8px;flex-wrap:wrap}
+.ct-canal-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:9px 13px;border-radius:var(--r-md);background:var(--surface-2);border:1.5px solid var(--border);color:var(--text-2);cursor:pointer;transition:.15s var(--ease)}
+.ct-canal-chip.on{border-color:transparent}
+.ct-canal-chip[data-canal="whatsapp"].on{background:var(--income-soft);color:var(--income)}
+.ct-canal-chip[data-canal="ligacao"].on{background:var(--brand-soft);color:var(--brand-text)}
+.ct-canal-chip[data-canal="presencial"].on{background:var(--warning-soft);color:var(--warning)}
+.ct-canal-chip[data-canal="email"].on{background:var(--info-soft);color:var(--info)}
 
 @media(max-width:640px){
   .page-kpis{grid-template-columns:1fr;gap:var(--s-3)}
