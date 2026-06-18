@@ -239,7 +239,7 @@ document.querySelectorAll('.mood-pick').forEach(p=>p.querySelectorAll('.mood').f
 })));
 
 /* ─── ROUTER (navegação SPA) ─── */
-const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',salvos:'Salvos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Clientes',relatorios:'Relatórios (Negócio)',documentos:'Documentos',encomendas:'Encomendas',financeiro:'Financeiro',mentor:'Mentor',perfil:'Perfil'};
+const TITLES={financas:'Finanças',transacoes:'Transações',metas:'Metas',agenda:'Agenda',saude:'Saúde',tarefas:'Tarefas',habitos:'Hábitos',estudos:'Estudos',leitura:'Leitura',series:'Séries',treinos:'Treinos',salvos:'Salvos',contatos:'Contatos',vendas:'Vendas',produtos:'Produtos',estoque:'Estoque',clientes:'Contatos Negócio',relatorios:'Relatórios (Negócio)',documentos:'Documentos',encomendas:'Encomendas',financeiro:'Financeiro',mentor:'Mentor',perfil:'Perfil'};
 function navigate(page){
   // rotas virtuais de sub-aba (financeiro-mei, etc.) mapeiam para 'financeiro'
   const pageReal=page.startsWith('financeiro-')?'financeiro':page;

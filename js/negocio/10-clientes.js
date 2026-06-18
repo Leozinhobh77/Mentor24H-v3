@@ -10,7 +10,7 @@ const Clientes=(()=>{
   const fmtD=iso=>{if(!iso)return '—';const p=iso.split('-');return `${p[2]}/${p[1]}/${p[0].slice(2)}`;};
   function diasAniv(av){if(!av)return null;const p=av.split('-');const mm=+p[1],dd=+p[2];const h=new Date();h.setHours(0,0,0,0);let nx=new Date(h.getFullYear(),mm-1,dd);if(nx<h)nx=new Date(h.getFullYear()+1,mm-1,dd);return Math.round((nx-h)/86400000);}
 
-  let aba='clientes', q='', viewing=null;
+  let aba='clientes', q='', viewing=null, devedorFirst=true, _popListeners=false;
 
   /* ── dados derivados ── */
   const vendasDe=cid=>DB.vendas.filter(v=>v.clienteId===cid);
@@ -58,8 +58,8 @@ const Clientes=(()=>{
     renderLista(root);
   }
   function abaBar(){
-    return `<div class="toolbar" style="margin-bottom:var(--s-3)">
-      <div class="seg">
+    return `<div class="ct-toolbar">
+      <div class="ct-seg">
         <button class="${aba==='clientes'?'on':''}" data-aba="clientes">${svg('users',14)} Clientes</button>
         <button class="${aba==='fornecedores'?'on':''}" data-aba="fornecedores">${svg('box',14)} Fornecedores</button>
       </div>
@@ -70,20 +70,59 @@ const Clientes=(()=>{
   }
 
   /* ── LISTA DE CLIENTES ── */
+  function editarContatoNeg(c){
+    Modal.open('Editar contato',`
+      <div class="fg"><label>Nome*</label><input class="field" id="ecn-nome" value="${c.nome.replace(/"/g,'&quot;')}"></div>
+      <div class="fg"><label>Telefone / WhatsApp</label><input class="field" id="ecn-tel" value="${(c.telefone||'').replace(/"/g,'&quot;')}" placeholder="(31) 90000-0000"></div>
+      <div class="fg"><label>Aniversário</label><input class="field" id="ecn-aniv" type="date" value="${c.aniversario||''}"></div>
+      <div class="fg"><label>Limite de crédito (R$)</label><input class="field" id="ecn-lim" type="number" min="0" step="10" value="${limiteDe(c)}"></div>
+      <div class="fg"><label>Anotações</label><textarea class="field" id="ecn-obs" rows="2" style="resize:vertical">${(c.anotacoes||'').replace(/</g,'&lt;')}</textarea></div>
+    `,(b)=>{
+      const nome=b.querySelector('#ecn-nome').value.trim();
+      if(!nome){Toast.show('Informe o nome','err');return false;}
+      c.nome=nome;c.telefone=b.querySelector('#ecn-tel').value.trim();
+      c.aniversario=b.querySelector('#ecn-aniv').value||null;
+      c.limiteCredito=+b.querySelector('#ecn-lim').value||0;
+      c.anotacoes=b.querySelector('#ecn-obs').value.trim();
+      Toast.show('Contato atualizado');render();
+    },'Salvar');
+  }
   function rowHTML(c,m){
     const r=rfm(m);const lim=limiteDe(c);const estouro=m.saldoDevedor>lim;
-    return `<div class="ct-item">
-      <div class="ct-click" data-open="${c.id}">
-        <div class="ct-av" style="background:${avCor(c.nome)}">${ini(c.nome)}</div>
-        <div class="ct-main">
-          <div class="ct-nm">${c.nome}<span style="font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:var(--r-full);background:${r.bg};color:${r.cor}">${r.e} ${r.l}</span></div>
-          <div style="font-size:11.5px;color:var(--text-3);font-weight:600;margin-top:2px">${m.nCompras} compra${m.nCompras!==1?'s':''} · ticket ${fmt(m.ticketMedio)}${m.ultimaCompra?` · últ. ${fmtD(m.ultimaCompra)}`:''}</div>
+    const cake=diasAniv(c.aniversario);
+    const saldoChip=m.saldoDevedor>0
+      ?`<span class="ct-saldo ${estouro?'estouro':'deve'}">⏱ deve ${fmt(m.saldoDevedor)}</span>`
+      :`<span class="ct-saldo ok">✓ em dia</span>`;
+    return `<div class="ct-itemwrap">
+      <div class="ct-item">
+        <div class="ct-click" data-open="${c.id}">
+          <div class="ct-av" style="background:${avCor(c.nome)}">${ini(c.nome)}</div>
+          <div class="ct-main">
+            <div class="ct-l1"><span class="ct-nm">${c.nome}</span></div>
+            <div class="ct-l2">
+              <span class="ct-rfm" style="background:${r.bg};color:${r.cor}">${r.e} ${r.l}</span>
+              <span class="ct-meta">${m.nCompras} compra${m.nCompras!==1?'s':''}${m.ultimaCompra?` · últ. ${fmtD(m.ultimaCompra)}`:''}</span>
+              ${cake!=null&&cake<=7?`<span class="ct-chip-cake">🎂 ${cake===0?'hoje':cake+'d'}</span>`:''}
+              ${saldoChip}
+            </div>
+          </div>
+        </div>
+        <div class="ct-acts">
+          ${c.telefone?`<a class="docbtn wa" href="${waLink(c.telefone,'Oi '+c.nome+'!')}" target="_blank" rel="noopener" title="WhatsApp" aria-label="WhatsApp ${c.nome}">${svg('chat',17)}</a>`:''}
+          <button class="docbtn acts" data-pop="${c.id}" title="Ações rápidas" aria-label="Ações rápidas — ${c.nome}">${svg('zap',17)}</button>
         </div>
       </div>
-      <div style="display:flex;align-items:center;padding-right:var(--s-3)">
-        ${m.saldoDevedor>0
-          ?`<div style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-weight:800;font-size:13px;color:${estouro?'var(--expense)':'var(--warning)'}" title="${estouro?'Acima do limite de '+fmt(lim):'Saldo devedor'}">${svg(estouro?'alert':'clock',13)} ${fmt(m.saldoDevedor)}</div>`
-          :`<span style="font-size:11px;font-weight:700;color:var(--income)">✓ em dia</span>`}
+      <div class="ct-pop" id="ct-pop-${c.id}">
+        <div class="ct-pop-h"><div class="ct-pop-av" style="background:${avCor(c.nome)}">${ini(c.nome)}</div><b>${c.nome}</b></div>
+        <div class="ct-pop-sec">Enviar pro cliente</div>
+        <div class="ct-pop-it" data-act="venda" data-cid="${c.id}"><span class="e">🛒</span> Registrar venda</div>
+        <div class="ct-pop-it" data-act="cardapio"><span class="e">📋</span> Enviar cardápio</div>
+        <div class="ct-pop-it" data-act="orcamento"><span class="e">🧾</span> Enviar orçamento</div>
+        <div class="ct-pop-it" data-act="recibo"><span class="e">📃</span> Enviar recibo</div>
+        <div class="ct-pop-div"></div>
+        <div class="ct-pop-sec">Contato</div>
+        <div class="ct-pop-it" data-act="editar" data-cid="${c.id}"><span class="e">✏️</span> Editar</div>
+        <div class="ct-pop-it danger" data-act="excluir" data-cid="${c.id}"><span class="e">🗑️</span> Excluir</div>
       </div>
     </div>`;
   }
@@ -95,29 +134,71 @@ const Clientes=(()=>{
     const devedores=cs.filter(o=>o.m.saldoDevedor>0).length;
     const reativar=cs.filter(o=>{const l=rfm(o.m).l;return l==='Sumido'||l==='Em risco';});
     const nivers=cs.filter(o=>{const d=diasAniv(o.c.aniversario);return d!=null&&d<=7;});
-    root.innerHTML=`
+    let listHTML='';
+    if(devedorFirst){
+      const comPend=cs.filter(o=>o.m.saldoDevedor>0);
+      const emDia=cs.filter(o=>o.m.saldoDevedor<=0);
+      if(comPend.length)listHTML+=`<div class="ct-group deve">Com pendência <span class="cnt">· ${comPend.length}</span></div>`+comPend.map(o=>rowHTML(o.c,o.m)).join('');
+      if(emDia.length)listHTML+=`<div class="ct-group ok">Em dia <span class="cnt">· ${emDia.length}</span></div>`+emDia.map(o=>rowHTML(o.c,o.m)).join('');
+    } else {
+      cs.sort((a,b)=>a.c.nome.localeCompare(b.c.nome,'pt'));
+      listHTML=cs.map(o=>rowHTML(o.c,o.m)).join('');
+    }
+    root.innerHTML=`<div class="ct-page">
       ${abaBar()}
-      <div class="page-kpis">
-        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--warning-soft);color:var(--warning)">${svg('clock',14)}</span>A receber</div><div class="kv" style="color:${aReceber>0?'var(--warning)':'var(--text-1)'}">${fmt(aReceber)}</div></div>
-        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--brand-soft);color:var(--brand-text)">${svg('users',14)}</span>Clientes</div><div class="kv">${cs.length}</div></div>
-        <div class="kpi"><div class="kl"><span class="ki" style="background:var(--expense-soft);color:var(--expense)">${svg('alert',14)}</span>Devedores</div><div class="kv">${devedores}</div></div>
+      <div class="ct-kpis">
+        <div class="ct-kpi"><div class="ct-kpi-l"><span class="dot" style="background:var(--warning-soft);color:var(--warning)">⏱</span>A receber</div><div class="ct-kpi-v" style="color:${aReceber>0?'var(--warning)':'var(--text-1)'}">${fmt(aReceber)}</div></div>
+        <div class="ct-kpi"><div class="ct-kpi-l"><span class="dot" style="background:var(--brand-soft);color:var(--brand-text)">👥</span>Clientes</div><div class="ct-kpi-v">${cs.length}</div></div>
+        <div class="ct-kpi"><div class="ct-kpi-l"><span class="dot" style="background:var(--expense-soft);color:var(--expense)">⚠</span>Devedores</div><div class="ct-kpi-v">${devedores}</div></div>
       </div>
-      ${(reativar.length||nivers.length)?`<div class="card" style="margin-bottom:var(--s-3)">
-        <div class="card-head"><div class="ico" style="background:var(--info-soft);color:var(--info)">${svg('zap',16)}</div><h3>Para reativar &amp; lembrar</h3></div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          ${reativar.map(o=>`<div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-2)"><span style="flex:1">💤 <b>${o.c.nome}</b> ${rfm(o.m).l.toLowerCase()}${o.m.ultimaCompra?` · última compra ${fmtD(o.m.ultimaCompra)}`:' · sem compras'}</span>${o.c.telefone?`<a class="docbtn wa" target="_blank" rel="noopener" href="${waLink(o.c.telefone,`Oi ${o.c.nome}! Faz tempo que não te vejo por aqui 😊 Preparei novidades, dá uma passada!`)}" title="Reativar no WhatsApp">${svg('chat',15)}</a>`:''}</div>`).join('')}
-          ${nivers.map(o=>{const d=diasAniv(o.c.aniversario);return `<div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-2)"><span style="flex:1">🎂 <b>${o.c.nome}</b> faz aniversário ${d===0?'hoje':'em '+d+'d'}</span>${o.c.telefone?`<a class="docbtn wa" target="_blank" rel="noopener" href="${waLink(o.c.telefone,`Parabéns, ${o.c.nome}! 🎉 Desejo tudo de bom. Passa aqui pra comemorar com um docinho 🎂`)}" title="Parabenizar">${svg('chat',15)}</a>`:''}</div>`;}).join('')}
-        </div>
+      <div class="ct-toolbar">
+        <div class="ct-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--text-4)" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5"/></svg><input placeholder="Buscar cliente…" data-q value="${q}"></div>
+      </div>
+      <div class="ct-filter">
+        <span class="ct-filter-lab">Ordem</span>
+        <div class="ct-toggle" data-toggle-dev><span>⚠️ Devedores primeiro</span><div class="ct-switch${devedorFirst?' on':''}"></div></div>
+      </div>
+      ${(reativar.length||nivers.length)?`<div class="ct-nudge">
+        <div class="ct-nudge-h"><div class="ico" style="background:var(--info-soft);color:var(--info)">${svg('zap',14)}</div><h3>Para reativar &amp; lembrar</h3></div>
+        ${reativar.map(o=>`<div class="ct-nudge-row"><span class="txt">💤 <b>${o.c.nome}</b> ${rfm(o.m).l.toLowerCase()}${o.m.ultimaCompra?` · última compra ${fmtD(o.m.ultimaCompra)}`:' · sem compras'}</span>${o.c.telefone?`<a class="ct-mini-wa" href="${waLink(o.c.telefone,'Oi '+o.c.nome+'! Faz tempo que não te vejo por aqui 😊 Preparei novidades, dá uma passada!')}" target="_blank" rel="noopener">${svg('chat',15)}</a>`:''}</div>`).join('')}
+        ${nivers.map(o=>{const d=diasAniv(o.c.aniversario);return `<div class="ct-nudge-row"><span class="txt">🎂 <b>${o.c.nome}</b> faz aniversário ${d===0?'hoje':'em '+d+'d'}</span>${o.c.telefone?`<a class="ct-mini-wa" href="${waLink(o.c.telefone,'Parabéns, '+o.c.nome+'! 🎉 Desejo tudo de bom. Passa aqui pra comemorar com um docinho 🎂')}" target="_blank" rel="noopener">${svg('chat',15)}</a>`:''}</div>`;}).join('')}
       </div>`:''}
-      <div class="toolbar">
-        <input class="field grow" placeholder="Buscar cliente…" data-q value="${q}">
-      </div>
-      <div class="card">
-        ${cs.length?cs.map(o=>rowHTML(o.c,o.m)).join(''):`<div class="empty" style="padding:var(--s-6) 0"><div class="eico">${svg('users',24)}</div><h4>Nenhum cliente ainda</h4><p>Clientes aparecem aqui ao registrar vendas ou marcar contatos como "Negócio".</p></div>`}
-      </div>`;
+      ${cs.length?listHTML:`<div class="empty" style="padding:var(--s-6) var(--s-4)"><div class="eico">${svg('users',24)}</div><h4>Nenhum cliente ainda</h4><p>Clientes aparecem ao registrar vendas ou marcar contatos como "Negócio".</p></div>`}
+    </div>`;
     bindAba(root);
-    const qi=root.querySelector('[data-q]');if(qi)qi.oninput=e=>{q=e.target.value;render();const n=document.getElementById('clientes-root').querySelector('[data-q]');if(n){n.focus();n.setSelectionRange(q.length,q.length);}};
+    const qi=root.querySelector('[data-q]');
+    if(qi)qi.oninput=e=>{q=e.target.value;render();const n=document.getElementById('clientes-root').querySelector('[data-q]');if(n){n.focus();n.setSelectionRange(q.length,q.length);}};
     root.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{viewing=+b.dataset.open;render();});
+    const tog=root.querySelector('[data-toggle-dev]');
+    if(tog)tog.onclick=()=>{devedorFirst=!devedorFirst;render();};
+    // Popover: toggle
+    root.querySelectorAll('[data-pop]').forEach(btn=>{
+      btn.onclick=e=>{
+        e.stopPropagation();
+        const pop=root.querySelector('#ct-pop-'+btn.dataset.pop);
+        const isOpen=pop&&pop.classList.contains('show');
+        root.querySelectorAll('.ct-pop.show').forEach(p=>p.classList.remove('show'));
+        if(pop&&!isOpen)pop.classList.add('show');
+      };
+    });
+    // Popover: actions (delegated to root; stopPropagation prevents reaching document)
+    root.addEventListener('click',e=>{
+      const it=e.target.closest('[data-act]');if(!it)return;
+      e.stopPropagation();
+      const act=it.dataset.act,cid=it.dataset.cid?+it.dataset.cid:null;
+      const c=cid?DB.contatos.find(x=>x.id===cid):null;
+      root.querySelectorAll('.ct-pop.show').forEach(p=>p.classList.remove('show'));
+      if(act==='venda')navigate('vendas');
+      else if(act==='excluir'&&c)Modal.confirm('Excluir contato?',`"${c.nome}" será removido permanentemente.`,()=>{DB.contatos=DB.contatos.filter(x=>x.id!==c.id);Toast.show('Contato removido');render();});
+      else if(act==='editar'&&c)editarContatoNeg(c);
+      else Toast.show('Em breve 🚧');
+    });
+    // Global close: outside click (skip if inside .ct-pop) + ESC (attach once per page load)
+    if(!_popListeners){
+      _popListeners=true;
+      document.addEventListener('click',e=>{if(e.target.closest('.ct-pop'))return;const r=document.getElementById('clientes-root');if(r)r.querySelectorAll('.ct-pop.show').forEach(p=>p.classList.remove('show'));});
+      document.addEventListener('keydown',e=>{if(e.key==='Escape'){const r=document.getElementById('clientes-root');if(r)r.querySelectorAll('.ct-pop.show').forEach(p=>p.classList.remove('show'));}});
+    }
   }
 
   /* ── FICHA DO CLIENTE (caderneta + fiado) ── */
