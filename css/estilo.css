@@ -938,6 +938,20 @@ select.field{cursor:pointer}
 .ctf-ev-es{font-size:11.5px;color:var(--text-3);font-weight:600;margin-top:1px}
 .ctf-ev-dt{font-size:11px;color:var(--text-4);font-weight:700;white-space:nowrap;flex-shrink:0}
 .ctf-notetxt{font-size:13.5px;color:var(--text-2);line-height:1.55}
+/* ── Ficha Negócio (F2) — pill Ações + caderneta + kpis ── */
+.ctf-pill-acts{background:var(--brand-soft);color:var(--brand-text);border-color:transparent}
+#clientes-root .ctf-hero .ct-av{width:74px;height:74px;font-size:26px;margin:0 auto 12px}
+#clientes-root .ctf-hero .ct-pop{top:calc(100% - 6px);right:var(--s-4);left:auto}
+.cad-lab{font-size:12.5px;color:var(--text-2);font-weight:700}
+.cad-val{font-family:var(--mono);font-size:28px;font-weight:800;color:var(--warning);margin-top:2px}
+.cad-limrow{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-3);font-weight:700;margin:13px 0 5px}
+.cad-bar{height:7px;border-radius:var(--r-full);background:var(--surface-3);overflow:hidden}
+.cad-bar>div{height:100%;background:var(--warning);border-radius:var(--r-full);transition:width .3s var(--ease)}
+.fk-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fk{background:var(--surface-2);border-radius:var(--r-md);padding:11px 12px}
+.fk-l{font-size:11px;color:var(--text-3);font-weight:700}
+.fk-v{font-size:18px;font-weight:800;letter-spacing:-.02em;margin-top:3px}
+#clientes-root .ctf-card .ctf-notetxt{margin-top:9px}
 @media(min-width:720px){
   .ctf-cards{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
   .ctf-cards .ctf-card{margin-bottom:0}

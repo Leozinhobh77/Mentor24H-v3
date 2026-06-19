@@ -15,5 +15,6 @@
 
 ## Fichas existentes
 - [3-telas/financas-pessoal-v2.md](3-telas/financas-pessoal-v2.md) — Tela Finanças Pessoal v2 (redesign executor-20260614-001)
+- [3-telas/contatos-negocio-ficha.md](3-telas/contatos-negocio-ficha.md) — Ficha do Cliente (Negócio) padrão .ctf-* (executor-20260618-004 · F2)
 
 <!-- as pastas de categoria nascem quando a 1ª peça daquela categoria é criada -->

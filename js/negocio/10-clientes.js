@@ -201,18 +201,40 @@ const Clientes=(()=>{
     }
   }
 
-  /* ── FICHA DO CLIENTE (caderneta + fiado) ── */
+  /* ── FICHA DO CLIENTE (caderneta + fiado) — padrão .ctf-* (F2) ── */
   function extratoRow(v){
     const aprazo=v.pagamento==='a_prazo';const restante=v.total-(v.recebido||0);const pend=aprazo&&v.status==='pendente'&&restante>0.001;
-    return `<div class="ev-item">
-      <div class="ev-time">${v.data.slice(8,10)}/${v.data.slice(5,7)}</div>
-      <div class="ev-bar" style="background:${pend?'var(--warning)':'var(--income)'}"></div>
-      <div class="ev-main">
-        <div class="et">${v.itens.map(i=>`${i.emoji} ${i.nome}×${i.qtd}`).join(', ')}</div>
-        <div class="es"><span style="font-family:var(--mono);font-weight:700">${fmt(v.total)}</span> · ${PG[v.pagamento]||v.pagamento} ${pend?`<span style="color:var(--warning);font-weight:700">⏳ deve ${fmt(restante)}</span>`:v.status==='pago'?'<span style="color:var(--income);font-weight:700">✅ pago</span>':''}</div>
+    return `<div class="ctf-ev">
+      <div class="ctf-ev-dt">${v.data.slice(8,10)}/${v.data.slice(5,7)}</div>
+      <div class="ctf-ev-bar" style="background:${pend?'var(--warning)':'var(--income)'}"></div>
+      <div class="ctf-ev-mn">
+        <div class="ctf-ev-et">${v.itens.map(i=>`${i.emoji} ${i.nome}×${i.qtd}`).join(', ')}</div>
+        <div class="ctf-ev-es"><b style="font-family:var(--mono);color:var(--text-1)">${fmt(v.total)}</b> · ${PG[v.pagamento]||v.pagamento}${pend?` · <span style="color:var(--warning);font-weight:700">⏳ deve ${fmt(restante)}</span>`:v.status==='pago'?` · <span style="color:var(--income);font-weight:700">✅ pago</span>`:''}</div>
       </div>
-      ${pend?`<button class="btn btn-primary btn-sm" data-receber="${v.id}" style="font-size:11px;padding:5px 10px">Receber</button>`:''}
+      ${pend?`<button class="btn btn-primary btn-sm" data-receber="${v.id}" style="font-size:11px;padding:6px 11px;flex-shrink:0">Receber</button>`:''}
     </div>`;
+  }
+  // Janelinha (popover) de ações — reusa o markup/visual da F1 (.ct-pop), com data-fpop/data-fact próprios da ficha
+  function popHTML(c){
+    return `<div class="ct-pop" id="ctf-pop">
+      <div class="ct-pop-h"><div class="ct-pop-av" style="background:${avCor(c.nome)}">${ini(c.nome)}</div><b>${c.nome}</b></div>
+      <div class="ct-pop-sec">Enviar pro cliente</div>
+      <div class="ct-pop-it" data-fact="venda"><span class="e">🛒</span> Registrar venda</div>
+      <div class="ct-pop-it" data-fact="cardapio"><span class="e">📋</span> Enviar cardápio</div>
+      <div class="ct-pop-it" data-fact="orcamento"><span class="e">🧾</span> Enviar orçamento</div>
+      <div class="ct-pop-it" data-fact="recibo"><span class="e">📃</span> Enviar recibo</div>
+      <div class="ct-pop-div"></div>
+      <div class="ct-pop-sec">Contato</div>
+      <div class="ct-pop-it" data-fact="editar"><span class="e">✏️</span> Editar</div>
+      <div class="ct-pop-it danger" data-fact="excluir"><span class="e">🗑️</span> Excluir</div>
+    </div>`;
+  }
+  // Fecha qualquer .ct-pop aberta por clique-fora + ESC (idempotente via _popListeners; compartilhado com a lista)
+  function ensurePopListeners(){
+    if(_popListeners)return;
+    _popListeners=true;
+    document.addEventListener('click',e=>{if(e.target.closest('.ct-pop'))return;const r=document.getElementById('clientes-root');if(r)r.querySelectorAll('.ct-pop.show').forEach(p=>p.classList.remove('show'));});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){const r=document.getElementById('clientes-root');if(r)r.querySelectorAll('.ct-pop.show').forEach(p=>p.classList.remove('show'));}});
   }
   function renderFicha(c){
     const root=document.getElementById('clientes-root');if(!root)return;
@@ -220,57 +242,78 @@ const Clientes=(()=>{
     const lim=limiteDe(c);const usoPct=lim?Math.min(100,Math.round(m.saldoDevedor/lim*100)):0;const estouro=m.saldoDevedor>lim;
     const pend=m.vs.filter(v=>v.pagamento==='a_prazo'&&v.status==='pendente');
     const cobrancaMsg=`Oi ${c.nome}! 😊 Passando pra lembrar do valor de ${fmt(m.saldoDevedor)} da(s) sua(s) compra(s)${pend.length?` (a partir de ${fmtD(pend[pend.length-1].data)})`:''}. Quando puder acertar, me avisa? 🙏`;
+    const corSaldo=m.saldoDevedor>0?(estouro?'var(--expense)':'var(--warning)'):'var(--income)';
+    const corBar=estouro?'var(--expense)':usoPct>80?'var(--warning)':'var(--brand)';
+    const corCadIco=m.saldoDevedor>0?(estouro?'var(--expense)':'var(--warning)'):'var(--income)';
+    const bgCadIco=m.saldoDevedor>0?(estouro?'var(--expense-soft)':'var(--warning-soft)'):'var(--income-soft)';
     root.innerHTML=`
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:var(--s-5)">
-        <button class="btn btn-soft" data-back>${svg('chevleft',16)} Voltar</button>
+      <div class="ctf-head"><button class="ctf-back" data-back>${svg('chevleft',16)} Voltar</button></div>
+
+      <div class="ctf-hero" style="position:relative">
+        <div class="ct-av" style="background:${avCor(c.nome)}">${ini(c.nome)}</div>
+        <div class="ctf-nm">${c.nome}</div>
+        <div><span class="ctf-score" style="background:${r.bg};color:${r.cor}">${r.e} ${r.l}</span></div>
+        <div class="ctf-pills">
+          ${tel?`<a class="ctf-pill ctf-pill-wa" href="https://wa.me/55${tel}" target="_blank" rel="noopener">${svg('chat',16)} WhatsApp</a>
+          <a class="ctf-pill" href="tel:+55${tel}">${svg('phone',16)} Ligar</a>`:''}
+          <button class="ctf-pill ctf-pill-acts" data-fpop>${svg('zap',16)} Ações</button>
+        </div>
+        ${popHTML(c)}
       </div>
-      <div class="bento">
-        <div class="card col-12" style="display:flex;align-items:center;gap:var(--s-5);flex-wrap:wrap">
-          <div class="ct-av" style="width:64px;height:64px;font-size:22px;background:${avCor(c.nome)}">${ini(c.nome)}</div>
-          <div style="flex:1;min-width:160px">
-            <div style="font-size:20px;font-weight:800;letter-spacing:-.02em">${c.nome}</div>
-            <div style="margin-top:6px"><span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:var(--r-full);background:${r.bg};color:${r.cor}">${r.e} ${r.l}</span></div>
-          </div>
-          <div style="display:flex;gap:8px">
-            ${tel?`<a class="docbtn wa" href="https://wa.me/55${tel}" target="_blank" rel="noopener" title="WhatsApp">${svg('chat',18)}</a><a class="docbtn" href="tel:+55${tel}" title="Ligar">${svg('phone',18)}</a>`:''}
-          </div>
-        </div>
-        <div class="card col-12">
-          <div class="kpi-row">
-            <div class="kpi-card"><span class="kpi-label">Total gasto</span><span class="kpi-val">${fmt(m.totalGasto)}</span></div>
-            <div class="kpi-card"><span class="kpi-label">Compras</span><span class="kpi-val">${m.nCompras}</span></div>
-            <div class="kpi-card"><span class="kpi-label">Ticket médio</span><span class="kpi-val">${fmt(m.ticketMedio)}</span></div>
-            <div class="kpi-card"><span class="kpi-label">Última compra</span><span class="kpi-val" style="font-size:14px">${fmtD(m.ultimaCompra)}</span></div>
+
+      <div class="ctf-cards">
+        <div class="ctf-card">
+          <div class="ctf-chead"><div class="ctf-cico" style="background:${bgCadIco};color:${corCadIco}">${svg('clock',16)}</div><h3>Caderneta (fiado)</h3></div>
+          <div class="cad-lab">Saldo devedor</div>
+          <div class="cad-val" style="color:${corSaldo}">${fmt(m.saldoDevedor)}</div>
+          <div class="cad-limrow"><span>Limite de crédito</span><span>${fmt(m.saldoDevedor)} / ${fmt(lim)}</span></div>
+          <div class="cad-bar"><div style="width:${usoPct}%;background:${corBar}"></div></div>
+          ${estouro?`<div class="ctf-alert">${svg('alert',12)} Acima do limite de crédito!</div>`:''}
+          <div class="ctf-btns">
+            <button class="ctf-btn ctf-btn-soft" data-editlim>${svg('pencil',13)} Limite</button>
+            ${m.saldoDevedor>0&&tel?`<a class="ctf-btn ctf-btn-pri" href="${waLink(c.telefone,cobrancaMsg)}" target="_blank" rel="noopener" style="text-decoration:none">${svg('chat',14)} Cobrar no WhatsApp</a>`:''}
           </div>
         </div>
-        <div class="card col-6">
-          <div class="card-head"><div class="ico" style="background:${m.saldoDevedor>0?'var(--warning-soft)':'var(--income-soft)'};color:${m.saldoDevedor>0?'var(--warning)':'var(--income)'}">${svg('clock',17)}</div><h3>Caderneta (fiado)</h3></div>
-          <div style="font-size:13px;color:var(--text-2);font-weight:600">Saldo devedor</div>
-          <div style="font-family:var(--mono);font-size:26px;font-weight:800;color:${m.saldoDevedor>0?(estouro?'var(--expense)':'var(--warning)'):'var(--income)'}">${fmt(m.saldoDevedor)}</div>
-          <div style="margin-top:var(--s-3)">
-            <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-3);font-weight:600;margin-bottom:4px"><span>Limite de crédito</span><span>${fmt(m.saldoDevedor)} / ${fmt(lim)}</span></div>
-            <div class="bar"><div style="height:100%;width:${usoPct}%;background:${estouro?'var(--expense)':usoPct>80?'var(--warning)':'var(--brand)'};transition:width .3s"></div></div>
-            ${estouro?`<div style="color:var(--expense);font-weight:700;font-size:11.5px;margin-top:6px;display:flex;align-items:center;gap:5px">${svg('alert',12)} Acima do limite de crédito!</div>`:''}
-          </div>
-          <div style="display:flex;gap:8px;margin-top:var(--s-4);flex-wrap:wrap">
-            <button class="btn btn-soft btn-sm" data-editlim>${svg('pencil',13)} Limite</button>
-            ${m.saldoDevedor>0&&tel?`<a class="btn btn-primary btn-sm" href="${waLink(c.telefone,cobrancaMsg)}" target="_blank" rel="noopener" style="text-decoration:none">${svg('chat',14)} Cobrar no WhatsApp</a>`:''}
+
+        <div class="ctf-card">
+          <div class="ctf-chead"><div class="ctf-cico" style="background:var(--brand-soft);color:var(--brand-text)">${svg('chart',16)}</div><h3>Resumo</h3></div>
+          <div class="fk-grid">
+            <div class="fk"><div class="fk-l">Total gasto</div><div class="fk-v">${fmt(m.totalGasto)}</div></div>
+            <div class="fk"><div class="fk-l">Compras</div><div class="fk-v">${m.nCompras}</div></div>
+            <div class="fk"><div class="fk-l">Ticket médio</div><div class="fk-v">${fmt(m.ticketMedio)}</div></div>
+            <div class="fk"><div class="fk-l">Última compra</div><div class="fk-v" style="font-size:15px">${fmtD(m.ultimaCompra)}</div></div>
           </div>
         </div>
-        <div class="card col-6">
-          <div class="card-head"><div class="ico" style="background:var(--brand-soft);color:var(--brand-text)">${svg('zap',17)}</div><h3>Relacionamento</h3></div>
-          ${c.aniversario?`<div style="font-size:13px;color:var(--text-2)">🎂 Aniversário: <b>${fmtD(c.aniversario)}</b> · em ${diasAniv(c.aniversario)}d</div>`:`<p style="font-size:12.5px;color:var(--text-4)">Sem aniversário cadastrado.</p>`}
-          ${(r.l==='Sumido'||r.l==='Em risco')?`<div style="margin-top:8px;padding:8px 12px;background:var(--warning-soft);border-radius:var(--r-md);font-size:12.5px;color:var(--warning);font-weight:700">⚠️ Cliente ${r.l.toLowerCase()} — vale uma ação de reativação</div>`:''}
-          ${c.anotacoes?`<p style="font-size:12.5px;color:var(--text-3);margin-top:8px;line-height:1.5">${c.anotacoes}</p>`:''}
+
+        <div class="ctf-card">
+          <div class="ctf-chead"><div class="ctf-cico" style="background:var(--brand-soft);color:var(--brand-text)">${svg('zap',16)}</div><h3>Relacionamento</h3></div>
+          ${c.aniversario?`<div class="ctf-kv">🎂 Aniversário: <b>${fmtD(c.aniversario)}</b> · em ${diasAniv(c.aniversario)}d</div>`:`<div class="ctf-kv" style="color:var(--text-4)">Sem aniversário cadastrado.</div>`}
+          ${(r.l==='Sumido'||r.l==='Em risco')?`<div class="ctf-prox" style="background:var(--warning-soft);color:var(--warning)"><span>⚠️ Cliente ${r.l.toLowerCase()} — vale uma ação de reativação</span></div>`:''}
+          ${c.anotacoes?`<div class="ctf-notetxt">${c.anotacoes}</div>`:''}
         </div>
-        <div class="card col-12">
-          <div class="card-head"><div class="ico" style="background:var(--info-soft);color:var(--info)">${svg('repeat',17)}</div><h3>Extrato de compras</h3></div>
-          ${m.vs.length?m.vs.map(extratoRow).join(''):`<p style="font-size:12.5px;color:var(--text-4)">Nenhuma compra registrada ainda.</p>`}
+
+        <div class="ctf-card ctf-card--full">
+          <div class="ctf-chead"><div class="ctf-cico" style="background:var(--info-soft);color:var(--info)">${svg('repeat',16)}</div><h3>Extrato de compras</h3></div>
+          ${m.vs.length?m.vs.map(extratoRow).join(''):`<div class="ctf-kv" style="color:var(--text-4)">Nenhuma compra registrada ainda.</div>`}
         </div>
       </div>`;
     root.querySelector('[data-back]').onclick=()=>{viewing=null;render();};
-    root.querySelector('[data-editlim]').onclick=()=>editarLimite(c);
+    const elLim=root.querySelector('[data-editlim]');if(elLim)elLim.onclick=()=>editarLimite(c);
     root.querySelectorAll('[data-receber]').forEach(b=>b.onclick=()=>receberVenda(c,+b.dataset.receber));
+    // ⚡ Ações — janelinha da ficha (fecha por clique-fora/ESC via listeners globais do módulo)
+    const popBtn=root.querySelector('[data-fpop]'),pop=root.querySelector('#ctf-pop');
+    if(popBtn&&pop){
+      popBtn.onclick=e=>{e.stopPropagation();const open=pop.classList.contains('show');root.querySelectorAll('.ct-pop.show').forEach(p=>p.classList.remove('show'));if(!open)pop.classList.add('show');};
+      root.querySelectorAll('[data-fact]').forEach(it=>{it.onclick=e=>{
+        e.stopPropagation();pop.classList.remove('show');
+        const act=it.dataset.fact;
+        if(act==='venda')navigate('vendas');
+        else if(act==='editar')editarContatoNeg(c);
+        else if(act==='excluir')Modal.confirm('Excluir contato?',`"${c.nome}" será removido permanentemente.`,()=>{DB.contatos=DB.contatos.filter(x=>x.id!==c.id);Toast.show('Contato removido');viewing=null;render();});
+        else Toast.show('Em breve 🚧');
+      };});
+    }
+    ensurePopListeners();
   }
   function receberVenda(c,vid){
     const v=DB.vendas.find(x=>x.id===vid);if(!v)return;
