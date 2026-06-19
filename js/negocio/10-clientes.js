@@ -188,7 +188,7 @@ const Clientes=(()=>{
       const act=it.dataset.act,cid=it.dataset.cid?+it.dataset.cid:null;
       const c=cid?DB.contatos.find(x=>x.id===cid):null;
       root.querySelectorAll('.ct-pop.show').forEach(p=>p.classList.remove('show'));
-      if(act==='venda')navigate('vendas');
+      if(act==='venda'&&c)Vendas.novaVenda(c.id);
       else if(act==='excluir'&&c)Modal.confirm('Excluir contato?',`"${c.nome}" será removido permanentemente.`,()=>{DB.contatos=DB.contatos.filter(x=>x.id!==c.id);Toast.show('Contato removido');render();});
       else if(act==='editar'&&c)editarContatoNeg(c);
       else Toast.show('Em breve 🚧');
@@ -307,7 +307,7 @@ const Clientes=(()=>{
       root.querySelectorAll('[data-fact]').forEach(it=>{it.onclick=e=>{
         e.stopPropagation();pop.classList.remove('show');
         const act=it.dataset.fact;
-        if(act==='venda')navigate('vendas');
+        if(act==='venda')Vendas.novaVenda(c.id);
         else if(act==='editar')editarContatoNeg(c);
         else if(act==='excluir')Modal.confirm('Excluir contato?',`"${c.nome}" será removido permanentemente.`,()=>{DB.contatos=DB.contatos.filter(x=>x.id!==c.id);Toast.show('Contato removido');viewing=null;render();});
         else Toast.show('Em breve 🚧');

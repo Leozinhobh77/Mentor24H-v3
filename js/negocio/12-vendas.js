@@ -484,7 +484,15 @@ const Vendas=(()=>{
     });
   }
 
-  return {render};
+  // F3a — abre o PDV já com o cliente selecionado (chamado pela janelinha ⚡ de Contatos Negócio)
+  function novaVenda(clienteId){
+    const c=DB.contatos.find(x=>x.id===clienteId);
+    clienteSel=c?{id:c.id,nome:c.nome}:null;
+    view='pdv';
+    navigate('vendas');
+  }
+
+  return {render,novaVenda};
 })();
 
 /* ═══════════════════════════════════════════════
