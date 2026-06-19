@@ -1154,8 +1154,8 @@ select.field{cursor:pointer}
   body.drawer-open{overflow:hidden;position:fixed;width:100%;left:0;right:0}
   #side-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:65;opacity:0;visibility:hidden;transition:opacity .25s var(--ease),visibility .25s}
   body.drawer-open #side-backdrop{opacity:1;visibility:visible}
-  .topbar{padding:var(--s-3) var(--s-5);flex-wrap:nowrap;gap:var(--s-3)}
-  .top-actions{gap:var(--s-2)}
+  .topbar{padding:var(--s-3) var(--s-3);flex-wrap:nowrap;gap:var(--s-3)}
+  .top-actions{gap:var(--s-1)}
   .greet{flex:1;min-width:0}
   .greet h1,.greet p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .btn-add span{display:none}
@@ -1668,7 +1668,7 @@ select.field{cursor:pointer}
   .nav-group .nav-item{font-size:14px;padding:9px var(--s-3)}
   .nav-label{font-size:12.5px}
   .nav-chevron{width:15px;height:15px}
-  .greet h1{font-size:20px}
+  .greet h1{font-size:15px}
   .greet p{font-size:14px}
   .row .info .t,.lmain .lt,.ct-nm{font-size:15px}
   .row .info .s,.lmain .ls{font-size:13px}
